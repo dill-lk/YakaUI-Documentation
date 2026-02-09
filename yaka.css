@@ -12,6 +12,16 @@
     /* Deep Violet */
     --accent-3: #2B86C5;
     /* Electric Blue */
+    --accent-4: #00F5D4;
+    /* Neon Aqua */
+    --accent-5: #FEE440;
+    /* Sunburst Yellow */
+    --accent-6: #9B5DE5;
+    /* Electric Purple */
+    --accent-7: #00BBF9;
+    /* Sky Pulse */
+    --accent-8: #F15BB5;
+    /* Pop Magenta */
 
     /* Semantic Palette */
     --success: #10b981;
@@ -42,6 +52,14 @@
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
+}
+
+.color-swatch {
+    width: 90px;
+    height: 90px;
+    border-radius: 18px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
 }
 
 /* Loader */

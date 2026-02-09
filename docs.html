@@ -389,23 +389,82 @@
                 <section class="component-section">
                     <h2>Colors & Theme</h2>
                     <div class="preview-box">
-                        <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;">
-                            <div
-                                style="width:100px; height:40px; background:var(--accent); border-radius:8px; border:1px solid var(--glass-border);">
+                        <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center;">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent</div>
                             </div>
-                            <div
-                                style="width:100px; height:40px; background:var(--accent-2); border-radius:8px; border:1px solid var(--glass-border);">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-2);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 2
+                                </div>
                             </div>
-                            <div
-                                style="width:100px; height:40px; background:var(--success); border-radius:8px; border:1px solid var(--glass-border);">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-3);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 3
+                                </div>
                             </div>
-                            <div
-                                style="width:100px; height:40px; background:var(--danger); border-radius:8px; border:1px solid var(--glass-border);">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-4);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 4
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-5);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 5
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--success);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Success</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--warning);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Warning</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--danger);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Danger</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--info);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Info</div>
                             </div>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
-                    <p>YAKA utilizes a multi-layered design token system for variables and accents.</p>
+                    <p>YAKA utilizes a multi-layered design token system for variables, accents, and semantic states.
+                        You can override the defaults globally or scope them to a specific section.</p>
+
+                    <h3>Customize the Default Palette</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Change the core colors by overriding the root
+                        variables in your own stylesheet.</p>
+                    <div class="code-block">
+                        <span class="token-comment">/* Override defaults */</span><br>
+                        :root {<br>
+                        &nbsp;&nbsp;--accent: <span class="token-val">#22c55e</span>;<br>
+                        &nbsp;&nbsp;--accent-2: <span class="token-val">#16a34a</span>;<br>
+                        &nbsp;&nbsp;--accent-3: <span class="token-val">#0ea5e9</span>;<br>
+                        &nbsp;&nbsp;--success: <span class="token-val">#14b8a6</span>;<br>
+                        &nbsp;&nbsp;--warning: <span class="token-val">#f97316</span>;<br>
+                        &nbsp;&nbsp;--danger: <span class="token-val">#ef4444</span>;<br>
+                        }
+                    </div>
+
+                    <h3>Scoped Theme Example</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Apply a theme to a single section by attaching
+                        variables to a wrapper.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- HTML --&gt;</span><br>
+                        &lt;<span class="token-tag">section</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"theme-ocean"</span>&gt;...&lt;/<span class="token-tag">section</span>&gt;<br><br>
+                        <span class="token-comment">/* CSS */</span><br>
+                        .theme-ocean {<br>
+                        &nbsp;&nbsp;--accent: <span class="token-val">#22d3ee</span>;<br>
+                        &nbsp;&nbsp;--accent-2: <span class="token-val">#3b82f6</span>;<br>
+                        &nbsp;&nbsp;--accent-3: <span class="token-val">#6366f1</span>;<br>
+                        }
+                    </div>
 
 
 
@@ -418,6 +477,11 @@
                         &nbsp;&nbsp;--accent: <span class="token-val">#FF3CAC</span>;<br>
                         &nbsp;&nbsp;--accent-2: <span class="token-val">#784BA0</span>;<br>
                         &nbsp;&nbsp;--accent-3: <span class="token-val">#2B86C5</span>;<br><br>
+                        &nbsp;&nbsp;--accent-4: <span class="token-val">#00F5D4</span>;<br>
+                        &nbsp;&nbsp;--accent-5: <span class="token-val">#FEE440</span>;<br>
+                        &nbsp;&nbsp;--accent-6: <span class="token-val">#9B5DE5</span>;<br>
+                        &nbsp;&nbsp;--accent-7: <span class="token-val">#00BBF9</span>;<br>
+                        &nbsp;&nbsp;--accent-8: <span class="token-val">#F15BB5</span>;<br><br>
 
                         &nbsp;&nbsp;<span class="token-comment">/* Semantic States */</span><br>
                         &nbsp;&nbsp;--success: <span class="token-val">#10b981</span>;<br>
@@ -462,8 +526,6 @@
                             <button class="btn-shine">Shine</button>
                             <button class="btn-grad-border">Gradient</button>
                             <button class="btn-cyber">Cyber</button>
-                            <button class="btn-organic">Organic</button>
-                            <button class="btn-glitch">Glitch</button>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
@@ -473,7 +535,7 @@
                         <li>Use <strong>Primary</strong> for the main action per screen.</li>
                         <li>Use <strong>Secondary</strong> and <strong>Outline</strong> for supporting actions.</li>
                         <li>Use <strong>Ghost</strong> for subtle links inside dense UI.</li>
-                        <li>Use <strong>Glow/Cyber/Organic/Glitch</strong> for hero moments and marketing CTAs.</li>
+                        <li>Use <strong>Glow/Cyber</strong> for hero moments and marketing CTAs.</li>
                     </ul>
 
 
@@ -553,10 +615,7 @@
                             class="token-tag">button</span>&gt;<br><br>
                         <span class="token-comment">&lt;!-- Specialty Styles --&gt;</span><br>
                         &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"btn-organic"</span>&gt;Organic&lt;/<span
-                            class="token-tag">button</span>&gt;<br>
-                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"btn-glitch"</span>&gt;Glitch&lt;/<span
+                            class="token-val">"btn-cyber"</span>&gt;Cyber&lt;/<span
                             class="token-tag">button</span>&gt;
                     </div>
 
