@@ -22,6 +22,8 @@
 
 ## 🚀 Overview
 
+DoCS - https://yaka-ui.vercel.app/docs.html
+
 **YAKA UI** is a lightweight, high-performance UI framework designed for creating stunning, interactive web interfaces with minimal effort. It leverages the power of **GSAP (GreenSock Animation Platform)** for buttery smooth 60fps animations and uses **SVG** for crisp, scalable graphics.
 
 Built with modern **ES Modules** and **CSS3 Variables**, YAKA UI brings premium "Glassmorphism" aesthetics and complex physics-based interactions to your project without the bloat.
