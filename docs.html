@@ -261,7 +261,7 @@
         <div class="logo">
             <a href="index.html"
                 style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px;">
-                <img src="image.png" alt="YAKA UI Logo" style="width: 48px; height: 48px; filter: invert(1);">
+                <img src="image.png" alt="YAKA UI Logo" style="width: 48px; height: 48px;">
                 <span style="font-size: 1.2rem; font-weight: 700;">YAKA UI</span>
             </a>
         </div>
@@ -304,7 +304,6 @@
             <div
                 style="font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; color:#666; margin:40px 0 15px; font-weight:700; padding-left:10px;">
                 Effects</div>
-            <a href="#" data-target="parallax" class="sidebar-link">Parallax</a>
             <a href="#" data-target="progress" class="sidebar-link">Progress Indicators</a>
             <a href="#" data-target="reveal" class="sidebar-link">Image Reveal</a>
             <a href="#" data-target="typing" class="sidebar-link">Typing Text</a>
@@ -318,7 +317,6 @@
             <div
                 style="font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; color:#666; margin:40px 0 15px; font-weight:700; padding-left:10px;">
                 Layout & Marketing</div>
-            <a href="#" data-target="features" class="sidebar-link">Feature Grid</a>
             <a href="#" data-target="testimonials" class="sidebar-link">Testimonials</a>
             <a href="#" data-target="steps" class="sidebar-link">Step Process</a>
             <a href="#" data-target="timeline" class="sidebar-link">Timeline</a>
@@ -339,7 +337,7 @@
                      <h2>Getting Started</h2>
                     <div style="margin-bottom: 3rem; text-align: left;">
                         <img src="image.png" alt="YAKA UI Logo"
-                            style="width: 96px; height: 96px; filter: invert(1); margin-bottom: 2rem;">
+                            style="width: 96px; height: 96px; margin-bottom: 2rem;">
                     </div>
                     <div style="margin-bottom: 2rem;">
                         <a href="https://github.com/dill-lk/YAKA-UI" target="_blank"
@@ -507,7 +505,7 @@
                     <p>YAKA utilizes a multi-layered design token system for variables, accents, and semantic states.
                         You can override the defaults globally or scope them to a specific section.</p>
 
-                    <h3>Extended Palette (Tailwind-inspired)</h3>
+                    <h3>Extended Palette</h3>
                     <p style="font-size:0.9rem; color:var(--text-muted);">Use these extra color tokens for custom UI
                         highlights, charts, or accents beyond the core brand palette.</p>
                     <div class="code-block">
@@ -1425,29 +1423,6 @@
                 </section>
             </div>
 
-            <div id="parallax" class="docs-content-wrapper">
-                <h1 class="category-header">Effects</h1>
-                <section class="component-section">
-                    <h2>Parallax</h2>
-                    <div class="preview-box" style="height:250px; overflow-y:auto; scrollbar-width:thin;">
-                        <div style="height:500px; display:flex; flex-direction:column; gap:20px; padding:20px;">
-                            <div class="card glass-card" data-speed="2" style="background:var(--accent-glow);">Fast
-                                Track (2)</div>
-                            <div class="card glass-card" data-speed="1">Standard (1)</div>
-                            <div class="card glass-card" data-speed="0.5" style="opacity:0.5;">Deep Layer (0.5)</div>
-                        </div>
-                    </div>
-                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
-                    <p>Layer cards at different scroll speeds using the <code>data-speed</code> attribute.</p>
-                    <div class="code-block">
-                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"card glass-card"</span> <span class="token-attr">data-speed</span>=<span
-                            class="token-val">"1.5"</span>&gt;Layer&lt;/<span class="token-tag">div</span>&gt;
-                    </div>
-
-                </section>
-            </div>
-
             <!-- Progress -->
             <div id="progress" class="docs-content-wrapper">
                 <section class="component-section">
@@ -1458,7 +1433,7 @@
                             <div class="progress-wrapper">
                                 <div class="progress-label"><span>Optimization</span><span>92%</span></div>
                                 <div class="progress-track">
-                                    <div class="progress-fill" data-value="92%"></div>
+                                    <div class="progress-fill" data-value="92%" style="width:92%;"></div>
                                 </div>
                             </div>
                             <div style="display:flex; gap:30px; justify-content:center;">
@@ -1488,8 +1463,9 @@
                 <section class="component-section">
                     <h2>Image Reveal</h2>
                     <div class="preview-box">
-                        <div class="reveal-image" style="max-width:400px; margin:0 auto;">
-                            <img src="https://picsum.photos/600/400" alt="reveal">
+                        <div class="reveal-image" style="max-width:420px; margin:0 auto;">
+                            <img src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?auto=format&fit=crop&w=900&q=80"
+                                alt="Futuristic workstation">
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
@@ -1609,11 +1585,14 @@
                     <div class="preview-box">
                         <div class="gallery-accordion" style="width:100%; max-width:600px; margin:0 auto;">
                             <div class="gallery-item"
-                                style="background-image: url('https://picsum.photos/300/400?r=1');"></div>
+                                style="background-image: url('https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=600&q=80');">
+                            </div>
                             <div class="gallery-item"
-                                style="background-image: url('https://picsum.photos/300/400?r=2');"></div>
+                                style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80');">
+                            </div>
                             <div class="gallery-item"
-                                style="background-image: url('https://picsum.photos/300/400?r=3');"></div>
+                                style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80&sat=-30');">
+                            </div>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
@@ -1645,31 +1624,6 @@
                             class="token-val">"video-bg"</span> <span class="token-attr">autoplay</span> <span
                             class="token-attr">muted</span> <span class="token-attr">loop</span>&gt;...&lt;/<span
                             class="token-tag">video</span>&gt;
-                    </div>
-                </section>
-            </div>
-
-            <div id="features" class="docs-content-wrapper">
-                <h1 class="category-header">Layout & Marketing</h1>
-                <section class="component-section">
-                    <h2>Feature Grid</h2>
-                    <div class="preview-box">
-                        <div class="features-grid">
-                            <div class="feature-card">
-                                <div class="feature-icon">🚀</div>
-                                <h3 class="feature-title">Performance</h3>
-                                <p class="feature-desc">Highly optimized animations with zero lag using GSAP.</p>
-                            </div>
-                            <div class="feature-card">
-                                <div class="feature-icon">✨</div>
-                                <h3 class="feature-title">Aesthetics</h3>
-                                <p class="feature-desc">Curated glassmorphism and motion design patterns.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="code-block">
-                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"feature-card"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;
                     </div>
                 </section>
             </div>
@@ -1830,82 +1784,10 @@
                 </section>
             </div>
 
-            <div id="grid-system" class="docs-content-wrapper">
-                <section class="component-section">
-                    <h2>Grid System</h2>
-                    <div class="preview-box">
-                        <div class="grid grid-3" style="width:100%;">
-                            <div class="card glass-card">
-                                <div class="card-content">
-                                    <h3>Column A</h3>
-                                    <p>Use <code>.grid</code> with <code>.grid-3</code>.</p>
-                                </div>
-                            </div>
-                            <div class="card glass-card">
-                                <div class="card-content">
-                                    <h3>Column B</h3>
-                                    <p>Responsive down to one column.</p>
-                                </div>
-                            </div>
-                            <div class="card glass-card">
-                                <div class="card-content">
-                                    <h3>Column C</h3>
-                                    <p>Supports fixed or auto grids.</p>
-                                </div>
-                            </div>
-                            <div class="card glass-card grid-span-2">
-                                <div class="card-content">
-                                    <h3>Span 2</h3>
-                                    <p>Use <code>.grid-span-2</code> to span columns.</p>
-                                </div>
-                            </div>
-                            <div class="card glass-card">
-                                <div class="card-content">
-                                    <h3>Column D</h3>
-                                    <p>Auto-fit available space.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
-                    <p>Powerful layout utilities for dashboards, feature grids, and marketing sections with responsive
-                        behavior baked in.</p>
-
-                    <h3>Basic Usage</h3>
-                    <div class="code-block">
-                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"grid grid-3"</span>&gt;<br>
-                        &nbsp;&nbsp;... items ...<br>
-                        &lt;/<span class="token-tag">div</span>&gt;
-                    </div>
-
-                    <h3>Auto-Fit Layout</h3>
-                    <div class="code-block">
-                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"grid grid-auto"</span>&gt;<br>
-                        &nbsp;&nbsp;... cards ...<br>
-                        &lt;/<span class="token-tag">div</span>&gt;
-                    </div>
-
-                    <h3>Span Columns</h3>
-                    <div class="code-block">
-                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"grid grid-4"</span>&gt;<br>
-                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"card glass-card grid-span-2"</span>&gt;Wide&lt;/<span
-                            class="token-tag">div</span>&gt;<br>
-                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"card glass-card"</span>&gt;Item&lt;/<span
-                            class="token-tag">div</span>&gt;<br>
-                        &lt;/<span class="token-tag">div</span>&gt;
-                    </div>
-                </section>
-            </div>
-
             <div id="timeline" class="docs-content-wrapper">
                 <section class="component-section">
                     <h2>Timeline</h2>
-                    <div class="preview-box">
+                    <div class="preview-box" style="padding: 6rem 3rem;">
                         <div class="timeline">
                             <div class="timeline-item">
                                 <div class="timeline-dot"></div>
