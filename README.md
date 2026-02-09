@@ -14,7 +14,7 @@
   </p>
 
   ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-  ![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+  ![Version](https://img.shields.io/badge/version-0.1.0-orange.svg)
   ![GSAP](https://img.shields.io/badge/Powered%20by-GSAP-88CE02.svg)
 </div>
 
