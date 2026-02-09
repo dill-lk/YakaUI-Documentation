@@ -1,7 +1,7 @@
 # YAKA UI
 
 <div align="center">
-  <img src="favicon.png" alt="YAKA UI Logo" width="120" height="120" />
+  <img src="image.png" alt="YAKA UI Logo" width="140" height="140" />
   <h1>YAKA UI</h1>
   <p><strong>Next-Generation UI Framework powered by GSAP & SVG</strong></p>
   
