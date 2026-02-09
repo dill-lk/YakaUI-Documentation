@@ -1244,6 +1244,24 @@
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Accordion stacks reveal content progressively with smooth open/close animation and automatic
+                        icon rotation.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"accordion"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"accordion-item"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"accordion-header"</span>&gt;Title&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"accordion-content"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -1264,6 +1282,24 @@
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Tabs swap content without page navigation and keep the interface compact for multi-step flows.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tabs-container"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tabs-header"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"tab-item active"</span> <span
+                            class="token-attr">data-tab</span>=<span class="token-val">"tab-one"</span>&gt;Tab One&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">id</span>=<span
+                            class="token-val">"tab-one"</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tab-content active"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -1277,6 +1313,18 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Glassmorphic dialogs with smooth scale entry.</p>
+
+                    <h3>Trigger + Modal</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">data-trigger-modal</span>=<span
+                            class="token-val">"demo-modal"</span>&gt;Open&lt;/<span class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">id</span>=<span
+                            class="token-val">"demo-modal"</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"modal-overlay"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"modal glass-card"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                     <div id="demo-modal" class="modal-overlay">
                         <div class="modal glass-card">
@@ -1311,6 +1359,15 @@
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Non-blocking notification system.</p>
 
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        <span class="token-comment">// Types: success | error | info</span><br>
+                        <span class="token-keyword">window</span>.Yaka.showToast(<span
+                            class="token-val">'Saved successfully'</span>, <span class="token-val">'success'</span>);<br>
+                        <span class="token-keyword">window</span>.Yaka.showToast(<span
+                            class="token-val">'Something went wrong'</span>, <span class="token-val">'error'</span>);
+                    </div>
+
                 </section>
             </div>
 
@@ -1323,6 +1380,14 @@
                             Detail</button>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Tooltips display lightweight context on hover using the <code>data-tooltip</code> attribute.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">data-tooltip</span>=<span
+                            class="token-val">"Helpful hint"</span>&gt;Hover me&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -1342,6 +1407,19 @@
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Dropdown menus toggle on click and close automatically when clicking outside the menu.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"dropdown"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-glow dropdown-trigger"</span>&gt;Menu&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"dropdown-menu"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
