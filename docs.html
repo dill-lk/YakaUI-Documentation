@@ -261,7 +261,7 @@
         <div class="logo">
             <a href="index.html"
                 style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px;">
-                <img src="image.png" alt="YAKA UI Logo" style="width: 48px; height: 48px;">
+                <img src="image.png" alt="YAKA UI Logo" style="width: 48px; height: 48px; filter: invert(1);">
                 <span style="font-size: 1.2rem; font-weight: 700;">YAKA UI</span>
             </a>
         </div>
@@ -339,11 +339,11 @@
                      <h2>Getting Started</h2>
                     <div style="margin-bottom: 3rem; text-align: left;">
                         <img src="image.png" alt="YAKA UI Logo"
-                            style="width: 96px; height: 96px; margin-bottom: 2rem;">
+                            style="width: 96px; height: 96px; filter: invert(1); margin-bottom: 2rem;">
                     </div>
                     <div style="margin-bottom: 2rem;">
                         <a href="https://github.com/dill-lk/YAKA-UI" target="_blank"
-                            class="nav-item active" data-magnetic
+                            class="btn-primary btn-magnetic" data-magnetic
                             style="padding: 0.8rem 1.5rem; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                                 <path
@@ -1438,6 +1438,12 @@
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Layer cards at different scroll speeds using the <code>data-speed</code> attribute.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card"</span> <span class="token-attr">data-speed</span>=<span
+                            class="token-val">"1.5"</span>&gt;Layer&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -1467,6 +1473,12 @@
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Track progress with linear bars or circular indicators driven by data attributes.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"progress-fill"</span> <span class="token-attr">data-value</span>=<span
+                            class="token-val">"80%"</span>&gt;&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -1482,6 +1494,14 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>High-end cinematic entry for visuals.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"reveal-image"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">img</span> <span class="token-attr">src</span>=<span
+                            class="token-val">"image.jpg"</span> <span class="token-attr">alt</span>=<span
+                            class="token-val">"Reveal"</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -1495,6 +1515,11 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Engaging typewriter animation.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">h3</span> <span class="token-attr">data-typing</span>=<span
+                            class="token-val">"Elevating the web experience."</span>&gt;&lt;/<span
+                            class="token-tag">h3</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -1510,6 +1535,10 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Animated value counters with GSAP precision.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">data-count</span>=<span
+                            class="token-val">"2500"</span>&gt;0&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
                 </section>
             </div>
 
@@ -1526,6 +1555,11 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Infinite text ribbons for high-impact branding.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"marquee-container"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
                 </section>
             </div>
 
@@ -1543,6 +1577,11 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Interactive border glow track that follows the cursor.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"spotlight-card"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
                 </section>
             </div>
 
@@ -1555,6 +1594,11 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Distorted visual aesthetic for high-impact typography.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glitch"</span> <span class="token-attr">data-text</span>=<span
+                            class="token-val">"CYBERPUNK"</span>&gt;CYBERPUNK&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
                 </section>
             </div>
 
@@ -1574,6 +1618,11 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Interactive image accordion with smooth expansion.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"gallery-accordion"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
                 </section>
             </div>
 
@@ -1588,6 +1637,14 @@
                                     type="video/mp4">
                             </video>
                         </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Looped ambient video layers that sit behind your hero content.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">video</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"video-bg"</span> <span class="token-attr">autoplay</span> <span
+                            class="token-attr">muted</span> <span class="token-attr">loop</span>&gt;...&lt;/<span
+                            class="token-tag">video</span>&gt;
                     </div>
                 </section>
             </div>
@@ -1693,6 +1750,83 @@
                             </div>
                         </div>
                     </div>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"pricing-card"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <div id="grid-system" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Grid System</h2>
+                    <div class="preview-box">
+                        <div class="grid grid-3" style="width:100%;">
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column A</h3>
+                                    <p>Use <code>.grid</code> with <code>.grid-3</code>.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column B</h3>
+                                    <p>Responsive down to one column.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column C</h3>
+                                    <p>Supports fixed or auto grids.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card grid-span-2">
+                                <div class="card-content">
+                                    <h3>Span 2</h3>
+                                    <p>Use <code>.grid-span-2</code> to span columns.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column D</h3>
+                                    <p>Auto-fit available space.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Powerful layout utilities for dashboards, feature grids, and marketing sections with responsive
+                        behavior baked in.</p>
+
+                    <h3>Basic Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-3"</span>&gt;<br>
+                        &nbsp;&nbsp;... items ...<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Auto-Fit Layout</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-auto"</span>&gt;<br>
+                        &nbsp;&nbsp;... cards ...<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Span Columns</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-4"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card grid-span-2"</span>&gt;Wide&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card"</span>&gt;Item&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
                 </section>
             </div>
 
@@ -1788,6 +1922,11 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"timeline-item"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
                     </div>
                 </section>
             </div>
