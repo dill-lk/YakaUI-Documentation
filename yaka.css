@@ -331,6 +331,17 @@ body::-webkit-scrollbar {
     box-shadow: 0 14px 28px var(--btn-color-glow, rgba(255, 60, 172, 0.45));
 }
 
+.btn-magnetic {
+    background: transparent !important;
+    border: 1px solid var(--btn-color, var(--accent));
+    color: var(--btn-color, var(--text-main)) !important;
+    box-shadow: none !important;
+}
+
+.btn-magnetic:hover {
+    box-shadow: 0 0 16px var(--btn-color-glow, rgba(255, 60, 172, 0.35)) !important;
+}
+
 /* Hero Section */
 .hero {
     height: 100vh;
