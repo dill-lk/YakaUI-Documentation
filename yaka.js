@@ -1,7 +1,7 @@
-import gsap from "https://cdn.skypack.dev/gsap";
-import ScrollTrigger from "https://cdn.skypack.dev/gsap/ScrollTrigger";
-import MotionPathPlugin from "https://cdn.skypack.dev/gsap/MotionPathPlugin";
-import TextPlugin from "https://cdn.skypack.dev/gsap/TextPlugin";
+import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js";
+import ScrollTrigger from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js";
+import MotionPathPlugin from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/MotionPathPlugin.js";
+import TextPlugin from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/TextPlugin.js";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, TextPlugin);
