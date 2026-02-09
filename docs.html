@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="yaka.css">
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="image.png">
     <style>
         /* Docs specific styles */
         .docs-layout {
@@ -224,6 +224,35 @@
             background: var(--accent);
             color: white;
         }
+
+        @media (max-width: 900px) {
+            .docs-layout {
+                flex-direction: column;
+                padding-top: 70px;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 2rem;
+            }
+
+            .component-section h2 {
+                font-size: 2.2rem;
+            }
+
+            .preview-box {
+                padding: 3rem 1.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -232,7 +261,7 @@
         <div class="logo">
             <a href="index.html"
                 style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px;">
-                <img src="favicon.png" alt="YAKA UI Logo" style="width: 48px; height: 48px; filter: invert(1);">
+                <img src="image.png" alt="YAKA UI Logo" style="width: 48px; height: 48px; filter: invert(1);">
                 <span style="font-size: 1.2rem; font-weight: 700;">YAKA UI</span>
             </a>
         </div>
@@ -260,6 +289,7 @@
             <a href="#" data-target="avatars" class="sidebar-link">Avatars</a>
             <a href="#" data-target="alerts" class="sidebar-link">Alerts</a>
             <a href="#" data-target="skeletons" class="sidebar-link">Skeletons</a>
+            <a href="#" data-target="light-theme" class="sidebar-link">Light Theme</a>
 
             <div
                 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-main); margin:40px 0 15px; font-weight:800; padding-left:10px; opacity:0.6;">
@@ -293,6 +323,7 @@
             <a href="#" data-target="steps" class="sidebar-link">Step Process</a>
             <a href="#" data-target="timeline" class="sidebar-link">Timeline</a>
             <a href="#" data-target="pricing" class="sidebar-link">Pricing</a>
+            <a href="#" data-target="grid-system" class="sidebar-link">Grid System</a>
 
             <div
                 style="font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; color:#666; margin:40px 0 15px; font-weight:700; padding-left:10px;">
@@ -306,11 +337,12 @@
                 <h1 class="category-header">Essentials</h1>
                 <section class="component-section">
                     <div style="margin-bottom: 3rem; text-align: left;">
-                        <img src="favicon.png" alt="YAKA UI Logo"
+                        <img src="image.png" alt="YAKA UI Logo"
                             style="width: 96px; height: 96px; filter: invert(1); margin-bottom: 2rem;">
                     </div>
                     <div style="margin-bottom: 2rem;">
-                        <a href="https://github.com/dill-lk/YAKA-UI" target="_blank" class="btn-primary"
+                        <a href="https://github.com/dill-lk/YAKA-UI" target="_blank"
+                            class="btn-primary btn-magnetic" data-magnetic
                             style="padding: 0.8rem 1.5rem; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                                 <path
@@ -389,23 +421,144 @@
                 <section class="component-section">
                     <h2>Colors & Theme</h2>
                     <div class="preview-box">
-                        <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;">
-                            <div
-                                style="width:100px; height:40px; background:var(--accent); border-radius:8px; border:1px solid var(--glass-border);">
+                        <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center;">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent</div>
                             </div>
-                            <div
-                                style="width:100px; height:40px; background:var(--accent-2); border-radius:8px; border:1px solid var(--glass-border);">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-2);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 2
+                                </div>
                             </div>
-                            <div
-                                style="width:100px; height:40px; background:var(--success); border-radius:8px; border:1px solid var(--glass-border);">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-3);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 3
+                                </div>
                             </div>
-                            <div
-                                style="width:100px; height:40px; background:var(--danger); border-radius:8px; border:1px solid var(--glass-border);">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-4);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 4
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-5);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 5
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--success);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Success</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--warning);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Warning</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--danger);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Danger</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--info);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Info</div>
+                            </div>
+                        </div>
+                        <div
+                            style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin-top:28px;">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--blue-400); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Blue</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch"
+                                    style="background:var(--emerald-400); width:70px; height:70px;"></div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Emerald</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--rose-400); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Rose</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--amber-400); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Amber</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch"
+                                    style="background:var(--violet-400); width:70px; height:70px;"></div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Violet</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--cyan-400); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Cyan</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch"
+                                    style="background:var(--slate-100); width:70px; height:70px;"></div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Slate</div>
                             </div>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
-                    <p>YAKA utilizes a multi-layered design token system for variables and accents.</p>
+                    <p>YAKA utilizes a multi-layered design token system for variables, accents, and semantic states.
+                        You can override the defaults globally or scope them to a specific section.</p>
+
+                    <h3>Extended Palette (Tailwind-inspired)</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Use these extra color tokens for custom UI
+                        highlights, charts, or accents beyond the core brand palette.</p>
+                    <div class="code-block">
+                        :root {<br>
+                        &nbsp;&nbsp;--slate-50: <span class="token-val">#f8fafc</span>;<br>
+                        &nbsp;&nbsp;--slate-100: <span class="token-val">#f1f5f9</span>;<br>
+                        &nbsp;&nbsp;--slate-600: <span class="token-val">#475569</span>;<br>
+                        &nbsp;&nbsp;--slate-900: <span class="token-val">#0f172a</span>;<br>
+                        &nbsp;&nbsp;--blue-400: <span class="token-val">#60a5fa</span>;<br>
+                        &nbsp;&nbsp;--blue-600: <span class="token-val">#2563eb</span>;<br>
+                        &nbsp;&nbsp;--emerald-400: <span class="token-val">#34d399</span>;<br>
+                        &nbsp;&nbsp;--emerald-600: <span class="token-val">#059669</span>;<br>
+                        &nbsp;&nbsp;--rose-400: <span class="token-val">#fb7185</span>;<br>
+                        &nbsp;&nbsp;--rose-600: <span class="token-val">#e11d48</span>;<br>
+                        &nbsp;&nbsp;--amber-400: <span class="token-val">#fbbf24</span>;<br>
+                        &nbsp;&nbsp;--amber-600: <span class="token-val">#d97706</span>;<br>
+                        &nbsp;&nbsp;--violet-400: <span class="token-val">#a78bfa</span>;<br>
+                        &nbsp;&nbsp;--violet-600: <span class="token-val">#7c3aed</span>;<br>
+                        &nbsp;&nbsp;--cyan-400: <span class="token-val">#22d3ee</span>;<br>
+                        &nbsp;&nbsp;--cyan-600: <span class="token-val">#0891b2</span>;<br>
+                        }
+                    </div>
+
+                    <h3>Customize the Default Palette</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Change the core colors by overriding the root
+                        variables in your own stylesheet.</p>
+                    <div class="code-block">
+                        <span class="token-comment">/* Override defaults */</span><br>
+                        :root {<br>
+                        &nbsp;&nbsp;--accent: <span class="token-val">#22c55e</span>;<br>
+                        &nbsp;&nbsp;--accent-2: <span class="token-val">#16a34a</span>;<br>
+                        &nbsp;&nbsp;--accent-3: <span class="token-val">#0ea5e9</span>;<br>
+                        &nbsp;&nbsp;--success: <span class="token-val">#14b8a6</span>;<br>
+                        &nbsp;&nbsp;--warning: <span class="token-val">#f97316</span>;<br>
+                        &nbsp;&nbsp;--danger: <span class="token-val">#ef4444</span>;<br>
+                        }
+                    </div>
+
+                    <h3>Scoped Theme Example</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Apply a theme to a single section by attaching
+                        variables to a wrapper.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- HTML --&gt;</span><br>
+                        &lt;<span class="token-tag">section</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"theme-ocean"</span>&gt;...&lt;/<span class="token-tag">section</span>&gt;<br><br>
+                        <span class="token-comment">/* CSS */</span><br>
+                        .theme-ocean {<br>
+                        &nbsp;&nbsp;--accent: <span class="token-val">#22d3ee</span>;<br>
+                        &nbsp;&nbsp;--accent-2: <span class="token-val">#3b82f6</span>;<br>
+                        &nbsp;&nbsp;--accent-3: <span class="token-val">#6366f1</span>;<br>
+                        }
+                    </div>
 
 
 
@@ -418,6 +571,28 @@
                         &nbsp;&nbsp;--accent: <span class="token-val">#FF3CAC</span>;<br>
                         &nbsp;&nbsp;--accent-2: <span class="token-val">#784BA0</span>;<br>
                         &nbsp;&nbsp;--accent-3: <span class="token-val">#2B86C5</span>;<br><br>
+                        &nbsp;&nbsp;--accent-4: <span class="token-val">#00F5D4</span>;<br>
+                        &nbsp;&nbsp;--accent-5: <span class="token-val">#FEE440</span>;<br>
+                        &nbsp;&nbsp;--accent-6: <span class="token-val">#9B5DE5</span>;<br>
+                        &nbsp;&nbsp;--accent-7: <span class="token-val">#00BBF9</span>;<br>
+                        &nbsp;&nbsp;--accent-8: <span class="token-val">#F15BB5</span>;<br><br>
+                        &nbsp;&nbsp;<span class="token-comment">/* Extended Palette */</span><br>
+                        &nbsp;&nbsp;--slate-50: <span class="token-val">#f8fafc</span>;<br>
+                        &nbsp;&nbsp;--slate-100: <span class="token-val">#f1f5f9</span>;<br>
+                        &nbsp;&nbsp;--slate-600: <span class="token-val">#475569</span>;<br>
+                        &nbsp;&nbsp;--slate-900: <span class="token-val">#0f172a</span>;<br>
+                        &nbsp;&nbsp;--blue-400: <span class="token-val">#60a5fa</span>;<br>
+                        &nbsp;&nbsp;--blue-600: <span class="token-val">#2563eb</span>;<br>
+                        &nbsp;&nbsp;--emerald-400: <span class="token-val">#34d399</span>;<br>
+                        &nbsp;&nbsp;--emerald-600: <span class="token-val">#059669</span>;<br>
+                        &nbsp;&nbsp;--rose-400: <span class="token-val">#fb7185</span>;<br>
+                        &nbsp;&nbsp;--rose-600: <span class="token-val">#e11d48</span>;<br>
+                        &nbsp;&nbsp;--amber-400: <span class="token-val">#fbbf24</span>;<br>
+                        &nbsp;&nbsp;--amber-600: <span class="token-val">#d97706</span>;<br>
+                        &nbsp;&nbsp;--violet-400: <span class="token-val">#a78bfa</span>;<br>
+                        &nbsp;&nbsp;--violet-600: <span class="token-val">#7c3aed</span>;<br>
+                        &nbsp;&nbsp;--cyan-400: <span class="token-val">#22d3ee</span>;<br>
+                        &nbsp;&nbsp;--cyan-600: <span class="token-val">#0891b2</span>;<br><br>
 
                         &nbsp;&nbsp;<span class="token-comment">/* Semantic States */</span><br>
                         &nbsp;&nbsp;--success: <span class="token-val">#10b981</span>;<br>
@@ -445,7 +620,19 @@
                     <h2>Buttons</h2>
                     <div class="preview-box">
                         <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;">
-                            <button class="btn-primary">Primary</button>
+                            <button class="btn-primary" style="display:flex; align-items:center; gap:10px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2 3 7l9 5 9-5-9-5Zm0 20-9-5V9l9 5 9-5v8l-9 5Z" />
+                                </svg>
+                                Primary
+                            </button>
+                            <button class="btn-primary orange">Orange</button>
+                            <button class="btn-primary yellow">Yellow</button>
+                            <button class="btn-outline blue">Outline Blue</button>
+                            <button class="btn-cyber violet">Cyber Violet</button>
+                            <button class="btn-secondary">Secondary</button>
+                            <button class="btn-outline">Outline</button>
+                            <button class="btn-ghost">Ghost</button>
                             <button class="btn-glow"><span>Glow Effect</span>
                                 <div class="glow-container">
                                     <div class="glow-circle"></div>
@@ -453,10 +640,18 @@
                             </button>
                             <button class="btn-shine">Shine</button>
                             <button class="btn-grad-border">Gradient</button>
+                            <button class="btn-cyber">Cyber</button>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
-                    <p>Clean, interactive triggers for user actions.</p>
+                    <p>Buttons are the core call-to-action elements in YAKA UI, designed for clarity, hierarchy, and
+                        motion-rich micro-interactions.</p>
+                    <ul style="color: var(--text-muted); margin: 0 0 2rem 1.2rem; line-height: 1.8;">
+                        <li>Use <strong>Primary</strong> for the main action per screen.</li>
+                        <li>Use <strong>Secondary</strong> and <strong>Outline</strong> for supporting actions.</li>
+                        <li>Use <strong>Ghost</strong> for subtle links inside dense UI.</li>
+                        <li>Use <strong>Glow/Cyber</strong> for hero moments and marketing CTAs.</li>
+                    </ul>
 
 
 
@@ -475,7 +670,8 @@
                     </div>
 
                     <h3>2. Visual Styles</h3>
-                    <p style="font-size:0.9rem; color:var(--text-muted);">Base styles to define action priority.</p>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Base styles to define action priority and
+                        intent.</p>
                     <div class="code-block">
                         &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
                             class="token-val">"btn-primary"</span>&gt;Primary&lt;/<span
@@ -487,7 +683,9 @@
                             class="token-val">"btn-outline"</span>&gt;Outline&lt;/<span
                             class="token-tag">button</span>&gt;<br>
                         &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"btn-ghost"</span>&gt;Ghost&lt;/<span class="token-tag">button</span>&gt;
+                            class="token-val">"btn-ghost"</span>&gt;Ghost&lt;/<span class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-cyber"</span>&gt;Cyber&lt;/<span class="token-tag">button</span>&gt;
                     </div>
 
                     <h3>3. Special Effects</h3>
@@ -526,11 +724,61 @@
                             class="token-tag">button</span>&gt;<br><br>
                         <span class="token-comment">&lt;!-- Specialty Styles --&gt;</span><br>
                         &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"btn-organic"</span>&gt;Organic&lt;/<span
+                            class="token-val">"btn-cyber"</span>&gt;Cyber&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>5. Color Variants</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Apply a color utility class alongside the
+                        button class to swap its accent. Example: <code>class="btn-primary orange"</code>.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-primary orange"</span>&gt;Orange&lt;/<span
                             class="token-tag">button</span>&gt;<br>
                         &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"btn-glitch"</span>&gt;Glitch&lt;/<span
+                            class="token-val">"btn-primary yellow"</span>&gt;Yellow&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-outline blue"</span>&gt;Outline Blue&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-cyber violet"</span>&gt;Cyber Violet&lt;/<span
                             class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>6. Icon & Loading Patterns</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Combine icons with text or show progress for
+                        async actions.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Icon + Label --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-secondary"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">span</span> <span
+                            class="token-attr">style</span>=<span class="token-val">"display:inline-flex; align-items:center; gap:8px;"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">svg</span> <span class="token-attr">width</span>=<span class="token-val">"16"</span>
+                        <span class="token-attr">height</span>=<span class="token-val">"16"</span> <span class="token-attr">viewBox</span>=<span class="token-val">"0 0 24 24"</span>
+                        <span class="token-attr">fill</span>=<span class="token-val">"currentColor"</span>&gt;...&lt;/<span
+                            class="token-tag">svg</span>&gt;Download<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">span</span>&gt;<br>
+                        &lt;/<span class="token-tag">button</span>&gt;<br><br>
+                        <span class="token-comment">&lt;!-- Loading State --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-primary"</span> <span class="token-attr">disabled</span>&gt;Processing...&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>7. Accessibility & Layout</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Accessible states and full-width actions.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Disabled + Full Width --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-outline"</span> <span class="token-attr">style</span>=<span
+                            class="token-val">"width:100%;"</span> <span class="token-attr">disabled</span>&gt;Continue&lt;/<span
+                            class="token-tag">button</span>&gt;<br><br>
+                        <span class="token-comment">&lt;!-- ARIA Label for Icon Buttons --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-ghost"</span> <span class="token-attr">aria-label</span>=<span
+                            class="token-val">"Open settings"</span>&gt;⚙️&lt;/<span class="token-tag">button</span>&gt;
                     </div>
                 </section>
             </div>
@@ -552,6 +800,18 @@
                                 <div class="card-content">
                                     <h3>Soft Card</h3>
                                     <p>Subtle depth.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card card-neon">
+                                <div class="card-content">
+                                    <h3>Neon Card</h3>
+                                    <p>High-contrast accent.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card card-gradient">
+                                <div class="card-content">
+                                    <h3>Gradient Card</h3>
+                                    <p>Soft brand blend.</p>
                                 </div>
                             </div>
                         </div>
@@ -585,6 +845,12 @@
                             class="token-tag">div</span>&gt;<br>
                         &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
                             class="token-val">"card glass-card card-soft"</span>&gt;Soft&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card card-neon"</span>&gt;Neon&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card card-gradient"</span>&gt;Gradient&lt;/<span
                             class="token-tag">div</span>&gt;
                     </div>
 
@@ -614,6 +880,39 @@
                 </section>
             </div>
 
+            <!-- Light Theme -->
+            <div id="light-theme" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Light Theme</h2>
+                    <div class="preview-box theme-light" style="align-items:stretch;">
+                        <div class="light-surface" style="padding:2.5rem; border-radius:20px;">
+                            <h3 style="margin-top:0;">Bright UI Surface</h3>
+                            <p style="color:var(--text-muted); margin-bottom:2rem;">Use <code>.theme-light</code> to
+                                flip the system into a light palette. You can apply it globally on the body or scope it
+                                to a component wrapper.</p>
+                            <div style="display:flex; flex-wrap:wrap; gap:16px;">
+                                <button class="btn-primary">Primary</button>
+                                <button class="btn-secondary">Secondary</button>
+                                <button class="btn-outline">Outline</button>
+                            </div>
+                            <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px;">
+                                <span class="badge badge-soft">Neutral</span>
+                                <span class="badge badge-outline">Outline</span>
+                                <span class="badge badge-success">Success</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Apply to body or section --&gt;</span><br>
+                        &lt;<span class="token-tag">body</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"theme-light"</span>&gt;...&lt;/<span class="token-tag">body</span>&gt;<br><br>
+                        <span class="token-comment">/* Optional scoped wrapper */</span><br>
+                        &lt;<span class="token-tag">section</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"theme-light"</span>&gt;...&lt;/<span class="token-tag">section</span>&gt;
+                    </div>
+                </section>
+            </div>
+
             <!-- Inputs -->
             <div id="inputs" class="docs-content-wrapper">
                 <section class="component-section">
@@ -624,10 +923,15 @@
                             <div class="input-minimal"><input type="text" required placeholder=" "><label>Minimal
                                     Focus</label></div>
                             <div class="input-glass"><input type="text" placeholder="Glass Input"></div>
+                            <div class="input-glow"><input type="text" placeholder="Glow Input"></div>
                             <div style="display:flex; gap:20px; justify-content:center;">
                                 <label class="switch-label">
                                     <div class="switch-modern"><input type="checkbox" checked><span
                                             class="slider"></span></div>Switch
+                                </label>
+                                <label class="switch-label">
+                                    <div class="switch-modern switch-pill"><input type="checkbox" checked><span
+                                            class="slider"></span></div>Pill
                                 </label>
                             </div>
                         </div>
@@ -665,7 +969,20 @@
                         &lt;/<span class="token-tag">div</span>&gt;
                     </div>
 
-                    <h3>3. Modern Switches</h3>
+                    <h3>3. Glow Inputs</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Use a soft halo for primary input focus
+                        states.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Glow Input --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"input-glow"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">input</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"text"</span> <span class="token-attr">placeholder</span>=<span
+                            class="token-val">"Project name"</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>4. Modern Switches</h3>
                     <p style="font-size:0.9rem; color:var(--text-muted);">Pure CSS toggles with smooth pill animations
                         and size control.</p>
                     <div class="code-block">
@@ -682,9 +999,14 @@
                         &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
                         &nbsp;&nbsp;Label Text<br>
                         &lt;/<span class="token-tag">label</span>&gt;
+                        <br><br>
+                        <span class="token-comment">&lt;!-- Pill Style --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"switch-modern switch-pill"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
                     </div>
 
-                    <h3>4. Animated Focus</h3>
+                    <h3>5. Animated Focus</h3>
                     <p style="font-size:0.9rem; color:var(--text-muted);">Vector-based interactive borders for
                         high-fidelity states.</p>
                     <div class="code-block">
@@ -714,6 +1036,8 @@
                             <span class="badge badge-pill badge-primary">Pill</span>
                             <span class="badge badge-glass">Glass</span>
                             <span class="badge badge-glow">Glow</span>
+                            <span class="badge badge-outline">Outline</span>
+                            <span class="badge badge-soft">Soft</span>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
@@ -741,6 +1065,12 @@
                             class="token-tag">span</span>&gt;<br>
                         &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
                             class="token-val">"badge badge-glow"</span>&gt;Glow&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-outline"</span>&gt;Outline&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-soft"</span>&gt;Soft&lt;/<span
                             class="token-tag">span</span>&gt;
                     </div>
 
@@ -769,6 +1099,10 @@
                             <img src="https://i.pravatar.cc/150?img=34" class="avatar avatar-lg avatar-squircle"
                                 alt="lg">
                             <img src="https://i.pravatar.cc/150?img=35" class="avatar avatar-lg avatar-glow" alt="glow">
+                            <div class="avatar-status">
+                                <img src="https://i.pravatar.cc/150?img=36" class="avatar avatar-lg avatar-ring"
+                                    alt="ring">
+                            </div>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
@@ -779,7 +1113,12 @@
                         &lt;<span class="token-tag">img</span> <span class="token-attr">class</span>=<span
                             class="token-val">"avatar avatar-squircle"</span>&gt;<br>
                         &lt;<span class="token-tag">img</span> <span class="token-attr">class</span>=<span
-                            class="token-val">"avatar avatar-glow"</span>&gt;
+                            class="token-val">"avatar avatar-glow"</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar-status"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">img</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar avatar-ring"</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
                     </div>
 
                     <h3>2. Social Groups</h3>
@@ -807,6 +1146,7 @@
                             style="display:flex; flex-direction:column; gap:15px; width:100%; max-width:500px; margin:0 auto;">
                             <div class="alert alert-glass">Project successfully updated.</div>
                             <div class="alert alert-minimal alert-success">Simple minimalist success message.</div>
+                            <div class="alert alert-outline alert-info">Outline info alert.</div>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
@@ -819,6 +1159,9 @@
                             class="token-tag">div</span>&gt;<br>
                         &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
                             class="token-val">"alert alert-minimal"</span>&gt;Message&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"alert alert-outline"</span>&gt;Message&lt;/<span
                             class="token-tag">div</span>&gt;
                     </div>
 
@@ -851,6 +1194,11 @@
                                 </div>
                             </div>
                             <div class="skeleton skeleton-rect" style="height:100px;"></div>
+                            <div class="skeleton-card">
+                                <div class="skeleton skeleton-text" style="width:60%;"></div>
+                                <div class="skeleton skeleton-text" style="width:80%;"></div>
+                                <div class="skeleton skeleton-rect" style="height:80px;"></div>
+                            </div>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
@@ -862,6 +1210,9 @@
                             class="token-tag">div</span>&gt;<br>
                         &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
                             class="token-val">"skeleton skeleton-avatar"</span>&gt;&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"skeleton-card"</span>&gt;...&lt;/<span
                             class="token-tag">div</span>&gt;
                     </div>
                 </section>
@@ -887,6 +1238,24 @@
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Accordion stacks reveal content progressively with smooth open/close animation and automatic
+                        icon rotation.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"accordion"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"accordion-item"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"accordion-header"</span>&gt;Title&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"accordion-content"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -907,6 +1276,24 @@
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Tabs swap content without page navigation and keep the interface compact for multi-step flows.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tabs-container"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tabs-header"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"tab-item active"</span> <span
+                            class="token-attr">data-tab</span>=<span class="token-val">"tab-one"</span>&gt;Tab One&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">id</span>=<span
+                            class="token-val">"tab-one"</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tab-content active"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -920,6 +1307,18 @@
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Glassmorphic dialogs with smooth scale entry.</p>
+
+                    <h3>Trigger + Modal</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">data-trigger-modal</span>=<span
+                            class="token-val">"demo-modal"</span>&gt;Open&lt;/<span class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">id</span>=<span
+                            class="token-val">"demo-modal"</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"modal-overlay"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"modal glass-card"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                     <div id="demo-modal" class="modal-overlay">
                         <div class="modal glass-card">
@@ -954,6 +1353,15 @@
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
                     <p>Non-blocking notification system.</p>
 
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        <span class="token-comment">// Types: success | error | info</span><br>
+                        <span class="token-keyword">window</span>.Yaka.showToast(<span
+                            class="token-val">'Saved successfully'</span>, <span class="token-val">'success'</span>);<br>
+                        <span class="token-keyword">window</span>.Yaka.showToast(<span
+                            class="token-val">'Something went wrong'</span>, <span class="token-val">'error'</span>);
+                    </div>
+
                 </section>
             </div>
 
@@ -966,6 +1374,14 @@
                             Detail</button>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Tooltips display lightweight context on hover using the <code>data-tooltip</code> attribute.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">data-tooltip</span>=<span
+                            class="token-val">"Helpful hint"</span>&gt;Hover me&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -985,6 +1401,19 @@
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Dropdown menus toggle on click and close automatically when clicking outside the menu.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"dropdown"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-glow dropdown-trigger"</span>&gt;Menu&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"dropdown-menu"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
 
                 </section>
             </div>
@@ -1256,6 +1685,78 @@
                                 <div class="pricing-price">$29</div><button class="btn-primary">Buy Now</button>
                             </div>
                         </div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="grid-system" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Grid System</h2>
+                    <div class="preview-box">
+                        <div class="grid grid-3" style="width:100%;">
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column A</h3>
+                                    <p>Use <code>.grid</code> with <code>.grid-3</code>.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column B</h3>
+                                    <p>Responsive down to one column.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column C</h3>
+                                    <p>Supports fixed or auto grids.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card grid-span-2">
+                                <div class="card-content">
+                                    <h3>Span 2</h3>
+                                    <p>Use <code>.grid-span-2</code> to span columns.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column D</h3>
+                                    <p>Auto-fit available space.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Powerful layout utilities for dashboards, feature grids, and marketing sections with responsive
+                        behavior baked in.</p>
+
+                    <h3>Basic Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-3"</span>&gt;<br>
+                        &nbsp;&nbsp;... items ...<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Auto-Fit Layout</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-auto"</span>&gt;<br>
+                        &nbsp;&nbsp;... cards ...<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Span Columns</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-4"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card grid-span-2"</span>&gt;Wide&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card"</span>&gt;Item&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
                     </div>
                 </section>
             </div>
