@@ -19,6 +19,10 @@
 ![Stars](https://img.shields.io/github/stars/dill-lk/YAKA-UI?style=social)
 ![Developer](https://img.shields.io/badge/Developed%20By-dill--lk-black?style=flat-square\&logo=github)
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=dill-lk/YAKA-UI&type=date&legend=top-left)](https://www.star-history.com/#dill-lk/YAKA-UI&type=date&legend=top-left)
+
 </div>
 
 ---
