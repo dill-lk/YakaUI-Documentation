@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glass Button Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        /* Global Resets */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+
+        /* Layout Container */
+        .layout-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #030303; 
+            overflow: hidden;
+        }
+
+        /* --- GLOW EFFECTS --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 8rem; 
+            height: 8rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 80%);
+            filter: blur(25px); 
+            opacity: 0.9;
+        }
+
+        .glow-mid {
+            position: absolute;
+            width: 18rem; 
+            height: 14rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            filter: blur(50px);
+        }
+
+        .glow-outer {
+            position: absolute;
+            width: 40rem; 
+            height: 30rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 75%);
+            filter: blur(90px);
+        }
+
+        /* --- GLASS BUTTONS (Based on your Disclosure Card logic) --- */
+        .glass-btn {
+            position: relative;
+            z-index: 1; 
+            width: 100%;
+            max-width: 18rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            user-select: none;
+            outline: none;
+            border-radius: 1rem;
+            
+            /* Your Glass UI Logic */
+            background-color: rgba(255, 255, 255, 0.025); 
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            box-shadow: 
+                0 20px 40px -10px rgba(0, 0, 0, 0.8),
+                inset 0 1px 1px rgba(255, 255, 255, 0.03); 
+            
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .glass-btn:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .glass-btn i {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s ease;
+        }
+
+        .glass-btn:hover i {
+            color: #fff;
+        }
+
+        /* Attribution Footer */
+        .attribution-footer {
+            position: absolute; 
+            bottom: 24px; 
+            color: rgba(255, 255, 255, 0.25); 
+            font-size: 0.75rem; 
+            z-index: 10;
+        }
+
+        .attribution-footer a {
+            color: rgba(255, 255, 255, 0.4); 
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-container">
+        <!-- Glow effects based on your structure -->
+        <div class="glow-wrapper">
+            <div class="glow-outer"></div>
+            <div class="glow-mid"></div>
+            <div class="glow-core" id="followGlow"></div>
+        </div>
+
+        <!-- Buttons using your Glass Logic -->
+        <div class="relative z-10 flex flex-col items-center w-full px-6">
+            
+            <button class="glass-btn" data-anim="bounce">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Upload Assets</span>
+            </button>
+
+            <button class="glass-btn" data-anim="spin">
+                <i class="fa-solid fa-arrows-rotate"></i>
+                <span>Sync Content</span>
+            </button>
+
+            <button class="glass-btn" data-anim="vibrate">
+                <i class="fa-solid fa-bell"></i>
+                <span>Notifications</span>
+            </button>
+
+            <button class="glass-btn" data-anim="pop">
+                <i class="fa-solid fa-heart"></i>
+                <span>Add Favorite</span>
+            </button>
+
+        </div>
+
+        <footer class="attribution-footer">
+            Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk chanthusa</a>
+        </footer> 
+    </div>
+
+    <script>
+        // Track the glow to the mouse for interactivity
+        const glow = document.getElementById('followGlow');
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(glow, {
+                x: e.clientX - window.innerWidth / 2,
+                y: e.clientY - window.innerHeight / 2,
+                duration: 1.5,
+                ease: "power2.out"
+            });
+        });
+
+        // Icon Animation Logic
+        document.querySelectorAll('.glass-btn').forEach(btn => {
+            const icon = btn.querySelector('i');
+            const type = btn.dataset.anim;
+
+            btn.addEventListener('click', () => {
+                // Button Press Effect
+                gsap.to(btn, { scale: 0.96, duration: 0.1, yoyo: true, repeat: 1 });
+
+                // Icon Specific Animations
+                if (type === 'bounce') {
+                    gsap.fromTo(icon, { y: 0 }, { y: -8, duration: 0.2, yoyo: true, repeat: 1, ease: "power2.out" });
+                } 
+                else if (type === 'spin') {
+                    gsap.to(icon, { rotation: "+=360", duration: 0.6, ease: "back.inOut(1.7)" });
+                } 
+                else if (type === 'vibrate') {
+                    gsap.fromTo(icon, { x: -2 }, { x: 2, duration: 0.05, repeat: 5, yoyo: true });
+                } 
+                else if (type === 'pop') {
+                    gsap.fromTo(icon, { scale: 1 }, { scale: 1.5, duration: 0.2, yoyo: true, repeat: 1, ease: "back.out(2)" });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glassmorphism Dropdown</title>
+
+    <!-- External Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Link to our split CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body
+    class="relative min-h-screen w-full bg-transparent flex flex-col items-center justify-start pt-24 overflow-hidden font-['Outfit']">
+    <!-- Atmospheric Foundation -->
+    <div class="bg-system">
+        <div class="atm-glow-master"></div>
+        <div class="atm-glow-bottom"></div>
+        <div class="atm-layer-noise"></div>
+    </div>
+
+    <!-- Main Container for Dropdown -->
+    <div class="z-10 w-full max-w-[280px] px-8 flex justify-end">
+        <div class="relative inline-block text-left" id="menuRoot">
+
+            <!-- External Glow Effect: Triggered via JS on menu open -->
+            <div id="mainGlow" class="glow-transition absolute top-full right-0 translate-y-20 -translate-x-20 z-0">
+                <div
+                    class="absolute w-[8rem] h-[8rem] bg-white/40 blur-[25px] rounded-full -translate-x-1/2 -translate-y-1/2">
+                </div>
+                <div
+                    class="absolute w-[20rem] h-[16rem] bg-white/[0.02] blur-[80px] rounded-full -translate-x-1/2 -translate-y-1/2">
+                </div>
+            </div>
+
+            <!-- Trigger Button Section -->
+            <div class="relative inline-block">
+                <!-- Inner button light source for a depth effect -->
+                <div id="btnGlow"
+                    class="absolute inset-0 m-auto w-1/2 h-1/2 bg-white/30 blur-[10px] rounded-full pointer-events-none opacity-0 transition-opacity duration-500">
+                </div>
+
+                <button id="menuButton" class="
+                    relative z-20 inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-[14px] font-medium text-white/90
+                    bg-white/[0.01] backdrop-blur-3xl 
+                    border-[1.5px] border-white/[0.06] border-t-white/[0.22] border-l-white/[0.12]
+                    shadow-[0_1px_3px_rgba(0,0,0,0.3)]
+                    hover:bg-white/[0.04] hover:border-white/25 transition-all duration-300
+                    focus:outline-none
+                ">
+                    <span class="relative z-10 tracking-tight">Options</span>
+                    <!-- Chevron icon rotates 180deg when active -->
+                    <i id="chevron"
+                        class="ph ph-caret-down relative z-10 text-[12px] opacity-50 transition-transform duration-300"></i>
+                </button>
+            </div>
+
+            <!-- The Dropdown Panel (Glassmorphic) -->
+            <div id="menuItems"
+                class="absolute right-0 w-52 mt-3 glass-panel rounded-[1.75rem] p-2 text-[14px] text-white/70 z-10">
+                <!-- Group 1: Actions -->
+                <div class="space-y-0.5">
+                    <button
+                        class="menu-item group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white">
+                        <div class="icon-box">
+                            <i class="ph-duotone ph-pencil-circle"></i>
+                        </div>
+                        <span class="font-normal">Edit Post</span>
+                    </button>
+
+                    <button
+                        class="menu-item group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white">
+                        <div class="icon-box">
+                            <i class="ph-duotone ph-copy"></i>
+                        </div>
+                        <span class="font-normal">Duplicate</span>
+                    </button>
+                </div>
+
+                <!-- Minimalist Separator -->
+                <div class="menu-item my-2 h-[1px] bg-white/[0.05] mx-4"></div>
+
+                <!-- Group 2: Management -->
+                <div class="space-y-0.5">
+                    <button
+                        class="menu-item group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white">
+                        <div class="icon-box">
+                            <i class="ph-duotone ph-archive"></i>
+                        </div>
+                        <span class="font-normal">Archive</span>
+                    </button>
+
+                    <button
+                        class="menu-item group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-red-500/10 hover:text-red-400">
+                        <div class="icon-box icon-box-delete">
+                            <i class="ph-duotone ph-trash icon-delete"></i>
+                        </div>
+                        <span class="font-normal">Delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Link to our split JS file -->
+    <script src="script.js"></script>
+</body>
+
+</html>

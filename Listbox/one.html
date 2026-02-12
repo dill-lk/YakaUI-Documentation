@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Listbox Component</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #030303;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            color: white;
+            padding-top: 5rem;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 20rem; 
+            height: 20rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0.85; }
+        }
+
+        /* --- LISTBOX STYLING --- */
+        .listbox-container {
+            position: relative;
+            z-index: 10;
+            width: 13rem; /* 52 in tailwind */
+        }
+
+        .listbox-button {
+            width: 100%;
+            text-align: left;
+            padding: 0.375rem 2rem 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            outline: none;
+        }
+
+        .listbox-button:focus {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+        }
+
+        .chevron-icon {
+            position: absolute;
+            right: 0.625rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+            pointer-events: none;
+        }
+
+        .listbox-options {
+            position: absolute;
+            top: calc(100% + 0.25rem);
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            padding: 0.25rem;
+            z-index: 50;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .listbox-options.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .listbox-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+            user-select: none;
+        }
+
+        .listbox-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .check-icon {
+            font-size: 0.75rem;
+            width: 1rem;
+            visibility: hidden;
+        }
+
+        .listbox-option.selected .check-icon {
+            visibility: visible;
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Glow -->
+    <div class="glow-wrapper">
+        <div class="glow-core"></div>
+    </div>
+
+    <!-- Main Component Container -->
+    <div class="listbox-container" id="listbox">
+        <button class="listbox-button" id="listboxBtn">
+            <span id="selectedName">Wade Cooper</span>
+            <i class="fa-solid fa-chevron-down chevron-icon"></i>
+        </button>
+
+        <div class="listbox-options" id="listboxOptions">
+            <!-- Populated via JS -->
+        </div>
+    </div>
+
+    <!-- Attribution Footer -->
+    <footer>
+        Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk chanthusa</a>
+    </footer>
+
+    <script>
+        const people = [
+            { id: 1, name: 'Tom Cook' },
+            { id: 2, name: 'Wade Cooper' },
+            { id: 3, name: 'Tanya Fox' },
+            { id: 4, name: 'Arlene Mccoy' },
+            { id: 5, name: 'Devon Webb' },
+        ];
+
+        let selected = people[1];
+        const btn = document.getElementById('listboxBtn');
+        const optionsContainer = document.getElementById('listboxOptions');
+        const selectedNameLabel = document.getElementById('selectedName');
+
+        function renderOptions() {
+            optionsContainer.innerHTML = '';
+            people.forEach(person => {
+                const opt = document.createElement('div');
+                opt.className = `listbox-option ${person.id === selected.id ? 'selected' : ''}`;
+                opt.innerHTML = `
+                    <i class="fa-solid fa-check check-icon"></i>
+                    <span>${person.name}</span>
+                `;
+                opt.onclick = (e) => {
+                    e.stopPropagation();
+                    selected = person;
+                    selectedNameLabel.innerText = person.name;
+                    renderOptions();
+                    toggleOptions();
+                };
+                optionsContainer.appendChild(opt);
+            });
+        }
+
+        function toggleOptions() {
+            const isOpen = optionsContainer.classList.contains('show');
+            if (isOpen) {
+                optionsContainer.classList.remove('show');
+            } else {
+                optionsContainer.classList.add('show');
+            }
+        }
+
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            toggleOptions();
+        };
+
+        window.onclick = () => {
+            optionsContainer.classList.remove('show');
+        };
+
+        // Initial Render
+        renderOptions();
+        
+        // Entry Animation
+        window.onload = () => {
+            gsap.from("#listbox", {
+                opacity: 0,
+                y: 10,
+                duration: 1,
+                ease: "power3.out"
+            });
+        };
+    </script>
+</body>
+</html>

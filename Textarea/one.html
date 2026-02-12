@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Select Component</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #030303;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 25rem; 
+            height: 25rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* --- COMPONENT STYLING --- */
+        .container-box {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 28rem;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            opacity: 0; /* For GSAP */
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .description {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .select-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .input-base {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.6rem 0.9rem;
+            color: #fff;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-base:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .select-input {
+            appearance: none;
+            cursor: pointer;
+            padding-right: 2.5rem;
+        }
+
+        .select-input option {
+            background-color: #111;
+            color: #fff;
+        }
+
+        .chevron-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .select-input:focus + .chevron-icon {
+            transform: translateY(-50%) rotate(180deg);
+            color: #fff;
+        }
+
+        .textarea-input {
+            resize: none;
+            display: block;
+            margin-top: 0.75rem;
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Glow -->
+    <div class="glow-wrapper">
+        <div class="glow-core"></div>
+    </div>
+
+    <!-- Container -->
+    <div class="container-box">
+        <!-- Project Status Field -->
+        <div class="field">
+            <label class="label">Project status</label>
+            <p class="description">This will be visible to clients on the project.</p>
+            
+            <div class="select-wrapper">
+                <select class="input-base select-input">
+                    <option value="active">Active</option>
+                    <option value="paused">Paused</option>
+                    <option value="delayed">Delayed</option>
+                    <option value="canceled">Canceled</option>
+                </select>
+                <i class="fa-solid fa-chevron-down chevron-icon"></i>
+            </div>
+        </div>
+
+        <!-- Description Field -->
+        <div class="field">
+            <label class="label">Description</label>
+            <p class="description">This will be shown under the product title.</p>
+            <textarea class="input-base textarea-input" rows="3"></textarea>
+        </div>
+    </div>
+
+    <!-- Attribution Footer -->
+    <footer>
+        Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk chanthusa</a>
+    </footer>
+
+    <script>
+        // Entrance Animation
+        window.onload = () => {
+            gsap.to(".container-box", {
+                opacity: 1,
+                y: 0,
+                startAt: { y: 20 },
+                duration: 1,
+                ease: "power3.out"
+            });
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glass Checkboxes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Atmospheric Foundation -->
+    <div class="bg-system">
+        <div class="atm-glow-master"></div>
+        <div class="atm-glow-bottom"></div>
+        <div class="atm-layer-noise"></div>
+    </div>
+
+    <div class="glass-card">
+
+        <!-- Standard Checkbox -->
+        <label class="row">
+            <div class="label-content">
+                <i class="fa-solid fa-cloud"></i>
+                <div class="text-group">
+                    <span class="title">Sync Data</span>
+                    <span class="subtitle">Cloud-native glass check</span>
+                </div>
+            </div>
+            <div class="cb-square">
+                <input type="checkbox" checked>
+                <div class="box"><i class="fa-solid fa-check"></i></div>
+            </div>
+        </label>
+
+        <!-- Switch Toggle -->
+        <label class="row">
+            <div class="label-content">
+                <i class="fa-solid fa-bolt"></i>
+                <div class="text-group">
+                    <span class="title">Turbo Mode</span>
+                    <span class="subtitle">Peak performance</span>
+                </div>
+            </div>
+            <div class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </div>
+        </label>
+
+        <!-- Radio Selection -->
+        <label class="row">
+            <div class="label-content">
+                <i class="fa-solid fa-fingerprint"></i>
+                <div class="text-group">
+                    <span class="title">Biometrics</span>
+                    <span class="subtitle">Radio dot verification</span>
+                </div>
+            </div>
+            <div class="cb-square">
+                <input type="checkbox">
+                <div class="dot-outer">
+                    <div class="dot-inner"></div>
+                </div>
+            </div>
+        </label>
+
+        <!-- Minimal Box -->
+        <label class="row">
+            <div class="label-content">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div class="text-group">
+                    <span class="title">Privacy Lock</span>
+                    <span class="subtitle">Encrypted states</span>
+                </div>
+            </div>
+            <div class="cb-square">
+                <input type="checkbox">
+                <div class="box"><i class="fa-solid fa-check"></i></div>
+            </div>
+        </label>
+
+    </div>
+
+
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

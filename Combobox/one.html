@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glass Combobox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        /* --- Global Resets --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+
+        .layout-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: #030303; 
+            overflow: hidden;
+            padding-top: 6rem; /* Top alignment */
+        }
+
+        /* --- CENTERED WHITE CIRCLE GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 22rem; 
+            height: 22rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.85;
+            animation: pulse 8s infinite ease-in-out;
+        }
+
+        .glow-outer {
+            position: absolute;
+            width: 45rem; 
+            height: 45rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 75%);
+            filter: blur(140px);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0.9; }
+        }
+
+        /* --- TRANSLUCENT COMBOBOX --- */
+        .combobox-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 22rem; 
+        }
+
+        .combobox-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .combobox-input {
+            width: 100%;
+            border-radius: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            padding: 1rem 3rem 1rem 1.5rem;
+            font-size: 1rem;
+            color: #fff;
+            outline: none;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            letter-spacing: -0.01em;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .combobox-input:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .combobox-button {
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s;
+        }
+
+        .combobox-button:hover { color: #fff; }
+
+        /* --- TRANSLUCENT POPUP --- */
+        .combobox-options {
+            position: absolute;
+            top: calc(100% + 0.75rem);
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 0.6rem;
+            z-index: 50;
+            /* INCREASED HEIGHT TO DISPLAY ALL NAMES */
+            max-height: 28rem; 
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            transform-origin: top;
+        }
+
+        .combobox-options.show { display: block; }
+
+        .combobox-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem; /* Slightly more vertical padding */
+            border-radius: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .combobox-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .combobox-option.selected {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .combobox-option i {
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .combobox-option.selected i { opacity: 1; }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        .combobox-options::-webkit-scrollbar { width: 4px; }
+        .combobox-options::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+
+        /* --- FOOTER --- */
+        footer {
+            position: absolute; 
+            bottom: 25px; 
+            color: rgba(255,255,255,0.25); 
+            font-size: 0.85rem; 
+            z-index: 10;
+        }
+        footer a { color: rgba(255,255,255,0.4); text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="layout-container">
+        <!-- Centered Background Glow -->
+        <div class="glow-wrapper">
+            <div class="glow-outer"></div>
+            <div class="glow-core"></div>
+        </div>
+
+        <!-- Floating Combobox -->
+        <div class="combobox-container" id="combobox">
+            <div class="combobox-input-wrapper">
+                <input type="text" class="combobox-input" id="comboInput" placeholder="Search team..." autocomplete="off">
+                <button class="combobox-button" id="comboButton">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+            </div>
+            <div class="combobox-options" id="comboOptions">
+                <!-- JavaScript populates -->
+            </div>
+        </div>
+
+        <footer>
+            Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk Chanthusa</a>
+        </footer>
+    </div>
+
+    <script>
+        const people = [
+            { id: 1, name: 'Tom Cook' },
+            { id: 2, name: 'Wade Cooper' },
+            { id: 3, name: 'Tanya Fox' },
+            { id: 4, name: 'Jinuk Chanthusa' },
+            
+          
+        ];
+
+        let selectedPerson = null; 
+        const comboInput = document.getElementById('comboInput');
+        const comboOptions = document.getElementById('comboOptions');
+        const comboButton = document.getElementById('comboButton');
+
+        function renderOptions(filter = '') {
+            const filtered = people.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+            comboOptions.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'p-4 text-sm text-white/30 text-center italic';
+                empty.innerText = 'No results found';
+                comboOptions.appendChild(empty);
+                return;
+            }
+
+            filtered.forEach(person => {
+                const opt = document.createElement('div');
+                opt.className = `combobox-option ${person.id === selectedPerson?.id ? 'selected' : ''}`;
+                opt.innerHTML = `<span>${person.name}</span><i class="fa-solid fa-check"></i>`;
+                opt.onclick = (e) => {
+                    e.stopPropagation();
+                    selectedPerson = person;
+                    comboInput.value = person.name;
+                    closeDropdown();
+                };
+                comboOptions.appendChild(opt);
+            });
+        }
+
+        function openDropdown() {
+            comboOptions.classList.add('show');
+            renderOptions(comboInput.value);
+            gsap.fromTo(comboOptions, 
+                { opacity: 0, y: -15, scale: 0.95 }, 
+                { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.7)" }
+            );
+        }
+
+        function closeDropdown() {
+            if (!comboOptions.classList.contains('show')) return;
+            gsap.to(comboOptions, { 
+                opacity: 0, 
+                y: -10, 
+                scale: 0.98,
+                duration: 0.2, 
+                onComplete: () => {
+                    comboOptions.classList.remove('show');
+                    if (selectedPerson) comboInput.value = selectedPerson.name;
+                }
+            });
+        }
+
+        comboInput.onfocus = openDropdown;
+        comboInput.oninput = (e) => {
+            if (!comboOptions.classList.contains('show')) openDropdown();
+            renderOptions(e.target.value);
+        };
+
+        comboButton.onclick = (e) => {
+            e.stopPropagation();
+            comboOptions.classList.contains('show') ? closeDropdown() : openDropdown();
+        };
+
+        document.onclick = (e) => {
+            if (!document.getElementById('combobox').contains(e.target)) closeDropdown();
+        };
+    </script>
+</body>
+</html>

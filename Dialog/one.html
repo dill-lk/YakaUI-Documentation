@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glassmorphism Dialog</title>
+    
+    <!-- Tailwind for layout only -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        /* --- PURE GLASS CSS ONLY --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- CONSTRAINED DYNAMIC GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -45%); /* Aligned with button */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .glow-active {
+            transform: translate(-50%, -50%); /* Aligned with popup */
+        }
+
+        .glow-core {
+            position: absolute;
+            /* Tightened to vanish residue behind button */
+            width: 4rem; 
+            height: 4rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            filter: blur(15px); 
+            opacity: 0; /* Fully invisible when button is shown */
+            transition: all 0.3s ease;
+        }
+
+        /* Glow only appears and expands for the popup */
+        .glow-active .glow-core {
+            width: 18rem; 
+            height: 18rem;
+            opacity: 0.8;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, transparent 75%);
+            filter: blur(45px);
+        }
+
+        .glow-mid {
+            position: absolute;
+            width: 15rem; 
+            height: 15rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+            filter: blur(50px);
+            opacity: 0; /* Vanish residue */
+            transition: opacity 0.3s ease;
+        }
+
+        .glow-active .glow-mid {
+            opacity: 1;
+        }
+
+        /* --- TRIGGER BUTTON --- */
+        #openBtn {
+            position: relative;
+            z-index: 10;
+            padding: 0.6rem 1.4rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #fff;
+            border-radius: 0.6rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        #openBtn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* --- DIALOG PANEL --- */
+        #dialogOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 40;
+            display: none;
+            backdrop-filter: blur(8px);
+        }
+
+        #dialogContainer {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .dialog-panel {
+            position: relative;
+            width: 100%;
+            max-width: 30rem;
+            padding: 2rem;
+            
+            background-color: rgba(255, 255, 255, 0.01); 
+            backdrop-filter: blur(50px) saturate(210%);
+            -webkit-backdrop-filter: blur(50px) saturate(210%);
+            
+            /* Reflected Light Border */
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-top: 1px solid rgba(255, 255, 255, 0.22); 
+            border-radius: 1.5rem;
+            
+            box-shadow: 
+                0 50px 100px -20px rgba(0, 0, 0, 1),
+                inset 0 1px 0px rgba(255, 255, 255, 0.05); 
+        }
+
+        .dialog-title {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #fff;
+            letter-spacing: -0.01em;
+        }
+
+        .dialog-message {
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        /* Got it button: Translucent & Glassy */
+        .confirm-btn {
+            margin-top: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border-radius: 0.6rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .confirm-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .hidden-element {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+   <div class="layout-container">
+    <!-- Minimal Spotlight Glow -->
+    <div id="glowWrapper" class="glow-wrapper">
+        <div class="glow-mid"></div>
+        <div class="glow-core"></div>
+    </div>
+
+    <!-- Trigger -->
+    <button id="openBtn">Open dialog</button>
+
+    <!-- Dialog -->
+    <div id="dialogOverlay"></div>
+    <div id="dialogContainer">
+        <div class="dialog-panel">
+            <h3 class="dialog-title">Payment successful</h3>
+            <p class="dialog-message">
+                Your payment has been successfully submitted. We’ve sent you an email with all of the details of your order.
+            </p>
+            <button id="closeBtn" class="confirm-btn">Got it, thanks!</button>
+        </div>
+    </div>
+   
+        <!-- Attribution Footer -->
+       <footer style="position: absolute; bottom: 20px; color: rgba(255,255,255,0.3); font-size: 0.8rem; z-index: 10;">
+            Created by <a href="https://github.com/dill-lk" target="_blank" style="color: rgba(255,255,255,0.5); text-decoration: none;">Jinuk chanthusa</a>
+        </footer> 
+    </div>
+
+    <script>
+        const openBtn = document.getElementById('openBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const overlay = document.getElementById('dialogOverlay');
+        const container = document.getElementById('dialogContainer');
+        const glowWrapper = document.getElementById('glowWrapper');
+
+        function openModal() {
+            container.style.display = 'flex';
+            overlay.style.display = 'block';
+            openBtn.classList.add('hidden-element');
+            glowWrapper.classList.add('glow-active'); 
+        }
+
+        function closeModal() {
+            container.style.display = 'none';
+            overlay.style.display = 'none';
+            openBtn.classList.remove('hidden-element');
+            glowWrapper.classList.remove('glow-active'); 
+        }
+
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', closeModal);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

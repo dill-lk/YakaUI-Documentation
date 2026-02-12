@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glass Button Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="layout-container">
+        <!-- Glow effects based on your structure -->
+        <div class="glow-wrapper">
+            <div class="glow-outer"></div>
+            <div class="glow-mid"></div>
+            <div class="glow-core" id="followGlow"></div>
+        </div>
+
+        <!-- Buttons using your Glass Logic -->
+        <div class="relative z-10 flex flex-col items-center w-full px-6">
+
+            <button class="glass-btn" data-anim="bounce">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Upload Assets</span>
+            </button>
+
+            <button class="glass-btn" data-anim="spin">
+                <i class="fa-solid fa-arrows-rotate"></i>
+                <span>Sync Content</span>
+            </button>
+
+            <button class="glass-btn" data-anim="vibrate">
+                <i class="fa-solid fa-bell"></i>
+                <span>Notifications</span>
+            </button>
+
+            <button class="glass-btn" data-anim="pop">
+                <i class="fa-solid fa-heart"></i>
+                <span>Add Favorite</span>
+            </button>
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

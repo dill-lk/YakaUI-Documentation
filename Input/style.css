@@ -1,0 +1,133 @@
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background-color: transparent;
+    /* Updated for atmosphere */
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* --- THE MASTER ATMOSPHERIC ENGINE --- */
+.bg-system {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: #000;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.atm-glow-master {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1920px;
+    height: 100vh;
+    background-image: url('../bg-top.c54a3f7e.jpg');
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% auto;
+    opacity: 1;
+    mix-blend-mode: screen;
+    z-index: 1;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.atm-glow-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 800px;
+    background-image: url('../bg-bottom.e4e0724b.jpg');
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: cover;
+    opacity: 0.8;
+    mix-blend-mode: screen;
+    z-index: 1;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+}
+
+.atm-layer-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background-image: url('../bg-noise.67fd2524.png');
+    background-repeat: repeat;
+    opacity: 0.04;
+    pointer-events: none;
+}
+
+/* --- GLASS COMPONENT STYLING --- */
+.field-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 28rem;
+    padding: 2.5rem;
+
+    /* Transparent Backdrop */
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.5rem;
+}
+
+.description {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5rem;
+    margin-top: 0.1rem;
+}
+
+.input-field {
+    width: 100%;
+    margin-top: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    color: #fff;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-field:focus {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.1);
+}

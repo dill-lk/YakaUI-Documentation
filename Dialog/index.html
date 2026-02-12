@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glassmorphism Dialog</title>
+    <!-- Tailwind for layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="layout-container">
+        <!-- Minimal Spotlight Glow -->
+        <!-- Atmospheric Foundation -->
+        <div class="bg-system">
+            <div class="atm-glow-master"></div>
+            <div class="atm-glow-bottom"></div>
+            <div class="atm-layer-noise"></div>
+        </div>
+
+        <!-- Trigger -->
+        <button id="openBtn">Open dialog</button>
+
+        <!-- Dialog -->
+        <div id="dialogOverlay"></div>
+        <div id="dialogContainer">
+            <div class="dialog-panel">
+                <h3 class="dialog-title">Payment successful</h3>
+                <p class="dialog-message">
+                    Your payment has been successfully submitted. We’ve sent you an email with all of the details of
+                    your order.
+                </p>
+                <button id="closeBtn" class="confirm-btn">Got it, thanks!</button>
+            </div>
+        </div>
+
+
+        <!-- Attribution Footer -->
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

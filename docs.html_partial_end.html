@@ -1,0 +1,45 @@
+const tid = link.getAttribute('data-target');
+if (tid) {
+e.preventDefault();
+activateSection(tid);
+
+// Update URL
+const url = new URL(window.location);
+url.searchParams.set('tab', tid);
+history.pushState({}, '', url);
+}
+});
+});
+
+// Initial load from URL
+const params = new URLSearchParams(window.location.search);
+const tab = params.get('tab') || 'getting-started';
+activateSection(tab);
+}
+
+// Run
+if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', initDocs);
+} else {
+initDocs();
+}
+
+// Back to top
+const btt = document.createElement('button');
+btt.className = 'back-to-top';
+btt.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="m18 15-6-6-6 6" />
+</svg>`;
+document.body.appendChild(btt);
+
+window.addEventListener('scroll', () => {
+if (window.scrollY > 400) btt.classList.add('visible');
+else btt.classList.remove('visible');
+});
+
+btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>
+</body>
+
+</html>

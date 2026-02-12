@@ -1,0 +1,145 @@
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+/* --- THE MASTER ATMOSPHERIC ENGINE --- */
+.bg-system {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: #000;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.atm-glow-master {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1920px;
+    height: 100vh;
+    background-image: url('../bg-top.c54a3f7e.jpg');
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% auto;
+    opacity: 1;
+    mix-blend-mode: screen;
+    z-index: 1;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.atm-glow-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 800px;
+    background-image: url('../bg-bottom.e4e0724b.jpg');
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: cover;
+    opacity: 0.8;
+    mix-blend-mode: screen;
+    z-index: 1;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+}
+
+.atm-layer-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background-image: url('../bg-noise.67fd2524.png');
+    background-repeat: repeat;
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+/* --- Glassmorphic Panel --- */
+.glass-panel {
+    /* Transparent Backdrop */
+    background-color: rgba(255, 255, 255, 0.001);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+
+    /* 1.5px border for sharpness on dark backgrounds */
+    border: 1.5px solid rgba(255, 255, 255, 0.05);
+
+    /* Multi-sided border colors create a "light source" reflection effect */
+    border-top-color: rgba(255, 255, 255, 0.15);
+    border-left-color: rgba(255, 255, 255, 0.1);
+
+    /* Deep shadow for elevation */
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.98),
+        inset 0 1px 2px rgba(255, 255, 255, 0.02);
+}
+
+/* --- Glow Animations --- */
+.glow-transition {
+    transition: opacity 700ms ease-out;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.glow-transition.active {
+    opacity: 1;
+}
+
+.btn-glow-active {
+    opacity: 1 !important;
+}
+
+/* --- Icon Styling --- */
+.icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+/* Hover state for circular icon containers */
+.group:hover .icon-box {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.ph-duotone {
+    font-size: 1.1rem;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+/* Intensify icon opacity on hover */
+.group:hover .ph-duotone {
+    opacity: 1;
+}
+
+/* --- Specialized Red State for Delete --- */
+.group:hover .icon-box-delete {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.group:hover .icon-delete {
+    color: #f87171;
+    opacity: 1;
+}
+
+/* Initial GSAP hidden state */
+#menuItems {
+    opacity: 0;
+    visibility: hidden;
+    transform-origin: top right;
+}

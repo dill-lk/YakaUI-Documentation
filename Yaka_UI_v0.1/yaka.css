@@ -1,0 +1,648 @@
+/**
+ * YAKA UI - Framework CSS
+ * Premium Glassmorphic Component Library
+ * Created by Jinuk Chanthusa (https://github.com/dill-lk)
+ * 
+ * Components: Buttons, Checkbox, Combobox, Dialog, Disclosure, Dropdown,
+ *             Fieldset, Input, Listbox, Popover, Radio Group, Select, 
+ *             Tabs, Textarea, Transition
+ */
+
+/* ========================================
+   GOOGLE FONTS
+   ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+/* ========================================
+   GLOBAL RESETS
+   ======================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #030303;
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    color: white;
+}
+
+/* ========================================
+   LAYOUT CONTAINERS
+   ======================================== */
+.layout-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #030303;
+    overflow: hidden;
+}
+
+/* ========================================
+   GLOW SYSTEM (3-Layer Radial Gradient)
+   ======================================== */
+.glow-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.glow-core {
+    position: absolute;
+    width: 8rem;
+    height: 8rem;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 80%);
+    filter: blur(25px);
+    opacity: 0.9;
+}
+
+.glow-mid {
+    position: absolute;
+    width: 18rem;
+    height: 14rem;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    filter: blur(50px);
+}
+
+.glow-outer {
+    position: absolute;
+    width: 40rem;
+    height: 30rem;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 75%);
+    filter: blur(90px);
+}
+
+/* Pulsing Animation for Glow */
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 0.85;
+    }
+}
+
+.glow-core.pulse {
+    animation: pulse 10s infinite ease-in-out;
+}
+
+/* ========================================
+   GLASSMORPHISM BASE STYLES
+   ======================================== */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1.5rem;
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(45px) saturate(210%);
+    -webkit-backdrop-filter: blur(45px) saturate(210%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1.5rem;
+    box-shadow:
+        0 40px 100px -20px rgba(0, 0, 0, 0.9),
+        inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+.glass-btn {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 18rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.025);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow:
+        0 20px 40px -10px rgba(0, 0, 0, 0.8),
+        inset 0 1px 1px rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.glass-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.glass-btn i {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.3s ease;
+}
+
+.glass-btn:hover i {
+    color: #fff;
+}
+
+.btn-action {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-action:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* ========================================
+   FORM INPUTS (Base Styles)
+   ======================================== */
+.input-base {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.9rem;
+    color: #fff;
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-base:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.input-field {
+    width: 100%;
+    margin-top: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    color: #fff;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-field:focus {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   SELECT DROPDOWNS
+   ======================================== */
+.select-wrapper {
+    position: relative;
+}
+
+.select-input {
+    appearance: none;
+    cursor: pointer;
+}
+
+.select-input option {
+    background-color: #111;
+    color: #fff;
+}
+
+.chevron-icon {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.select-input:focus+.chevron-icon {
+    transform: translateY(-50%) rotate(180deg);
+    color: #fff;
+}
+
+/* ========================================
+   CHECKBOXES
+   ======================================== */
+.cb-square {
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.cb-square input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1.5rem;
+    width: 1.5rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input:checked~.box {
+    background: #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    border-color: #fff;
+}
+
+.box i {
+    color: #000;
+    font-size: 0.75rem;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+input:checked~.box i {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    width: 2.6rem;
+    height: 1.4rem;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.08);
+    transition: .4s;
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 1rem;
+    width: 1rem;
+    left: 3px;
+    bottom: 2.5px;
+    background-color: rgba(255, 255, 255, 0.4);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+input:checked+.slider:before {
+    transform: translateX(1.1rem);
+    background-color: #fff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+}
+
+/* Radio Dot */
+.dot-outer {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.dot-inner {
+    width: 0.6rem;
+    height: 0.6rem;
+    background: #fff;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 12px #fff;
+}
+
+input:checked~.dot-outer {
+    border-color: #fff;
+}
+
+input:checked~.dot-outer .dot-inner {
+    transform: scale(1);
+}
+
+/* ========================================
+   RADIO GROUP
+   ======================================== */
+.radio-option {
+    position: relative;
+    cursor: pointer;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    outline: none;
+}
+
+.radio-option:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.radio-option.checked {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.radio-option.checked .check-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.check-icon {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+/* ========================================
+   DROPDOWN MENU
+   ======================================== */
+.menu-item {
+    transition: all 0.3s ease;
+}
+
+.icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.group:hover .icon-box {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.ph-duotone {
+    font-size: 1.1rem;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.group:hover .ph-duotone {
+    opacity: 1;
+}
+
+/* ========================================
+   DISCLOSURE / ACCORDION
+   ======================================== */
+.disclosure-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 30rem;
+    background-color: rgba(255, 255, 255, 0.025);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    box-shadow:
+        0 30px 60px -12px rgba(0, 0, 0, 0.9),
+        inset 0 1px 1px rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+}
+
+.disclosure-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+}
+
+.disclosure-item:last-child {
+    border-bottom: none;
+}
+
+summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 1.75rem;
+    width: 100%;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    outline: none;
+    background: transparent;
+    transition: background-color 0.3s ease;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+summary:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.chevron {
+    width: 0.9rem;
+    height: 0.9rem;
+    fill: rgba(255, 255, 255, 0.4);
+    transform-origin: center;
+}
+
+details[open] summary .chevron {
+    fill: #fff;
+}
+
+/* ========================================
+   TABS
+   ======================================== */
+.tab-btn {
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.tab-content {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}
+
+.tab-content.active {
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+}
+
+/* ========================================
+   LABELS & TYPOGRAPHY
+   ======================================== */
+.label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.description {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.title-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: -0.01em;
+}
+
+.plan-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.25rem;
+}
+
+.plan-details {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* ========================================
+   FOOTER / ATTRIBUTION
+   ======================================== */
+footer,
+.attribution-footer {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+    z-index: 10;
+}
+
+footer a,
+.attribution-footer a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+footer a:hover,
+.attribution-footer a:hover {
+    color: #fff;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.hidden-element {
+    display: none !important;
+}
+
+.glow-active {
+    opacity: 1 !important;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+/* ========================================
+   END OF YAKA UI FRAMEWORK
+   ======================================== */

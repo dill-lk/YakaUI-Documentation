@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glassmorphism UI</title>
+    <!-- Tailwind for layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="pt-24">
+
+    <!-- Global Dynamic Spotlight (Centered exactly behind the panel) -->
+    <div id="glowWrapper" class="glow-wrapper">
+        <div id="glowContainer" class="glow-container">
+            <div class="glow-mid"></div>
+            <div class="glow-core"></div>
+        </div>
+    </div>
+
+    <!-- Navigation Section -->
+    <nav class="relative z-20 flex gap-12 items-center">
+
+        <div class="text-sm font-semibold text-white/40 cursor-default hover:text-white transition-colors duration-300">
+            Products</div>
+
+        <!-- Solutions Popover -->
+        <div class="relative popover-container">
+            <button id="solutionsTrigger" class="nav-btn popover-trigger">Solutions</button>
+            <div id="solutionsPanel" class="popover-panel glass-panel divide-y divide-white/5">
+                <div class="p-4">
+                    <a href="#" class="popover-link">
+                        <p class="font-semibold text-white text-base">Insights</p>
+                        <p class="text-xs text-white/40">Measure actions your users take</p>
+                    </a>
+                    <a href="#" class="popover-link mt-2">
+                        <p class="font-semibold text-white text-base">Automations</p>
+                        <p class="text-xs text-white/40">Create your own targeted content</p>
+                    </a>
+                </div>
+                <div class="p-4">
+                    <a href="#" class="popover-link">
+                        <p class="font-semibold text-white text-base">Documentation</p>
+                        <p class="text-xs text-white/40">Start integrating tools</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm font-semibold text-white/40 cursor-default hover:text-white transition-colors duration-300">
+            Pricing</div>
+
+    </nav>
+
+    <!-- Attribution Footer -->
+    <footer style="position: absolute; bottom: 30px; color: rgba(255,255,255,0.25); font-size: 0.8rem; z-index: 10;">
+        Created by <a href="https://github.com/dill-lk" target="_blank"
+            style="color: rgba(255,255,255,0.4); text-decoration: none; border-bottom: 1px solid transparent; transition: border 0.3s;"
+            onmouseover="this.style.borderBottom='1px solid rgba(255,255,255,0.4)'"
+            onmouseout="this.style.borderBottom='1px solid transparent'">Jinuk chanthusa</a>
+    </footer>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>

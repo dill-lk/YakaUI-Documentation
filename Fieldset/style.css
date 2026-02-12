@@ -1,0 +1,159 @@
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background-color: transparent;
+    /* Updated for atmosphere */
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* --- THE MASTER ATMOSPHERIC ENGINE --- */
+.bg-system {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: #000;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.atm-glow-master {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1920px;
+    height: 100vh;
+    background-image: url('../bg-top.c54a3f7e.jpg');
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% auto;
+    opacity: 1;
+    mix-blend-mode: screen;
+    z-index: 1;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.atm-glow-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 800px;
+    background-image: url('../bg-bottom.e4e0724b.jpg');
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: cover;
+    opacity: 0.8;
+    mix-blend-mode: screen;
+    z-index: 1;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+}
+
+.atm-layer-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background-image: url('../bg-noise.67fd2524.png');
+    background-repeat: repeat;
+    opacity: 0.04;
+    pointer-events: none;
+}
+
+/* --- GLASS FORM STYLING --- */
+.form-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 32rem;
+    padding: 1rem;
+}
+
+.glass-fieldset {
+    /* Transparent Backdrop */
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.description {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.input-base {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.9rem;
+    color: #fff;
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-base:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+/* --- CUSTOM SELECT ARROW --- */
+.select-wrapper {
+    position: relative;
+}
+
+.select-input {
+    appearance: none;
+    cursor: pointer;
+}
+
+.select-input option {
+    background-color: #111;
+    color: #fff;
+}
+
+.chevron-icon {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+}

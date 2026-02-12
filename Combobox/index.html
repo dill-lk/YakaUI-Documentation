@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glass Combobox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="layout-container">
+        <!-- Centered Background Glow -->
+        <!-- Atmospheric Foundation -->
+        <div class="bg-system">
+            <div class="atm-glow-master"></div>
+            <div class="atm-glow-bottom"></div>
+            <div class="atm-layer-noise"></div>
+        </div>
+
+        <!-- Floating Combobox -->
+        <div class="combobox-container" id="combobox">
+            <div class="combobox-input-wrapper">
+                <input type="text" class="combobox-input" id="comboInput" placeholder="Search team..."
+                    autocomplete="off">
+                <button class="combobox-button" id="comboButton">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+            </div>
+            <div class="combobox-options" id="comboOptions">
+                <!-- JavaScript populates -->
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

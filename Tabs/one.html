@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glassmorphism Tabs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP for Seamless Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #030303;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            position: relative;
+        }
+
+        /* --- Dynamic Background Spotlight --- */
+        .glow-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+        }
+
+        .glow-container {
+            position: absolute;
+            width: 0;
+            height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            will-change: transform, left, top;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 20rem; 
+            height: 20rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+            filter: blur(50px); 
+        }
+
+        .glow-mid {
+            position: absolute;
+            width: 10rem; 
+            height: 10rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            filter: blur(30px);
+        }
+
+        /* --- Glassmorphism UI --- */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(40px) saturate(210%);
+            -webkit-backdrop-filter: blur(40px) saturate(210%);
+            border: 1px solid rgba(255, 255, 255, 0.06); 
+            border-top: 1px solid rgba(255, 255, 255, 0.15); 
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.9), inset 0 1px 0px rgba(255, 255, 255, 0.04);
+        }
+
+        /* --- Tab Styling --- */
+        .tab-btn {
+            position: relative;
+            padding: 7px 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.45);
+            border-radius: 9999px;
+            transition: color 0.3s ease;
+            z-index: 1;
+        }
+
+        .tab-btn.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Tab Content Control */
+        .tab-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            visibility: hidden;
+            opacity: 0;
+            padding: 4px; /* Reduced padding */
+        }
+
+        .tab-content.active {
+            position: relative;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* --- List Items --- */
+        .post-item {
+            position: relative;
+            padding: 14px 16px;
+            border-radius: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .post-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
+            margin: 0px 16px;
+        }
+
+        /* --- Footer (Fixed Position) --- */
+        .attribution-footer {
+            position: fixed; 
+            bottom: 24px; 
+            color: rgba(255,255,255,0.25); 
+            font-size: 0.75rem; 
+            z-index: 50;
+            text-align: center;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .attribution-footer a {
+            color: rgba(255,255,255,0.4); 
+            text-decoration: none;
+            transition: color 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .attribution-footer a:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body class="pt-24 pb-32 px-4">
+
+    <!-- Dynamic Spotlight -->
+    <div id="glowWrapper" class="glow-wrapper">
+        <div id="glowContainer" class="glow-container">
+            <div class="glow-mid"></div>
+            <div class="glow-core"></div>
+        </div>
+    </div>
+
+    <div class="w-full max-w-md relative z-10">
+        <!-- Tab Navigation -->
+        <div class="flex gap-1 mb-6 px-1 w-full justify-start" id="tabList">
+            <button class="tab-btn active" data-tab="recent">Recent</button>
+            <button class="tab-btn" data-tab="popular">Popular</button>
+            <button class="tab-btn" data-tab="trending">Trending</button>
+        </div>
+
+        <!-- Tab Panels (Optimized height and padding) -->
+        <div id="tabPanels" class="glass-panel rounded-2xl overflow-hidden w-full">
+            <div class="relative w-full">
+                
+                <!-- Recent Panel -->
+                <div id="recent" class="tab-content active">
+                    <ul class="flex flex-col">
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">Does drinking coffee make you smarter?</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>5h ago</span><span>&middot;</span><span>5 comments</span><span>&middot;</span><span>2 shares</span>
+                            </div>
+                        </li>
+                        <div class="divider"></div>
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">So you've bought coffee... now what?</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>2h ago</span><span>&middot;</span><span>3 comments</span><span>&middot;</span><span>2 shares</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Popular Panel -->
+                <div id="popular" class="tab-content">
+                    <ul class="flex flex-col">
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">Is tech making coffee better or worse?</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>Jan 7</span><span>&middot;</span><span>29 comments</span><span>&middot;</span><span>16 shares</span>
+                            </div>
+                        </li>
+                        <div class="divider"></div>
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">Innovative things happening in coffee</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>Mar 19</span><span>&middot;</span><span>24 comments</span><span>&middot;</span><span>12 shares</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Trending Panel -->
+                <div id="trending" class="tab-content">
+                    <ul class="flex flex-col">
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">Ask Me Anything: 10 coffee answers</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>2d ago</span><span>&middot;</span><span>9 comments</span><span>&middot;</span><span>5 shares</span>
+                            </div>
+                        </li>
+                        <div class="divider"></div>
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">The worst coffee advice ever heard</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>4d ago</span><span>&middot;</span><span>1 comments</span><span>&middot;</span><span>2 shares</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Attribution Footer (Moved Outside main container for fixed bottom) -->
+    <footer class="attribution-footer">
+        Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk chanthusa</a>
+    </footer> 
+
+    <script>
+        const glowWrapper = document.getElementById('glowWrapper');
+        const glowContainer = document.getElementById('glowContainer');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const tabPanels = document.getElementById('tabPanels');
+
+        let currentActiveId = 'recent';
+
+        function moveGlow(immediate = false) {
+            const rect = tabPanels.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            gsap.to(glowContainer, {
+                left: centerX,
+                top: centerY,
+                duration: immediate ? 0 : 1,
+                ease: "power3.out"
+            });
+        }
+
+        function switchTab(newTabBtn) {
+            const newTabId = newTabBtn.getAttribute('data-tab');
+            if (newTabId === currentActiveId) return;
+
+            const oldContent = document.getElementById(currentActiveId);
+            const newContent = document.getElementById(newTabId);
+
+            tabBtns.forEach(b => b.classList.remove('active'));
+            newTabBtn.classList.add('active');
+
+            // Butterfly Transition
+            gsap.to(oldContent, {
+                opacity: 0,
+                y: 8,
+                scale: 0.98,
+                duration: 0.3,
+                ease: "power2.in",
+                onComplete: () => {
+                    oldContent.classList.remove('active');
+                    newContent.classList.add('active');
+                    
+                    gsap.fromTo(newContent, 
+                        { opacity: 0, y: -8, scale: 0.98 }, 
+                        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.2)" }
+                    );
+
+                    currentActiveId = newTabId;
+                    // Trigger glow update after panel size might change
+                    requestAnimationFrame(moveGlow);
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            gsap.to(glowWrapper, { opacity: 1, duration: 1.5 });
+            moveGlow(true);
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => switchTab(btn));
+            });
+        });
+
+        window.addEventListener('resize', () => moveGlow(true));
+    </script>
+</body>
+</html>

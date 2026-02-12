@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glass Checkboxes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* --- INTENSIFIED STATIC CENTERED GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Multi-layered glow for maximum depth */
+        .glow-core {
+            position: absolute;
+            width: 18rem; 
+            height: 18rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+            filter: blur(50px); 
+            opacity: 0.7;
+            animation: pulse 8s infinite ease-in-out;
+        }
+
+        .glow-mid {
+            position: absolute;
+            width: 30rem; 
+            height: 30rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.4;
+        }
+
+        .glow-outer {
+            position: absolute;
+            width: 50rem; 
+            height: 40rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 75%);
+            filter: blur(120px);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        /* --- GLASS CONTAINER --- */
+        .glass-card {
+            position: relative;
+            z-index: 1; 
+            width: 100%;
+            max-width: 22rem; 
+            background-color: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(45px) saturate(210%);
+            -webkit-backdrop-filter: blur(45px) saturate(210%);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-top: 1px solid rgba(255, 255, 255, 0.15); /* Top highlight */
+            border-radius: 1.5rem;
+            box-shadow: 
+                0 40px 100px -20px rgba(0, 0, 0, 0.9),
+                inset 0 1px 1px rgba(255, 255, 255, 0.03); 
+            padding: 1.25rem;
+        }
+
+        /* --- ROW STYLING --- */
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0.75rem;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .row:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .label-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .label-content i {
+            width: 1.2rem;
+            text-align: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s ease;
+        }
+
+        .row:hover i { color: #fff; }
+
+        .text-group { display: flex; flex-direction: column; }
+        .title { font-size: 0.9rem; font-weight: 500; color: rgba(255, 255, 255, 0.9); }
+        .subtitle { font-size: 0.75rem; color: rgba(255, 255, 255, 0.3); }
+
+        /* --- TYPE 1: CLASSIC SQUARE --- */
+        .cb-square { position: relative; width: 1.5rem; height: 1.5rem; }
+        .cb-square input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .box {
+            position: absolute;
+            top: 0; left: 0; height: 1.5rem; width: 1.5rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input:checked ~ .box {
+            background: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            border-color: #fff;
+        }
+        .box i { color: #000; font-size: 0.75rem; opacity: 0; transform: scale(0.5); transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        input:checked ~ .box i { opacity: 1; transform: scale(1); }
+
+        /* --- TYPE 2: TOGGLE SWITCH --- */
+        .switch { position: relative; width: 2.6rem; height: 1.4rem; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.08);
+            transition: .4s; border-radius: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 1rem; width: 1rem;
+            left: 3px; bottom: 2.5px; background-color: rgba(255, 255, 255, 0.4);
+            transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: rgba(255, 255, 255, 0.2); }
+        input:checked + .slider:before { transform: translateX(1.1rem); background-color: #fff; box-shadow: 0 0 12px rgba(255,255,255,0.5); }
+
+        /* --- TYPE 3: RADIO DOT --- */
+        .dot-outer {
+            width: 1.5rem; height: 1.5rem; border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .dot-inner {
+            width: 0.6rem; height: 0.6rem; background: #fff; border-radius: 50%;
+            transform: scale(0); transition: 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 12px #fff;
+        }
+        input:checked ~ .dot-outer { border-color: #fff; }
+        input:checked ~ .dot-outer .dot-inner { transform: scale(1); }
+
+        footer {
+            position: absolute; 
+            bottom: 20px; 
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+        footer a { color: rgba(255,255,255,0.5); text-decoration: none; border-bottom: 1px solid transparent; transition: 0.3s; }
+        footer a:hover { border-bottom: 1px solid rgba(255,255,255,0.5); }
+    </style>
+</head>
+<body>
+
+    <div class="glow-wrapper">
+        <div class="glow-outer"></div>
+        <div class="glow-mid"></div>
+        <div class="glow-core"></div>
+    </div>
+
+    <div class="glass-card">
+        
+        <!-- Standard Checkbox -->
+        <label class="row">
+            <div class="label-content">
+                <i class="fa-solid fa-cloud"></i>
+                <div class="text-group">
+                    <span class="title">Sync Data</span>
+                    <span class="subtitle">Cloud-native glass check</span>
+                </div>
+            </div>
+            <div class="cb-square">
+                <input type="checkbox" checked>
+                <div class="box"><i class="fa-solid fa-check"></i></div>
+            </div>
+        </label>
+
+        <!-- Switch Toggle -->
+        <label class="row">
+            <div class="label-content">
+                <i class="fa-solid fa-bolt"></i>
+                <div class="text-group">
+                    <span class="title">Turbo Mode</span>
+                    <span class="subtitle">Peak performance</span>
+                </div>
+            </div>
+            <div class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </div>
+        </label>
+
+        <!-- Radio Selection -->
+        <label class="row">
+            <div class="label-content">
+                <i class="fa-solid fa-fingerprint"></i>
+                <div class="text-group">
+                    <span class="title">Biometrics</span>
+                    <span class="subtitle">Radio dot verification</span>
+                </div>
+            </div>
+            <div class="cb-square">
+                <input type="checkbox">
+                <div class="dot-outer"><div class="dot-inner"></div></div>
+            </div>
+        </label>
+
+        <!-- Minimal Box -->
+        <label class="row">
+            <div class="label-content">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div class="text-group">
+                    <span class="title">Privacy Lock</span>
+                    <span class="subtitle">Encrypted states</span>
+                </div>
+            </div>
+            <div class="cb-square">
+                <input type="checkbox">
+                <div class="box"><i class="fa-solid fa-check"></i></div>
+            </div>
+        </label>
+
+    </div>
+
+    <footer>
+        Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk Chanthusa</a>
+    </footer>
+
+    <script>
+        // Kinetic feedback on interaction
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', function() {
+                const row = this.closest('.row');
+                gsap.to(row, { scale: 0.96, duration: 0.1, yoyo: true, repeat: 1 });
+            });
+        });
+    </script>
+</body>
+</html>

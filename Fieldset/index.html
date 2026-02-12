@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Shipping Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Background Glow -->
+    <!-- Atmospheric Foundation -->
+    <div class="bg-system">
+        <div class="atm-glow-master"></div>
+        <div class="atm-glow-bottom"></div>
+        <div class="atm-layer-noise"></div>
+    </div>
+
+    <!-- Shipping Form -->
+    <div class="form-container">
+        <div class="glass-fieldset space-y-8">
+            <h2 class="text-base font-semibold text-white tracking-wide">Shipping details</h2>
+
+            <!-- Street Address -->
+            <div class="field">
+                <label class="label">Street address</label>
+                <input type="text" class="input-base" placeholder="123 Glass Lane">
+            </div>
+
+            <!-- Country -->
+            <div class="field">
+                <label class="label">Country</label>
+                <p class="description">We currently only ship to North America.</p>
+                <div class="select-wrapper">
+                    <select class="input-base select-input">
+                        <option>Canada</option>
+                        <option>Mexico</option>
+                        <option>United States</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                </div>
+            </div>
+
+            <!-- Delivery Notes -->
+            <div class="field">
+                <label class="label">Delivery notes</label>
+                <p class="description">If you have a tiger, we'd like to know about it.</p>
+                <textarea class="input-base" rows="3" style="resize: none;"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attribution Footer -->
+
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

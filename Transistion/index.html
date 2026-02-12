@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium GSAP Transitions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP for Seamless Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Dynamic Background Elements -->
+    <div class="glow-wrapper">
+        <div id="glow" class="glow-container">
+            <div class="glow-core"></div>
+        </div>
+    </div>
+
+    <!-- Main Transition Stage -->
+    <div class="w-full max-w-md relative z-10">
+        <div id="mainStage"
+            class="glass-panel rounded-[2.5rem] overflow-hidden min-h-[420px] flex items-center justify-center">
+
+            <!-- Scene 1: Elastic Glide -->
+            <div id="scene-1" class="content-box active">
+                <div class="icon-wrap">
+                    <i class="fa-solid fa-bolt-lightning text-yellow-400/80"></i>
+                </div>
+                <h2 class="text-2xl font-semibold mb-3 tracking-tight">Elastic Glide</h2>
+                <p class="text-white/40 text-[13px] leading-relaxed mb-8 px-2">High-momentum fluid transition utilizing
+                    advanced spring physics for an organic interaction feel.</p>
+                <button onclick="transitionTo(2)"
+                    class="btn-action px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]">Explore
+                    Velocity</button>
+            </div>
+
+            <!-- Scene 2: Kinetic Tilt -->
+            <div id="scene-2" class="content-box">
+                <div class="icon-wrap">
+                    <i class="fa-solid fa-cube text-blue-400/80"></i>
+                </div>
+                <h2 class="text-2xl font-semibold mb-3 tracking-tight">Kinetic Tilt</h2>
+                <p class="text-white/40 text-[13px] leading-relaxed mb-8 px-2">Spatial depth through dynamic perspective
+                    shifts and 3D coordinate space manipulation.</p>
+                <button onclick="transitionTo(3)"
+                    class="btn-action px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]">Enter
+                    Dimensions</button>
+            </div>
+
+            <!-- Scene 3: Spectral Ripple -->
+            <div id="scene-3" class="content-box">
+                <div class="icon-wrap">
+                    <i class="fa-solid fa-droplet text-purple-400/80"></i>
+                </div>
+                <h2 class="text-2xl font-semibold mb-3 tracking-tight">Spectral Ripple</h2>
+                <p class="text-white/40 text-[13px] leading-relaxed mb-8 px-2">Atmospheric Gaussian diffusion paired
+                    with staggered opacity for a smooth, spectral exit.</p>
+                <button onclick="transitionTo(4)"
+                    class="btn-action px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]">Flow
+                    Spectral</button>
+            </div>
+
+            <!-- Scene 4: Split Expansion -->
+            <div id="scene-4" class="content-box">
+                <div class="icon-wrap">
+                    <i class="fa-solid fa-arrows-split-up-and-left text-emerald-400/80"></i>
+                </div>
+                <h2 class="text-2xl font-semibold mb-3 tracking-tight">Split Expansion</h2>
+                <p class="text-white/40 text-[13px] leading-relaxed mb-8 px-2">Precise modular separation that
+                    reassembles with mathematical sequencing and weight.</p>
+                <button onclick="transitionTo(1)"
+                    class="btn-action px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]">Return
+                    Home</button>
+            </div>
+
+        </div>
+
+        <!-- Pagination Indicators -->
+        <div class="mt-12 flex justify-center gap-4">
+            <div class="dot w-1 h-1 rounded-full bg-white/10" id="dot-1" onclick="transitionTo(1)"></div>
+            <div class="dot w-1 h-1 rounded-full bg-white/10" id="dot-2" onclick="transitionTo(2)"></div>
+            <div class="dot w-1 h-1 rounded-full bg-white/10" id="dot-3" onclick="transitionTo(3)"></div>
+            <div class="dot w-1 h-1 rounded-full bg-white/10" id="dot-4" onclick="transitionTo(4)"></div>
+        </div>
+    </div>
+
+    <!-- Attribution Footer -->
+    <footer class="attribution-footer">
+        Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk chanthusa</a>
+    </footer>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

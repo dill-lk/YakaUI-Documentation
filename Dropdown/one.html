@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glassmorphism Dropdown</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons CDN -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        /* Custom Styles from React Layout */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.001);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            /* Visible border added for more definition */
+            border: 1.5px solid rgba(255, 255, 255, 0.05);
+            border-top-color: rgba(255, 255, 255, 0.15);
+            border-left-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.98), 
+                inset 0 1px 2px rgba(255, 255, 255, 0.02);
+        }
+
+        /* Transition States */
+        .menu-transition {
+            opacity: 0;
+            transform: scale(0.95) translateY(-12px);
+            visibility: hidden;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top right;
+        }
+
+        .menu-transition.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            visibility: visible;
+        }
+
+        .glow-transition {
+            transition: opacity 700ms ease-out;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .glow-transition.active {
+            opacity: 1;
+        }
+
+        .btn-glow-active {
+            opacity: 1 !important;
+        }
+
+        /* Rounded Icon Containers */
+        .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .group:hover .icon-box {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .ph-duotone {
+            font-size: 1.1rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .group:hover .ph-duotone {
+            opacity: 1;
+        }
+
+        /* Specialized Delete Hover */
+        .group:hover .icon-box-delete {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .group:hover .icon-delete {
+            color: #f87171;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen w-full bg-[#030303] flex flex-col items-center justify-start pt-24 overflow-hidden font-['Outfit']">
+
+    <!-- --- DROPDOWN CONTAINER --- -->
+    <div class="z-10 w-full max-w-[280px] px-8 flex justify-end">
+        <div class="relative inline-block text-left" id="menuRoot">
+            
+            <!-- --- MAIN MENU GLOW --- -->
+            <div id="mainGlow" class="glow-transition absolute top-full right-0 translate-y-20 -translate-x-20 z-0">
+                <div class="absolute w-[8rem] h-[8rem] bg-white/40 blur-[25px] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                <div class="absolute w-[20rem] h-[16rem] bg-white/[0.02] blur-[80px] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+            </div>
+
+            <!-- Trigger Button Wrapper -->
+            <div class="relative inline-block">
+                <!-- Internal Button Glow -->
+                <div id="btnGlow" class="absolute inset-0 m-auto w-1/2 h-1/2 bg-white/30 blur-[10px] rounded-full pointer-events-none opacity-0 transition-opacity duration-500"></div>
+                
+                <button id="menuButton" class="
+                    relative z-20 inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-[14px] font-medium text-white/90
+                    bg-white/[0.01] backdrop-blur-3xl 
+                    border-[1.5px] border-white/[0.06] border-t-white/[0.22] border-l-white/[0.12]
+                    shadow-[0_1px_3px_rgba(0,0,0,0.3)]
+                    hover:bg-white/[0.04] hover:border-white/25 transition-all duration-300
+                    focus:outline-none
+                ">
+                    <span class="relative z-10 tracking-tight">Options</span>
+                    <i id="chevron" class="ph ph-caret-down relative z-10 text-[12px] opacity-50 transition-transform duration-300"></i>
+                </button>
+            </div>
+
+            <!-- Menu Items -->
+            <div id="menuItems" class="menu-transition absolute right-0 w-52 mt-3 glass-panel rounded-[1.75rem] p-2 text-[14px] text-white/70 z-10">
+                <div class="space-y-0.5">
+                    <button class="group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white">
+                        <div class="icon-box">
+                            <i class="ph-duotone ph-pencil-circle"></i>
+                        </div>
+                        <span class="font-normal">Edit Post</span>
+                    </button>
+                    
+                    <button class="group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white">
+                        <div class="icon-box">
+                            <i class="ph-duotone ph-copy"></i>
+                        </div>
+                        <span class="font-normal">Duplicate</span>
+                    </button>
+                </div>
+
+                <!-- Faint Divider -->
+                <div class="my-2 h-[1px] bg-white/[0.05] mx-4"></div>
+
+                <div class="space-y-0.5">
+                    <button class="group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white">
+                        <div class="icon-box">
+                            <i class="ph-duotone ph-archive"></i>
+                        </div>
+                        <span class="font-normal">Archive</span>
+                    </button>
+                    
+                    <button class="group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-red-500/10 hover:text-red-400">
+                        <div class="icon-box icon-box-delete">
+                            <i class="ph-duotone ph-trash icon-delete"></i>
+                        </div>
+                        <span class="font-normal">Delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attribution Footer -->
+    <footer style="position: absolute; bottom: 20px; color: rgba(255,255,255,0.3); font-size: 0.8rem; z-index: 10;">
+        Created by <a href="https://github.com/dill-lk" target="_blank" rel="noopener noreferrer" style="color: rgba(255,255,255,0.5); text-decoration: none;">Jinuk chanthusa</a>
+    </footer>
+
+    <script>
+        const btn = document.getElementById('menuButton');
+        const menu = document.getElementById('menuItems');
+        const root = document.getElementById('menuRoot');
+        const mainGlow = document.getElementById('mainGlow');
+        const btnGlow = document.getElementById('btnGlow');
+        const chevron = document.getElementById('chevron');
+
+        let isOpen = false;
+
+        function toggleMenu() {
+            isOpen = !isOpen;
+            if (isOpen) {
+                menu.classList.add('show');
+                mainGlow.classList.add('active');
+                btnGlow.classList.add('btn-glow-active');
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                menu.classList.remove('show');
+                mainGlow.classList.remove('active');
+                btnGlow.classList.remove('btn-glow-active');
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        document.addEventListener('click', (e) => {
+            if (isOpen && !root.contains(e.target)) {
+                toggleMenu();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                toggleMenu();
+            }
+        });
+    </script>
+</body>
+</html>

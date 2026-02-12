@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Select Component</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Background Glow -->
+    <div class="glow-wrapper">
+        <div class="glow-core"></div>
+    </div>
+
+    <!-- Project Status Container -->
+    <div class="container-box">
+        <label class="label">Project status</label>
+        <p class="description">This will be visible to clients on the project.</p>
+
+        <div class="select-wrapper">
+            <select class="select-input">
+                <option value="active">Active</option>
+                <option value="paused">Paused</option>
+                <option value="delayed">Delayed</option>
+                <option value="canceled">Canceled</option>
+            </select>
+            <i class="fa-solid fa-chevron-down chevron-icon"></i>
+        </div>
+    </div>
+
+    <!-- Attribution Footer -->
+    <footer>
+        Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk chanthusa</a>
+    </footer>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

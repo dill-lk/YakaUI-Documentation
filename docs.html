@@ -1,0 +1,3124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - YakaUI v1.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="yaka_v1.0.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="icon" type="image/png" href="image.png">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shine: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.05) 100%);
+        }
+
+        /* Atmospheric Background */
+        body {
+            background-color: var(--bg-dark);
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before,
+        body::after {
+            display: none;
+        }
+
+        /* Atmospheric Background from index.html */
+        .bg-system {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background: #000;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .atm-glow-master {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1920px;
+            height: 100vh;
+            background-image: url('bg-top.c54a3f7e.jpg');
+            background-repeat: no-repeat;
+            background-position: top center;
+            background-size: 100% auto;
+            opacity: 1;
+            mix-blend-mode: screen;
+            z-index: 1;
+            pointer-events: none;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .atm-layer-noise {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background-image: url('bg-noise.67fd2524.png');
+            background-repeat: repeat;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        .atm-glow-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 900px;
+            background-image: url('bg-bottom.e4e0724b.jpg');
+            background-repeat: no-repeat;
+            background-position: bottom center;
+            background-size: cover;
+            opacity: 0.6;
+            mix-blend-mode: screen;
+            z-index: 1;
+            pointer-events: none;
+            -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0) 100%);
+            mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .visual-grid {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.15;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .white-grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1010;
+            pointer-events: none;
+            opacity: 0.12;
+            mix-blend-mode: overlay;
+        }
+
+        /* Sidebar Alignment Path */
+        .white-grid-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 280px;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, #fff, transparent);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Nav Alignment Path */
+        .white-grid-overlay::after {
+            content: '';
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #fff, transparent);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .layout-columns {
+            position: fixed;
+            inset: 0;
+            left: 280px;
+            top: 64px;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            padding: 0 4rem;
+            /* Matches content padding */
+            gap: 2rem;
+            /* Matches documentation gap rhythm */
+            pointer-events: none;
+            z-index: 1009;
+            opacity: 0.05;
+        }
+
+        .layout-columns .col {
+            border-left: 1px dashed #fff;
+            border-right: 1px dashed #fff;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.02), transparent);
+        }
+
+        /* Technical Row rhythm */
+        .layout-rows {
+            position: fixed;
+            inset: 0;
+            left: 280px;
+            top: 64px;
+            pointer-events: none;
+            z-index: 1008;
+            opacity: 0.03;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+            background-size: 100% 4rem;
+            /* Aligns with section leading */
+        }
+
+        /* Docs specific styles */
+        .docs-layout {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 64px;
+        }
+
+        .category-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .category-header::after {
+            content: '';
+            height: 1px;
+            flex: 1;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .sidebar {
+            width: 280px;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            bottom: 0;
+            padding: 1.5rem 1.5rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-y: auto;
+            background: rgba(4, 4, 4, 0.45);
+            backdrop-filter: blur(50px) saturate(180%);
+            -webkit-backdrop-filter: blur(50px) saturate(180%);
+            z-index: 90;
+            scrollbar-width: none;
+        }
+
+        .sidebar-category-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            margin: 40px 0 15px 12px;
+        }
+
+        .sidebar-link {
+            display: block;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            margin-bottom: 2px;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .sidebar-link.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            margin-left: 280px;
+            padding: 1.5rem 5rem;
+            width: 100%;
+            max-width: 1300px;
+        }
+
+        .docs-content-wrapper {
+            display: none;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .docs-content-wrapper.active {
+            display: block;
+        }
+
+        .component-section {
+            margin-bottom: 8rem;
+            scroll-margin-top: 100px;
+        }
+
+        .component-section h2 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            line-height: 1.1;
+        }
+
+        .component-section p {
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 850px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+
+        .component-section h3 {
+            font-size: 1.8rem;
+            margin-top: 4rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .component-section h4 {
+            font-size: 1.3rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .preview-box {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 6rem 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            overflow: hidden;
+            backdrop-filter: blur(8px) saturate(120%);
+            -webkit-backdrop-filter: blur(8px) saturate(120%);
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.01);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .preview-box:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Interactive Shine Layer */
+        .glass-shine-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(400px circle at var(--x, 50%) var(--y, 50%),
+                    rgba(255, 255, 255, 0.08),
+                    transparent 40%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .preview-box:hover .glass-shine-layer,
+        .glass-card:hover .glass-shine-layer {
+            opacity: 1;
+        }
+
+        .preview-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+            pointer-events: none;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            color: #d1d5db;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            margin-top: 1.5rem;
+            line-height: 1.7;
+            font-size: 0.85rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Syntax Highlighting Tokens - Ultra High Fidelity */
+        .token-tag {
+            color: #c084fc !important;
+            font-weight: 600;
+        }
+
+        .token-attr {
+            color: #22d3ee !important;
+        }
+
+        .token-val {
+            color: #fbbf24 !important;
+        }
+
+        .token-comment {
+            color: #6b7280 !important;
+            font-style: italic;
+        }
+
+        .token-keyword {
+            color: #f472b6 !important;
+            font-weight: 600;
+        }
+
+        .token-string {
+            color: #34d399 !important;
+        }
+
+        .token-pun {
+            color: #94a3b8 !important;
+        }
+
+        .token-prop {
+            color: #60a5fa !important;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .copy-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* Component specific Documentation Refinements */
+        .color-swatch {
+            width: 90px !important;
+            height: 90px !important;
+            border-radius: 22px !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.4),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .color-swatch::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), transparent);
+            pointer-events: none;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* Nav refinement */
+        .glass-nav {
+            background: rgba(2, 2, 2, 0.6) !important;
+            backdrop-filter: blur(30px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.6rem 4rem !important;
+        }
+
+        .sidebar-category-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: rgba(255, 255, 255, 0.4);
+            margin: 25px 0 10px 12px;
+        }
+
+        .sidebar-category-title:first-child {
+            margin-top: 0;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(8px) saturate(120%);
+            -webkit-backdrop-filter: blur(8px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            padding: 2.5rem;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .back-to-top:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px var(--accent-glow);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .vertical-copyright {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0.4;
+            z-index: 1000;
+            pointer-events: none;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                padding: 3rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .docs-layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                padding: 1.5rem;
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 2rem 1.5rem;
+            }
+
+            .component-section h2 {
+                font-size: 2.5rem;
+            }
+
+            .preview-box {
+                padding: 4rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .glass-nav {
+                padding: 1rem 1.5rem !important;
+            }
+        }
+
+        body,
+        html {
+            overflow-x: hidden;
+            overflow-y: auto !important;
+            width: 100%;
+            scroll-behavior: smooth;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="bg-system">
+        <div class="atm-glow-master"></div>
+        <div class="atm-glow-bottom"></div>
+        <div class="atm-layer-noise"></div>
+        <div class="visual-grid"></div>
+    </div>
+    <div class="white-grid-overlay"></div>
+    <div class="layout-columns">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col)</div><div class=" col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+    <div class="layout-rows"></div>
+
+    <div class="vertical-copyright">
+        © 2026 YakaUI Framework v1.0. Precision Crafted UI Components.
+    </div>
+
+    <nav class="glass-nav" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="logo-area" style="display: flex; align-items: center; gap: 20px;">
+            <div class="logo">
+                <a href="index.html"
+                    style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px;">
+                    <img src="image.png" alt="YakaUI Logo" style="width: 42px; height: 42px;">
+                    <span style="font-size: 1.1rem; font-weight: 700; letter-spacing: -0.5px;">YakaUI</span>
+                </a>
+            </div>
+            <div class="version-badge"
+                style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.1em;">
+                v1.0.0</div>
+        </div>
+        <div class="nav-links" style="display: flex; align-items: center; gap: 40px;">
+            <div class="search-trigger nav-item"
+                style="display: flex; align-items: center; gap: 8px; cursor: pointer; opacity: 0.6;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size: 12px;"></i>
+                <span>Search...</span>
+                <span
+                    style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 9px;">⌘K</span>
+            </div>
+            <a href="index.html" class="nav-item">Home</a>
+            <a href="#" class="nav-item active">Docs</a>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <aside class="sidebar">
+            <div class="sidebar-category-title">Essentials</div>
+            <a href="#" data-target="introduction" class="sidebar-link">Introduction</a>
+            <a href="#" data-target="getting-started" class="sidebar-link active">Getting Started</a>
+            <a href="#" data-target="colors" class="sidebar-link">Colors & Theme</a>
+            <a href="#" data-target="typography" class="sidebar-link">Typography</a>
+            <a href="#" data-target="cursor" class="sidebar-link">Custom Cursor</a>
+            <a href="#" data-target="loading" class="sidebar-link">Page Loading</a>
+
+            <div class="sidebar-category-title">Components</div>
+            <a href="#" data-target="buttons" class="sidebar-link">Buttons</a>
+            <a href="#" data-target="cards" class="sidebar-link">Cards</a>
+            <a href="#" data-target="inputs" class="sidebar-link">Inputs & Switches</a>
+            <a href="#" data-target="badges" class="sidebar-link">Badges</a>
+            <a href="#" data-target="avatars" class="sidebar-link">Avatars</a>
+            <a href="#" data-target="alerts" class="sidebar-link">Alerts</a>
+            <a href="#" data-target="skeletons" class="sidebar-link">Skeletons</a>
+            <a href="#" data-target="light-theme" class="sidebar-link">Light Theme</a>
+
+            <div class="sidebar-category-title">Interactive UI</div>
+            <a href="#" data-target="accordions" class="sidebar-link">Accordions</a>
+            <a href="#" data-target="tabs" class="sidebar-link">Tabs</a>
+            <a href="#" data-target="modals" class="sidebar-link">Modals</a>
+            <a href="#" data-target="toasts" class="sidebar-link">Toasts</a>
+            <a href="#" data-target="tooltips" class="sidebar-link">Tooltips</a>
+            <a href="#" data-target="dropdowns" class="sidebar-link">Dropdowns</a>
+            <a href="#" data-target="combobox" class="sidebar-link">Combobox</a>
+            <a href="#" data-target="listbox" class="sidebar-link">Listbox</a>
+            <a href="#" data-target="popover" class="sidebar-link">Popover</a>
+            <a href="#" data-target="radio-group" class="sidebar-link">Radio Group</a>
+
+            <div class="sidebar-category-title">Effects</div>
+            <a href="#" data-target="progress" class="sidebar-link">Progress Indicators</a>
+            <a href="#" data-target="reveal" class="sidebar-link">Image Reveal</a>
+            <a href="#" data-target="typing" class="sidebar-link">Typing Text</a>
+            <a href="#" data-target="stats" class="sidebar-link">Stats Count</a>
+            <a href="#" data-target="marquee" class="sidebar-link">Marquee</a>
+            <a href="#" data-target="spotlight" class="sidebar-link">Spotlight Cards</a>
+            <a href="#" data-target="glitch" class="sidebar-link">Glitch Text</a>
+            <a href="#" data-target="gallery" class="sidebar-link">Accordion Gallery</a>
+            <a href="#" data-target="videobg" class="sidebar-link">Video Background</a>
+            <a href="#" data-target="transitions" class="sidebar-link">Transitions & Scenes</a>
+            <a href="#" data-target="motion" class="sidebar-link">Motion & Parallax</a>
+
+            <div class="sidebar-category-title">Layout & Marketing</div>
+            <a href="#" data-target="testimonials" class="sidebar-link">Testimonials</a>
+            <a href="#" data-target="steps" class="sidebar-link">Step Process</a>
+            <a href="#" data-target="timeline" class="sidebar-link">Timeline</a>
+            <a href="#" data-target="pricing" class="sidebar-link">Pricing</a>
+            <a href="#" data-target="grid-system" class="sidebar-link">Grid System</a>
+
+            <div class="sidebar-category-title">Helper</div>
+            <a href="#" data-target="utilities" class="sidebar-link">Utility Classes</a>
+        </aside>
+
+        <main class="content">
+            <!-- Introduction -->
+            <div id="introduction" class="docs-content-wrapper">
+                <h1 class="category-header">Essentials</h1>
+                <section class="component-section">
+                    <h2>Introduction</h2>
+                    <p>YakaUI is a high-fidelity, production-ready UI framework built for developers who demand
+                        aesthetic excellence and fluid motion. At its core, YakaUI combines the transparency of
+                        Glassmorphism with the power of GSAP (GreenSock Animation Platform) to create interfaces that
+                        feel alive.</p>
+
+                    <div class="grid grid-2" style="margin-top: 4rem;">
+                        <div class="glass-card">
+                            <div class="card-content">
+                                <h3 style="margin-top:0;">Pure CSS Core</h3>
+                                <p style="font-size: 0.95rem;">Zero dependency styling for the majority of components.
+                                    Lightweight and lightning fast.</p>
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <div class="card-content">
+                                <h3 style="margin-top:0;">Motion Driven</h3>
+                                <p style="font-size: 0.95rem;">Powered by GSAP for the smoothest micro-interactions and
+                                    scroll-based reveals.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Philosophy</h3>
+                    <p>We believe that enterprise software doesn't have to be boring. YakaUI provides the building
+                        blocks for creating "magical" user experiences through subtle light play, physical depth, and
+                        meaningful movement.</p>
+                </section>
+            </div>
+
+            <!-- Getting Started -->
+            <div id="getting-started" class="docs-content-wrapper">
+                <h1 class="category-header">Essentials</h1>
+                <section class="component-section">
+                    <h2>Getting Started</h2>
+                    <div style="margin-bottom: 3rem; text-align: left;">
+                        <img src="image.png" alt="YAKA UI Logo" style="width: 96px; height: 96px; margin-bottom: 2rem;">
+                    </div>
+                    <div style="margin-bottom: 2rem;">
+                        <a href="https://github.com/dill-lk/YAKA-UI" target="_blank" class="btn-primary btn-magnetic"
+                            data-magnetic
+                            style="padding: 0.8rem 1.5rem; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                            View on GitHub
+                        </a>
+                    </div>
+                    <p style="margin-bottom: 2.5rem; color: var(--text-muted); line-height: 1.6;">YAKA UI is a
+                        project-ready library designed for production. Use our globally distributed CDN for the lowest
+                        latency or host the files locally for full control.</p>
+
+
+
+                    <h3>Option 1: CDN Setup (Recommended)</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">Use our globally
+                        distributed CDN for instant setup with zero configuration. Perfect for quick prototyping and
+                        production deployments.</p>
+
+                    <div class="code-block" style="padding: 1rem 2rem;">
+                        &lt;!-- jsDelivr CDN (Fast & Reliable) --&gt;<br>
+                        &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dill-lk/YAKA-UI/yaka.css"&gt;<br>
+                        &lt;script src="https://cdn.jsdelivr.net/gh/dill-lk/YAKA-UI/yaka.js"&gt;&lt;/script&gt;<br><br>
+
+                        &lt;!-- Alternative: UNPKG --&gt;<br>
+                        &lt;link rel="stylesheet" href="https://unpkg.com/yaka-ui/yaka.css"&gt;<br>
+                        &lt;script src="https://unpkg.com/yaka-ui/yaka.js"&gt;&lt;/script&gt;
+                    </div>
+
+                    <h3 style="margin-top:3rem;">Option 2: Download & Local Setup</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">Download the files from <a
+                            href="https://github.com/dill-lk/YAKA-UI" target="_blank"
+                            style="color:var(--accent); text-decoration:none;">GitHub</a> and host them locally for full
+                        control over versioning and customization.</p>
+
+                    <div class="code-block" style="padding: 1rem 2rem;">
+                        <span class="token-comment">&lt;!-- 1. Include YAKA UI Core Files --&gt;</span><br>
+                        &lt;<span class="token-tag">link</span> <span class="token-attr">rel</span>=<span
+                            class="token-val">"stylesheet"</span> <span class="token-attr">href</span>=<span
+                            class="token-val">"yaka_v1.0.css"</span>&gt;<br>
+                        &lt;<span class="token-tag">script</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"module"</span> <span class="token-attr">src</span>=<span
+                            class="token-val">"yaka_v1.0.js"</span>&gt;&lt;/<span
+                            class="token-tag">script</span>&gt;<br><br>
+
+                        <span class="token-comment">&lt;!-- 2. Required Dependencies (GSAP for animations)
+                            --&gt;</span><br>
+                        &lt;<span class="token-tag">script</span> <span class="token-attr">src</span>=<span
+                            class="token-val">"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"</span>&gt;&lt;/<span
+                            class="token-tag">script</span>&gt;<br>
+                        &lt;<span class="token-tag">script</span> <span class="token-attr">src</span>=<span
+                            class="token-val">"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"</span>&gt;&lt;/<span
+                            class="token-tag">script</span>&gt;
+                    </div>
+
+                    <h3 style="margin-top:3rem;">Quick Start Template</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Copy this boilerplate to start building
+                        immediately.</p>
+                    <div class="code-block">
+                        &lt;!<span class="token-tag">DOCTYPE</span> <span class="token-attr">html</span>&gt;<br>
+                        &lt;<span class="token-tag">html</span> <span class="token-attr">lang</span>=<span
+                            class="token-val">"en"</span>&gt;<br>
+                        &lt;<span class="token-tag">head</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">meta</span> <span
+                            class="token-attr">charset</span>=<span class="token-val">"UTF-8"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">link</span> <span class="token-attr">rel</span>=<span
+                            class="token-val">"stylesheet"</span> <span class="token-attr">href</span>=<span
+                            class="token-val">"yaka.css"</span>&gt;<br>
+                        &lt;/<span class="token-tag">head</span>&gt;<br>
+                        &lt;<span class="token-tag">body</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">button</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"btn-glow"</span>&gt;Hello
+                        World&lt;/<span class="token-tag">button</span>&gt;<br><br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">script</span> <span class="token-attr">src</span>=<span
+                            class="token-val">"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"</span>&gt;&lt;/<span
+                            class="token-tag">script</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">script</span> <span class="token-attr">src</span>=<span
+                            class="token-val">"yaka.js"</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"module"</span>&gt;&lt;/<span class="token-tag">script</span>&gt;<br>
+                        &lt;/<span class="token-tag">body</span>&gt;<br>
+                        &lt;/<span class="token-tag">html</span>&gt;
+                    </div>
+
+                    <h3 style="margin-top:3rem;">Initialization</h3>
+                    <p>Manual instance control for dynamic mounting or SPAs.</p>
+                    <div class="code-block">
+                        <span class="token-keyword">import</span> { YakaUI } <span class="token-keyword">from</span>
+                        <span class="token-val">'./yaka_v1.0.js'</span>;<br><br>
+                        <span class="token-comment">// Instance control for dynamic mounting</span><br>
+                        <span class="token-keyword">const</span> ui = <span class="token-keyword">new</span> YakaUI();
+                    </div>
+                </section>
+            </div>
+
+            <!-- Colors -->
+            <div id="colors" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Colors & Theme</h2>
+                    <div class="preview-box">
+                        <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center;">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-2);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 2
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-3);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 3
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-4);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 4
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--accent-5);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Accent 5
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--success);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Success</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--warning);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Warning</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--danger);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Danger</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--info);"></div>
+                                <div style="margin-top:10px; color:var(--text-muted); font-size:0.85rem;">Info</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin-top:28px;">
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--blue-400); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Blue</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch"
+                                    style="background:var(--emerald-400); width:70px; height:70px;"></div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Emerald</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--rose-400); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Rose</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--amber-400); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Amber</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch"
+                                    style="background:var(--violet-400); width:70px; height:70px;"></div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Violet</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--cyan-400); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Cyan</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div class="color-swatch" style="background:var(--slate-100); width:70px; height:70px;">
+                                </div>
+                                <div style="margin-top:8px; color:var(--text-muted); font-size:0.8rem;">Slate</div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>YAKA utilizes a multi-layered design token system for variables, accents, and semantic states.
+                        You can override the defaults globally or scope them to a specific section.</p>
+
+                    <h3>Extended Palette</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Use these extra color tokens for custom UI
+                        highlights, charts, or accents beyond the core brand palette.</p>
+                    <div class="code-block">
+                        :root {<br>
+                        &nbsp;&nbsp;--slate-50: <span class="token-val">#f8fafc</span>;<br>
+                        &nbsp;&nbsp;--slate-100: <span class="token-val">#f1f5f9</span>;<br>
+                        &nbsp;&nbsp;--slate-600: <span class="token-val">#475569</span>;<br>
+                        &nbsp;&nbsp;--slate-900: <span class="token-val">#0f172a</span>;<br>
+                        &nbsp;&nbsp;--blue-400: <span class="token-val">#60a5fa</span>;<br>
+                        &nbsp;&nbsp;--blue-600: <span class="token-val">#2563eb</span>;<br>
+                        &nbsp;&nbsp;--emerald-400: <span class="token-val">#34d399</span>;<br>
+                        &nbsp;&nbsp;--emerald-600: <span class="token-val">#059669</span>;<br>
+                        &nbsp;&nbsp;--rose-400: <span class="token-val">#fb7185</span>;<br>
+                        &nbsp;&nbsp;--rose-600: <span class="token-val">#e11d48</span>;<br>
+                        &nbsp;&nbsp;--amber-400: <span class="token-val">#fbbf24</span>;<br>
+                        &nbsp;&nbsp;--amber-600: <span class="token-val">#d97706</span>;<br>
+                        &nbsp;&nbsp;--violet-400: <span class="token-val">#a78bfa</span>;<br>
+                        &nbsp;&nbsp;--violet-600: <span class="token-val">#7c3aed</span>;<br>
+                        &nbsp;&nbsp;--cyan-400: <span class="token-val">#22d3ee</span>;<br>
+                        &nbsp;&nbsp;--cyan-600: <span class="token-val">#0891b2</span>;<br>
+                        }
+                    </div>
+
+                    <h3>Customize the Default Palette</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Change the core colors by overriding the root
+                        variables in your own stylesheet.</p>
+                    <div class="code-block">
+                        <span class="token-comment">/* Override defaults */</span><br>
+                        :root {<br>
+                        &nbsp;&nbsp;--accent: <span class="token-val">#22c55e</span>;<br>
+                        &nbsp;&nbsp;--accent-2: <span class="token-val">#16a34a</span>;<br>
+                        &nbsp;&nbsp;--accent-3: <span class="token-val">#0ea5e9</span>;<br>
+                        &nbsp;&nbsp;--success: <span class="token-val">#14b8a6</span>;<br>
+                        &nbsp;&nbsp;--warning: <span class="token-val">#f97316</span>;<br>
+                        &nbsp;&nbsp;--danger: <span class="token-val">#ef4444</span>;<br>
+                        }
+                    </div>
+
+                    <h3>Scoped Theme Example</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Apply a theme to a single section by attaching
+                        variables to a wrapper.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- HTML --&gt;</span><br>
+                        &lt;<span class="token-tag">section</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"theme-ocean"</span>&gt;...&lt;/<span
+                            class="token-tag">section</span>&gt;<br><br>
+                        <span class="token-comment">/* CSS */</span><br>
+                        .theme-ocean {<br>
+                        &nbsp;&nbsp;--accent: <span class="token-val">#22d3ee</span>;<br>
+                        &nbsp;&nbsp;--accent-2: <span class="token-val">#3b82f6</span>;<br>
+                        &nbsp;&nbsp;--accent-3: <span class="token-val">#6366f1</span>;<br>
+                        }
+                    </div>
+
+
+
+                    <h3>Full Token Map</h3>
+                    <div class="code-block">
+                        <span class="token-comment">/* Root Design Tokens */</span><br>
+                        :root {<br>
+                        &nbsp;&nbsp;<span class="token-comment">/* Brand Foundation */</span><br>
+                        &nbsp;&nbsp;--bg-dark: <span class="token-val">#0a0a0a</span>;<br>
+                        &nbsp;&nbsp;--accent: <span class="token-val">#FF3CAC</span>;<br>
+                        &nbsp;&nbsp;--accent-2: <span class="token-val">#784BA0</span>;<br>
+                        &nbsp;&nbsp;--accent-3: <span class="token-val">#2B86C5</span>;<br><br>
+                        &nbsp;&nbsp;--accent-4: <span class="token-val">#00F5D4</span>;<br>
+                        &nbsp;&nbsp;--accent-5: <span class="token-val">#FEE440</span>;<br>
+                        &nbsp;&nbsp;--accent-6: <span class="token-val">#9B5DE5</span>;<br>
+                        &nbsp;&nbsp;--accent-7: <span class="token-val">#00BBF9</span>;<br>
+                        &nbsp;&nbsp;--accent-8: <span class="token-val">#F15BB5</span>;<br><br>
+                        &nbsp;&nbsp;<span class="token-comment">/* Extended Palette */</span><br>
+                        &nbsp;&nbsp;--slate-50: <span class="token-val">#f8fafc</span>;<br>
+                        &nbsp;&nbsp;--slate-100: <span class="token-val">#f1f5f9</span>;<br>
+                        &nbsp;&nbsp;--slate-600: <span class="token-val">#475569</span>;<br>
+                        &nbsp;&nbsp;--slate-900: <span class="token-val">#0f172a</span>;<br>
+                        &nbsp;&nbsp;--blue-400: <span class="token-val">#60a5fa</span>;<br>
+                        &nbsp;&nbsp;--blue-600: <span class="token-val">#2563eb</span>;<br>
+                        &nbsp;&nbsp;--emerald-400: <span class="token-val">#34d399</span>;<br>
+                        &nbsp;&nbsp;--emerald-600: <span class="token-val">#059669</span>;<br>
+                        &nbsp;&nbsp;--rose-400: <span class="token-val">#fb7185</span>;<br>
+                        &nbsp;&nbsp;--rose-600: <span class="token-val">#e11d48</span>;<br>
+                        &nbsp;&nbsp;--amber-400: <span class="token-val">#fbbf24</span>;<br>
+                        &nbsp;&nbsp;--amber-600: <span class="token-val">#d97706</span>;<br>
+                        &nbsp;&nbsp;--violet-400: <span class="token-val">#a78bfa</span>;<br>
+                        &nbsp;&nbsp;--violet-600: <span class="token-val">#7c3aed</span>;<br>
+                        &nbsp;&nbsp;--cyan-400: <span class="token-val">#22d3ee</span>;<br>
+                        &nbsp;&nbsp;--cyan-600: <span class="token-val">#0891b2</span>;<br><br>
+
+                        &nbsp;&nbsp;<span class="token-comment">/* Semantic States */</span><br>
+                        &nbsp;&nbsp;--success: <span class="token-val">#10b981</span>;<br>
+                        &nbsp;&nbsp;--warning: <span class="token-val">#f59e0b</span>;<br>
+                        &nbsp;&nbsp;--danger: <span class="token-val">#ef4444</span>;<br>
+                        &nbsp;&nbsp;--info: <span class="token-val">#3b82f6</span>;<br><br>
+
+                        &nbsp;&nbsp;<span class="token-comment">/* Typography */</span><br>
+                        &nbsp;&nbsp;--text-main: <span class="token-val">#ffffff</span>;<br>
+                        &nbsp;&nbsp;--text-muted: <span class="token-val">#888888</span>;<br>
+                        &nbsp;&nbsp;--text-dim: <span class="token-val">#555555</span>;<br><br>
+
+                        &nbsp;&nbsp;<span class="token-comment">/* Physics */</span><br>
+                        &nbsp;&nbsp;--glass-bg: <span class="token-val">rgba(255, 255, 255, 0.03)</span>;<br>
+                        &nbsp;&nbsp;--glass-border: <span class="token-val">rgba(255, 255, 255, 0.08)</span>;<br>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Typography -->
+            <div id="typography" class="docs-content-wrapper">
+                <h1 class="category-header">Essentials</h1>
+                <section class="component-section">
+                    <h2>Typography</h2>
+                    <p>Precision-tuned type scales designed for maximum legibility in complex glassmorphic environments.
+                    </p>
+
+                    <div class="preview-box" style="flex-direction: column; align-items: flex-start; padding: 4rem;">
+                        <h1 style="margin:0; font-size: 4rem;">Heading 1</h1>
+                        <h2 style="margin:0; font-size: 3rem;">Heading 2</h2>
+                        <h3 style="margin:0; font-size: 2rem;">Heading 3</h3>
+                        <p style="margin: 20px 0 0; font-size: 1.1rem; opacity: 0.7;">The quick brown fox jumps over the
+                            lazy dog.</p>
+                        <p style="margin: 10px 0 0; font-size: 0.9rem; opacity: 0.5;">Medium and small body text
+                            examples.</p>
+                    </div>
+
+                    <h3>Font Family</h3>
+                    <p>YakaUI exclusively uses <strong>Outfit</strong>, a geometric sans-serif that balances modern
+                        efficiency with approachable warmth.</p>
+                    <div class="code-block">
+                        font-family: 'Outfit', sans-serif;
+                    </div>
+
+                    <h3>Type Scale</h3>
+                    <table style="width:100%; border-collapse: collapse; margin-top: 2rem; color: var(--text-muted);">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--glass-border); text-align: left;">
+                                <th style="padding: 1rem;">Level</th>
+                                <th style="padding: 1rem;">Size</th>
+                                <th style="padding: 1rem;">Weight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--glass-border);">
+                                <td style="padding: 1rem;">H1</td>
+                                <td style="padding: 1rem;">3.5rem - 4rem</td>
+                                <td style="padding: 1rem;">700</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--glass-border);">
+                                <td style="padding: 1rem;">H2</td>
+                                <td style="padding: 1rem;">2.5rem - 3rem</td>
+                                <td style="padding: 1rem;">600</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--glass-border);">
+                                <td style="padding: 1rem;">Body</td>
+                                <td style="padding: 1rem;">1rem - 1.15rem</td>
+                                <td style="padding: 1rem;">400</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 style="margin-top:4rem;">Helper Classes</h3>
+                    <div class="code-block">
+                        <span class="token-comment">/* Text Colors */</span><br>
+                        .text-main <span class="token-comment">// #FFFFFF</span><br>
+                        .text-muted <span class="token-comment">// #888888</span><br>
+                        .text-dim <span class="token-comment">// #555555</span><br><br>
+                        <span class="token-comment">/* Alignment */</span><br>
+                        .text-center<br>
+                        .text-right<br>
+                        .text-left
+                    </div>
+                </section>
+            </div>
+
+            <!-- Custom Cursor -->
+            <div id="cursor" class="docs-content-wrapper">
+                <h1 class="category-header">Essentials</h1>
+                <section class="component-section">
+                    <h2>Custom Cursor</h2>
+                    <p>A fluid, magnetic cursor that interacts with links, buttons, and custom data attributes.</p>
+
+                    <div class="preview-box" style="height: 200px; display: flex; flex-direction: column; gap: 20px;">
+                        <button class="btn-primary" style="cursor: pointer;">Default Button Interaction</button>
+                        <div style="padding: 1rem; border: 1px dashed var(--glass-border); border-radius: 8px;"
+                            data-cursor-text="EXPLORE">Hover for text cursor</div>
+                    </div>
+
+                    <h3>Automatic Interactions</h3>
+                    <p>The cursor automatically scales and changes style when hovering over:</p>
+                    <ul>
+                        <li><code>&lt;a&gt;</code> tags</li>
+                        <li><code>&lt;button&gt;</code> tags</li>
+                        <li>Elements with <code>.clickable</code> class</li>
+                    </ul>
+
+                    <h3>Custom Text Cursor</h3>
+                    <p>Display text directly inside the cursor follower by adding <code>data-cursor-text</code> to any
+                        element.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">data-cursor-text</span>=<span
+                            class="token-val">"EXPLORE"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Disabling the Cursor</h3>
+                    <p>If you prefer the native system cursor, you can omit <code>this.initCursor()</code> from your
+                        YakaUI initialization or hide the cursor element.</p>
+                </section>
+            </div>
+
+            <!-- Page Loading -->
+            <div id="loading" class="docs-content-wrapper">
+                <h1 class="category-header">Essentials</h1>
+                <section class="component-section">
+                    <h2>Page Loading</h2>
+                    <p>Elegant entrance animations that bridge the gap between initial load and interactive state.</p>
+
+                    <div class="preview-box">
+                        <p>The loader is an overlay that fades out once GSAP is ready and the DOM is loaded.</p>
+                    </div>
+
+                    <h3>HTML Structure</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"yaka-loader"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"loader-content"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span
+                            class="token-val">"loader-logo"</span>&gt;LOGO&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"loader-bar"</span>&gt;&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Sequence</h3>
+                    <p>1. <strong>Overlay:</strong> The <code>.yaka-loader</code> covers the screen with the site
+                        background color.<br>
+                        2. <strong>Entrance:</strong> UI elements with <code>data-yaka-fade</code> remain hidden until
+                        the loader finishes.<br>
+                        3. <strong>Exit:</strong> Once initialized, the loader slides or fades out, triggering the page
+                        animations.</p>
+                </section>
+            </div>
+
+            <!-- Buttons -->
+            <div id="buttons" class="docs-content-wrapper">
+                <h1 class="category-header">Components</h1>
+                <section class="component-section">
+                    <h2>Buttons</h2>
+                    <div class="preview-box">
+                        <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;">
+                            <button class="btn-primary" style="display:flex; align-items:center; gap:10px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2 3 7l9 5 9-5-9-5Zm0 20-9-5V9l9 5 9-5v8l-9 5Z" />
+                                </svg>
+                                Primary
+                            </button>
+                            <button class="btn-primary orange">Orange</button>
+                            <button class="btn-primary yellow">Yellow</button>
+                            <button class="btn-outline blue">Outline Blue</button>
+                            <button class="btn-cyber violet">Cyber Violet</button>
+                            <button class="btn-secondary">Secondary</button>
+                            <button class="btn-outline">Outline</button>
+                            <button class="btn-ghost">Ghost</button>
+                            <button class="btn-glow"><span>Glow Effect</span>
+                                <div class="glow-container">
+                                    <div class="glow-circle"></div>
+                                </div>
+                            </button>
+                            <button class="btn-shine">Shine</button>
+                            <button class="btn-grad-border">Gradient</button>
+                            <button class="btn-cyber">Cyber</button>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Buttons are the core interactive elements in YAKA UI, designed for clarity, visual hierarchy, and
+                        physics-driven micro-interactions.</p>
+                    <ul style="color: var(--text-muted); margin: 0 0 2rem 1.2rem; line-height: 1.8;">
+                        <li>Use <strong>Primary</strong> for the main action per screen.</li>
+                        <li>Use <strong>Secondary</strong> and <strong>Outline</strong> for supporting actions.</li>
+                        <li>Use <strong>Ghost</strong> for subtle links inside dense UI.</li>
+                        <li>Use <strong>Glow/Cyber</strong> for hero moments and marketing CTAs.</li>
+                    </ul>
+
+
+
+                    <h3 style="margin-top:40px;">1. Button Sizes</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Standardized sizes for different layout needs.
+                    </p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Available Sizes --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-sm"</span>&gt;Small&lt;/<span class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-primary"</span>&gt;Default&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-lg"</span>&gt;Large&lt;/<span class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>2. Visual Styles</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Base styles to define action priority and
+                        intent.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-primary"</span>&gt;Primary&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-secondary"</span>&gt;Secondary&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-outline"</span>&gt;Outline&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-ghost"</span>&gt;Ghost&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-cyber"</span>&gt;Cyber&lt;/<span class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>3. Special Effects</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Premium visual treatments for important
+                        actions.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Glow Effect (Requires spans/divs) --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-glow"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">span</span>&gt;Glow&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glow-container"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"glow-circle"</span>&gt;&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">button</span>&gt;<br><br>
+
+                        <span class="token-comment">&lt;!-- Other Effects --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-shine"</span>&gt;Shine&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-grad-border"</span>&gt;Gradient&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-organic"</span>&gt;Organic&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-glitch"</span>&gt;Glitch&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>4. Interactive Click Feedback</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Trigger physical animations using the
+                        <code>data-anim</code> attribute.
+                    </p>
+                    <div class="preview-box">
+                        <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+                            <button class="glass-btn btn-primary" data-anim="bounce">Bounce</button>
+                            <button class="glass-btn btn-primary" data-anim="spin">Spin</button>
+                            <button class="glass-btn btn-primary" data-anim="vibrate">Vibrate</button>
+                            <button class="glass-btn btn-primary" data-anim="pop">Pop</button>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glass-btn"</span> <span class="token-attr">data-anim</span>=<span
+                            class="token-val">"bounce"</span>&gt;Bounce&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glass-btn"</span> <span class="token-attr">data-anim</span>=<span
+                            class="token-val">"spin"</span>&gt;Spin&lt;/<span class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glass-btn"</span> <span class="token-attr">data-anim</span>=<span
+                            class="token-val">"vibrate"</span>&gt;Vibrate&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glass-btn"</span> <span class="token-attr">data-anim</span>=<span
+                            class="token-val">"pop"</span>&gt;Pop&lt;/<span class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>5. Magnetic Interactions</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Add physical weight to buttons that follow the
+                        cursor slightly.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span
+                            class="token-attr">data-magnetic</span>&gt;Magnetic Button&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>6. Color Variants</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Apply a color utility class alongside the
+                        button class to swap its accent. Example: <code>class="btn-primary orange"</code>.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-primary orange"</span>&gt;Orange&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-primary yellow"</span>&gt;Yellow&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-outline blue"</span>&gt;Outline Blue&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-cyber violet"</span>&gt;Cyber Violet&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>6. Icon & Loading Patterns</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Combine icons with text or show progress for
+                        async actions.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Icon + Label --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-secondary"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">span</span> <span class="token-attr">style</span>=<span
+                            class="token-val">"display:inline-flex; align-items:center; gap:8px;"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">svg</span> <span
+                            class="token-attr">width</span>=<span class="token-val">"16"</span>
+                        <span class="token-attr">height</span>=<span class="token-val">"16"</span> <span
+                            class="token-attr">viewBox</span>=<span class="token-val">"0 0 24 24"</span>
+                        <span class="token-attr">fill</span>=<span
+                            class="token-val">"currentColor"</span>&gt;...&lt;/<span
+                            class="token-tag">svg</span>&gt;Download<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">span</span>&gt;<br>
+                        &lt;/<span class="token-tag">button</span>&gt;<br><br>
+                        <span class="token-comment">&lt;!-- Loading State --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-primary"</span> <span
+                            class="token-attr">disabled</span>&gt;Processing...&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
+
+                    <h3>7. Accessibility & Layout</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Accessible states and full-width actions.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Disabled + Full Width --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-outline"</span> <span class="token-attr">style</span>=<span
+                            class="token-val">"width:100%;"</span> <span
+                            class="token-attr">disabled</span>&gt;Continue&lt;/<span
+                            class="token-tag">button</span>&gt;<br><br>
+                        <span class="token-comment">&lt;!-- ARIA Label for Icon Buttons --&gt;</span><br>
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"btn-ghost"</span> <span class="token-attr">aria-label</span>=<span
+                            class="token-val">"Open settings"</span>&gt;⚙️&lt;/<span class="token-tag">button</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Cards -->
+            <div id="cards" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Cards</h2>
+                    <div class="preview-box">
+                        <div
+                            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; width:100%;">
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Glass Card</h3>
+                                    <p>Minimalist container.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card card-soft">
+                                <div class="card-content">
+                                    <h3>Soft Card</h3>
+                                    <p>Subtle depth.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card card-neon">
+                                <div class="card-content">
+                                    <h3>Neon Card</h3>
+                                    <p>High-contrast accent.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card card-gradient">
+                                <div class="card-content">
+                                    <h3>Gradient Card</h3>
+                                    <p>Soft brand blend.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Minimalist glass containers with subtle depth and sharp micro-borders.</p>
+
+
+
+                    <h3 style="margin-top:40px;">1. Base Layout</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">The essential structure for all glass
+                        containers.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Basic Structure --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card-content"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;... Content ...<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>2. Visual Styles</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Simple variants for different content levels.
+                    </p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Style Classes --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card"</span>&gt;Standard&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card card-soft"</span>&gt;Soft&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card card-neon"</span>&gt;Neon&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card card-gradient"</span>&gt;Gradient&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>3. Spacing Helpers</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Internal buffers for consistent alignment.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Content Wrapper --&gt;</span><br>
+                        <span class="token-keyword">.card-content</span> { padding: 2rem; }
+                    </div>
+
+                    <h3>4. Interactive Effects</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Subtle motion triggers for hover states.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Spotlight Tracker --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"spotlight-card"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"spotlight-content"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;<br><br>
+                        <span class="token-comment">&lt;!-- Physics Attributes --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glass-card"</span> <span
+                            class="token-attr">data-magnetic</span>&gt;Magnetic Card&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Light Theme -->
+            <div id="light-theme" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Light Theme</h2>
+                    <div class="preview-box theme-light" style="align-items:stretch;">
+                        <div class="light-surface" style="padding:2.5rem; border-radius:20px;">
+                            <h3 style="margin-top:0;">Bright UI Surface</h3>
+                            <p style="color:var(--text-muted); margin-bottom:2rem;">Use <code>.theme-light</code> to
+                                flip the system into a light palette. You can apply it globally on the body or scope it
+                                to a component wrapper.</p>
+                            <div style="display:flex; flex-wrap:wrap; gap:16px;">
+                                <button class="btn-primary">Primary</button>
+                                <button class="btn-secondary">Secondary</button>
+                                <button class="btn-outline">Outline</button>
+                            </div>
+                            <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px;">
+                                <span class="badge badge-soft">Neutral</span>
+                                <span class="badge badge-outline">Outline</span>
+                                <span class="badge badge-success">Success</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Apply to body or section --&gt;</span><br>
+                        &lt;<span class="token-tag">body</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"theme-light"</span>&gt;...&lt;/<span
+                            class="token-tag">body</span>&gt;<br><br>
+                        <span class="token-comment">/* Optional scoped wrapper */</span><br>
+                        &lt;<span class="token-tag">section</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"theme-light"</span>&gt;...&lt;/<span class="token-tag">section</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Inputs -->
+            <div id="inputs" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Inputs & Switches</h2>
+                    <div class="preview-box">
+                        <div
+                            style="display:flex; flex-direction:column; gap:20px; width:100%; max-width:400px; margin:0 auto;">
+                            <div class="input-minimal"><input type="text" required placeholder=" "><label>Minimal
+                                    Focus</label></div>
+                            <div class="input-glass"><input type="text" placeholder="Glass Input"></div>
+                            <div class="input-glow"><input type="text" placeholder="Glow Input"></div>
+                            <div style="display:flex; gap:20px; justify-content:center;">
+                                <label class="switch-label">
+                                    <div class="switch-modern"><input type="checkbox" checked><span
+                                            class="slider"></span></div>Switch
+                                </label>
+                                <label class="switch-label">
+                                    <div class="switch-modern switch-pill"><input type="checkbox" checked><span
+                                            class="slider"></span></div>Pill
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Subtle data entry components with smooth physical feedback.</p>
+
+
+
+                    <h3 style="margin-top:40px;">1. Minimalist Forms</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">A clean bottom-line style for low-friction
+                        data entry.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Minimal Bottom Line --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"input-minimal"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">input</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"text"</span> <span class="token-attr">required</span> <span
+                            class="token-attr">placeholder</span>=<span class="token-val">" "</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">label</span>&gt;Name&lt;/<span
+                            class="token-tag">label</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>2. Glass Containers</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Fully encased glassmorphic inputs for complex
+                        layouts.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Enclosed Box --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"input-glass"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">input</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"email"</span> <span class="token-attr">placeholder</span>=<span
+                            class="token-val">"Email Address"</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>3. Glow Inputs</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Use a soft halo for primary input focus
+                        states.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Glow Input --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"input-glow"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">input</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"text"</span> <span class="token-attr">placeholder</span>=<span
+                            class="token-val">"Project name"</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>4. Modern Switches & Toggles</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Pure CSS toggles with smooth pill animations
+                        and physics-based feedback.</p>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Classic Toggle --&gt;</span><br>
+                        &lt;<span class="token-tag">label</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"switch"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">input</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"checkbox"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"slider"</span>&gt;&lt;/<span class="token-tag">span</span>&gt;<br>
+                        &lt;/<span class="token-tag">label</span>&gt;
+                    </div>
+
+                    <h3>5. Square Checkboxes</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Custom square inputs with 3D bounce effects on
+                        change.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">label</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"cb-square"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">input</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"checkbox"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"box"</span>&gt;&lt;<span class="token-tag">i</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"fa-solid
+                            fa-check"</span>&gt;&lt;/<span class="token-tag">i</span>&gt;&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">label</span>&gt;
+                    </div>
+
+                    <h3>6. Radio Dots</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Elegant radio indicators with a soft
+                        light-pulsing center.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">label</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">input</span> <span class="token-attr">type</span>=<span
+                            class="token-val">"radio"</span> <span class="token-attr">name</span>=<span
+                            class="token-val">"choice"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"dot-outer"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"dot-inner"</span>&gt;&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">label</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Badges -->
+            <div id="badges" class="docs-content-wrapper">
+                <h1 class="category-header">Components</h1>
+                <section class="component-section">
+                    <h2>Badges</h2>
+                    <div class="preview-box">
+                        <div style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
+                            <span class="badge badge-primary">Primary</span>
+                            <span class="badge badge-success">Success</span>
+                            <span class="badge badge-warning">Warning</span>
+                            <span class="badge badge-danger">Danger</span>
+                            <span class="badge badge-pill badge-primary">Pill</span>
+                            <span class="badge badge-glass">Glass</span>
+                            <span class="badge badge-glow">Glow</span>
+                            <span class="badge badge-outline">Outline</span>
+                            <span class="badge badge-soft">Soft</span>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <h3 style="margin-top:40px;">1. Base Variants</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Standard semantic styles for clear status
+                        communication.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-primary"</span>&gt;Primary&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-success"</span>&gt;Success&lt;/<span
+                            class="token-tag">span</span>&gt;
+                    </div>
+
+                    <h3>2. Modern Visuals</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Pill, Glass, and high-impact Glow treatments.
+                    </p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-pill badge-primary"</span>&gt;Pill&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-glass"</span>&gt;Glass&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-glow"</span>&gt;Glow&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-outline"</span>&gt;Outline&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-soft"</span>&gt;Soft&lt;/<span
+                            class="token-tag">span</span>&gt;
+                    </div>
+
+                    <h3>3. Status Dots</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Subtle indicators for system state or
+                        presence.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-dot"</span>&gt;Default&lt;/<span
+                            class="token-tag">span</span>&gt;<br>
+                        &lt;<span class="token-tag">span</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"badge badge-dot success"</span>&gt;Online&lt;/<span
+                            class="token-tag">span</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Avatars -->
+            <div id="avatars" class="docs-content-wrapper">
+                <h1 class="category-header">Components</h1>
+                <section class="component-section">
+                    <h2>Avatars</h2>
+                    <div class="preview-box">
+                        <div style="display:flex; gap:20px; align-items:center; justify-content:center;">
+                            <img src="https://i.pravatar.cc/150?img=33" class="avatar avatar-lg" alt="md">
+                            <img src="https://i.pravatar.cc/150?img=34" class="avatar avatar-lg avatar-squircle"
+                                alt="lg">
+                            <img src="https://i.pravatar.cc/150?img=35" class="avatar avatar-lg avatar-glow" alt="glow">
+                            <div class="avatar-status">
+                                <img src="https://i.pravatar.cc/150?img=36" class="avatar avatar-lg avatar-ring"
+                                    alt="ring">
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <h3 style="margin-top:40px;">1. Shapes & Effects</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Standard circles, modern squircles, and
+                        spotlight glow effects.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">img</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar avatar-squircle"</span>&gt;<br>
+                        &lt;<span class="token-tag">img</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar avatar-glow"</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar-status"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">img</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar avatar-ring"</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>2. Social Groups</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Stacked layouts for team or attendee lists.
+                    </p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar-group"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">img</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">img</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"avatar"</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Alerts -->
+            <div id="alerts" class="docs-content-wrapper">
+                <h1 class="category-header">Components</h1>
+                <section class="component-section">
+                    <h2>Alerts</h2>
+                    <div class="preview-box">
+                        <div
+                            style="display:flex; flex-direction:column; gap:15px; width:100%; max-width:500px; margin:0 auto;">
+                            <div class="alert alert-glass">Project successfully updated.</div>
+                            <div class="alert alert-minimal alert-success">Simple minimalist success message.</div>
+                            <div class="alert alert-outline alert-info">Outline info alert.</div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <h3 style="margin-top:40px;">1. Standard Styles</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Default glassmorphic and minimalist variants.
+                    </p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"alert alert-glass"</span>&gt;Message&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"alert alert-minimal"</span>&gt;Message&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"alert alert-outline"</span>&gt;Message&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>2. Semantic Feedback</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Color-coded states for information hierarchy.
+                    </p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"alert alert-success"</span>&gt;Success&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"alert alert-danger"</span>&gt;Error&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Skeletons -->
+            <div id="skeletons" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Skeletons</h2>
+                    <div class="preview-box">
+                        <div
+                            style="width:100%; max-width:400px; margin:0 auto; display:flex; flex-direction:column; gap:15px;">
+                            <div style="display:flex; gap:15px; align-items:center;">
+                                <div class="skeleton skeleton-avatar"></div>
+                                <div style="flex:1;">
+                                    <div class="skeleton skeleton-text" style="width:40%;"></div>
+                                    <div class="skeleton skeleton-text" style="width:70%;"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton skeleton-rect" style="height:100px;"></div>
+                            <div class="skeleton-card">
+                                <div class="skeleton skeleton-text" style="width:60%;"></div>
+                                <div class="skeleton skeleton-text" style="width:80%;"></div>
+                                <div class="skeleton skeleton-rect" style="height:80px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Animated loading placeholders that match your UI structure.</p>
+
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"skeleton skeleton-text"</span>&gt;&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"skeleton skeleton-avatar"</span>&gt;&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"skeleton-card"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Light Theme -->
+            <div id="light-theme" class="docs-content-wrapper">
+                <h1 class="category-header">Components</h1>
+                <section class="component-section">
+                    <h2>Light Theme Support</h2>
+                    <p>YakaUI isn't just for dark-mode enthusiasts. The framework includes a comprehensive Light Theme
+                        that retains the glassmorphic depth while switching to a precise porcelain aesthetic.</p>
+
+                    <div class="preview-box">
+                        <div class="theme-light"
+                            style="padding: 2rem; border-radius: 20px; background: var(--bg-dark); width: 100%;">
+                            <div class="glass-card" style="padding: 1.5rem; text-align: center;">
+                                <h3 style="margin-top:0;">Porcelain Glass</h3>
+                                <p style="font-size: 0.9rem; opacity: 0.7;">This card uses light theme variables.</p>
+                                <button class="btn-primary" style="margin-top: 10px;">Primary Action</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Activation</h3>
+                    <p>Apply the <code>.theme-light</code> class to any container or the <code>&lt;body&gt;</code> tag
+                        to swap all CSS variables to their light counterparts.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">body</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"theme-light"</span>&gt;<br>
+                        &nbsp;&nbsp;... all components now use light variables ...<br>
+                        &lt;/<span class="token-tag">body</span>&gt;
+                    </div>
+
+                    <h3>Variable Sync</h3>
+                    <p>The light theme overrides variables like <code>--bg-dark</code>, <code>--text-main</code>, and
+                        <code>--glass-bg</code> to ensure contrast is maintained without changing your component markup.
+                    </p>
+                </section>
+            </div>
+
+            <div id="accordions" class="docs-content-wrapper">
+                <h1 class="category-header">Interactive UI</h1>
+                <section class="component-section">
+                    <h2>Disclosure (Pure CSS)</h2>
+                    <p>Standardized accessible disclosures using native HTML tags with custom glassmorphic styling.</p>
+
+                    <div class="preview-box">
+                        <div class="disclosure-card" style="margin: 0 auto;">
+                            <details class="disclosure-item" open>
+                                <summary>
+                                    <span>What is the Scene Manager?</span>
+                                    <svg class="chevron" viewBox="0 0 24 24">
+                                        <path d="M7 10l5 5 5-5H7z" />
+                                    </svg>
+                                </summary>
+                                <div style="padding: 1.5rem; font-size: 0.9rem; opacity: 0.7; line-height: 1.6;">
+                                    The Scene Manager orchestrates full-page transitions using cinematic effects like
+                                    Elastic, Tilt, and Split.
+                                </div>
+                            </details>
+                            <details class="disclosure-item">
+                                <summary>
+                                    <span>Is it production ready?</span>
+                                    <svg class="chevron" viewBox="0 0 24 24">
+                                        <path d="M7 10l5 5 5-5H7z" />
+                                    </svg>
+                                </summary>
+                                <div style="padding: 1.5rem; font-size: 0.9rem; opacity: 0.7; line-height: 1.6;">
+                                    Absolutely. YakaUI is built with performance and accessibility in mind for high-end
+                                    applications.
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"disclosure-card"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">details</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"disclosure-item"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">summary</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Title<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">svg</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"chevron"</span>&gt;...&lt;/<span
+                            class="token-tag">svg</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="token-tag">summary</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span>&gt;Content&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">details</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+                <section class="component-section">
+                    <h2>Accordions</h2>
+                    <div class="preview-box">
+                        <div class="accordion" style="width:100%; max-width:500px; margin:0 auto;">
+                            <div class="accordion-item" style="border-bottom:1px solid var(--glass-border);">
+                                <div class="accordion-header"><span>Interactive Section</span><svg
+                                        class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path d="M6 9l6 6 6-6" />
+                                    </svg></div>
+                                <div class="accordion-content">
+                                    <div class="accordion-body">Click to expand and view content with smooth GSAP
+                                        animations.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Accordion stacks reveal content progressively with smooth open/close animation and automatic
+                        icon rotation.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"accordion"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"accordion-item"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span
+                            class="token-val">"accordion-header"</span>&gt;Title&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span
+                            class="token-val">"accordion-content"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Tabs -->
+            <div id="tabs" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Tabs</h2>
+                    <div class="preview-box">
+                        <div class="tabs-container" style="width:100%; max-width:500px; margin:0 auto;">
+                            <div class="tabs-header">
+                                <div class="tab-item active" data-tab="t1">Design</div>
+                                <div class="tab-item" data-tab="t2">Code</div>
+                                <div class="tab-indicator"></div>
+                            </div>
+                            <div class="tab-content active" id="t1" style="padding-top:15px;">Aesthetics first.</div>
+                            <div class="tab-content" id="t2" style="padding-top:15px;">Performance always.</div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Tabs swap content without page navigation and keep the interface compact for multi-step flows.
+                    </p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tabs-container"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tabs-header"</span>&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"tab-item active"</span> <span
+                            class="token-attr">data-tab</span>=<span class="token-val">"tab-one"</span>&gt;Tab
+                        One&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">id</span>=<span
+                            class="token-val">"tab-one"</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"tab-content active"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Modals -->
+            <div id="modals" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Modals</h2>
+                    <div class="preview-box">
+                        <button class="btn-primary" data-trigger-modal="demo-modal">Launch Demo Modal</button>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Glassmorphic dialogs with smooth scale entry.</p>
+
+                    <h3>Trigger + Modal</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span
+                            class="token-attr">data-trigger-modal</span>=<span
+                            class="token-val">"demo-modal"</span>&gt;Open&lt;/<span
+                            class="token-tag">button</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">id</span>=<span
+                            class="token-val">"demo-modal"</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"modal-overlay"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"modal glass-card"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <div id="demo-modal" class="modal-overlay">
+                        <div class="modal glass-card">
+                            <div class="modal-header">
+                                <h3>Modal Title</h3><button class="modal-close">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>This is a premium modal component.</p>
+                            </div>
+                            <div class="modal-footer"><button class="btn-primary modal-close">Awesome</button></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Toasts -->
+            <div id="toasts" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Toasts</h2>
+                    <div class="preview-box">
+                        <div style="display:flex; gap:15px; justify-content:center;">
+                            <button class="btn-glow"
+                                onclick="window.Yaka.showToast('Project updated!', 'success')"><span>Success</span>
+                                <div class="glow-container">
+                                    <div class="glow-circle"></div>
+                                </div>
+                            </button>
+                            <button class="btn-ghost"
+                                onclick="window.Yaka.showToast('Something went wrong.', 'error')">Error</button>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Non-blocking notification system.</p>
+
+                    <h3>Advanced API</h3>
+                    <p>You can call the toast system from any part of your script. It supports queuing and automatic
+                        dismissal after 3 seconds.</p>
+                    <div class="code-block">
+                        <span class="token-comment">// Programmatic call from your JS</span><br>
+                        <span class="token-keyword">import</span> { YakaUI } <span class="token-keyword">from</span>
+                        <span class="token-val">'./yaka_v1.0.js'</span>;<br><br>
+                        <span class="token-keyword">const</span> yaka = <span class="token-keyword">new</span>
+                        YakaUI();<br>
+                        yaka.showToast(<span class="token-val">'Data synchronized'</span>, <span
+                            class="token-val">'success'</span>);
+                    </div>
+
+                    <h3>Styling Customization</h3>
+                    <p>Toasts use CSS variables for easy theming. You can override these in your local CSS:</p>
+                    <div class="code-block">
+                        <span class="token-prop">--toast-bg</span>: <span class="token-val">rgba(20, 20, 25,
+                            0.9)</span>;<br>
+                        <span class="token-prop">--toast-border</span>: <span
+                            class="token-val">var(--accent)</span>;<br>
+                        <span class="token-prop">--toast-text</span>: <span class="token-val">#ffffff</span>;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tooltips -->
+            <div id="tooltips" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Tooltips</h2>
+                    <div class="preview-box">
+                        <button class="btn-primary" data-tooltip="Directly helpful information.">Hover for
+                            Detail</button>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Tooltips display lightweight context on hover using the <code>data-tooltip</code> attribute.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">button</span> <span class="token-attr">data-tooltip</span>=<span
+                            class="token-val">"Helpful hint"</span>&gt;Hover me&lt;/<span
+                            class="token-tag">button</span>&gt;
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Dropdowns -->
+            <div id="dropdowns" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Dropdowns</h2>
+                    <div class="preview-box" style="height:200px;">
+                        <div class="dropdown">
+                            <button class="btn-glow dropdown-trigger"><span>Options Menu</span></button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item">New Project</a>
+                                <a href="#" class="dropdown-item">Settings</a>
+                                <a href="#" class="dropdown-item" style="color:var(--danger);">Clear Cache</a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Dropdown menus toggle on click and close automatically when clicking outside the menu.</p>
+
+                    <h3>Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"dropdown"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">button</span> <span
+                            class="token-attr">class</span>=<span class="token-val">"btn-glow
+                            dropdown-trigger"</span>&gt;Menu&lt;/<span class="token-tag">button</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"dropdown-menu"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Combobox -->
+            <div id="combobox" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Combobox</h2>
+                    <div class="preview-box" style="height: 500px; padding: 0;">
+                        <iframe src="Combobox/one.html"
+                            style="width: 100%; height: 100%; border: none; border-radius: 20px;"></iframe>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Listbox -->
+            <div id="listbox" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Listbox</h2>
+                    <div class="preview-box" style="height: 450px; padding: 0;">
+                        <iframe src="Listbox/one.html"
+                            style="width: 100%; height: 100%; border: none; border-radius: 20px;"></iframe>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Popover -->
+            <div id="popover" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Popover</h2>
+                    <div class="preview-box" style="height: 500px; padding: 0;">
+                        <iframe src="Popover/one.html"
+                            style="width: 100%; height: 100%; border: none; border-radius: 20px;"></iframe>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Radio Group -->
+            <div id="radio-group" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Radio Group</h2>
+                    <div class="preview-box" style="height: 500px; padding: 0;">
+                        <iframe src="Radio Group/one.html"
+                            style="width: 100%; height: 100%; border: none; border-radius: 20px;"></iframe>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Progress -->
+            <div id="progress" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Progress Indicators</h2>
+                    <div class="preview-box">
+                        <div
+                            style="display:flex; flex-direction:column; gap:30px; width:100%; max-width:400px; margin:0 auto;">
+                            <div class="progress-wrapper">
+                                <div class="progress-label"><span>Optimization</span><span>92%</span></div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" data-value="92%" style="width:92%;"></div>
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:30px; justify-content:center;">
+                                <div class="progress-circle-wrapper" data-value="75"><svg class="progress-circle-svg"
+                                        viewBox="0 0 100 100">
+                                        <circle class="progress-circle-bg" cx="50" cy="50" r="45" />
+                                        <circle class="progress-circle-path" cx="50" cy="50" r="45" />
+                                    </svg>
+                                    <div class="progress-circle-text">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Track progress with linear bars or circular indicators driven by data attributes.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"progress-fill"</span> <span class="token-attr">data-value</span>=<span
+                            class="token-val">"80%"</span>&gt;&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Animated width with CSS var --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"progress-fill animate"</span> <span class="token-attr">style</span>=<span
+                            class="token-val">"--progress:70%;"</span>&gt;&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Reveal -->
+            <div id="reveal" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Image Reveal</h2>
+                    <div class="preview-box">
+                        <div class="reveal-image" style="max-width:420px; margin:0 auto;">
+                            <img src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?auto=format&fit=crop&w=900&q=80"
+                                alt="Futuristic workstation">
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>High-end cinematic entry for visuals.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"reveal-image"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">img</span> <span class="token-attr">src</span>=<span
+                            class="token-val">"image.jpg"</span> <span class="token-attr">alt</span>=<span
+                            class="token-val">"Reveal"</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Pair with ScrollTrigger to reveal as users
+                        scroll into view.</p>
+
+                </section>
+            </div>
+
+            <!-- Typing -->
+            <div id="typing" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Typing Text</h2>
+                    <div class="preview-box">
+                        <h3 data-typing="Elevating the web experience." style="margin:0;"></h3>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Engaging typewriter animation.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">h3</span> <span class="token-attr">data-typing</span>=<span
+                            class="token-val">"Elevating the web experience."</span>&gt;&lt;/<span
+                            class="token-tag">h3</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">The text animates when the element enters the
+                        viewport.</p>
+
+                </section>
+            </div>
+
+            <!-- Stats -->
+            <div id="stats" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Stats</h2>
+                    <div class="preview-box">
+                        <div style="font-size:3rem; font-weight:700; color:var(--text-main); line-height:1;"
+                            data-count="2500">0
+                        </div>
+                        <p style="margin-top:10px; color:var(--text-muted);">Total Downloads</p>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Animated value counters with GSAP precision.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">data-count</span>=<span
+                            class="token-val">"2500"</span>&gt;0&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Use integer values for smooth incrementing
+                        with ScrollTrigger.</p>
+                </section>
+            </div>
+
+            <!-- Marquee -->
+            <div id="marquee" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Marquee</h2>
+                    <div class="preview-box">
+                        <div class="marquee-container">
+                            <div class="marquee-content">
+                                <span>DESIGN</span><span>CODE</span><span>ANIMATE</span><span>FUTURE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Infinite text ribbons for high-impact branding.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"marquee-container"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Hover pauses the scroll for readability.</p>
+                </section>
+            </div>
+
+            <!-- Spotlight -->
+            <div id="spotlight" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Spotlight Cards</h2>
+                    <div class="preview-box">
+                        <div class="spotlight-card" style="width: 280px; margin:0 auto;">
+                            <div class="spotlight-content">
+                                <h3>Spotlight</h3>
+                                <p>Follows your mouse cursor.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Interactive border glow track that follows the cursor.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"spotlight-card"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Works best with concise content and clear
+                        card padding.</p>
+                </section>
+            </div>
+
+            <!-- Glitch -->
+            <div id="glitch" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Glitch Text</h2>
+                    <div class="preview-box">
+                        <div class="glitch" data-text="CYBERPUNK" style="font-size:2rem;">CYBERPUNK</div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Distorted visual aesthetic for high-impact typography.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glitch"</span> <span class="token-attr">data-text</span>=<span
+                            class="token-val">"CYBERPUNK"</span>&gt;CYBERPUNK&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"glitch glitch-soft"</span> <span
+                            class="token-attr">data-text</span>=<span class="token-val">"NEON"</span>&gt;NEON&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <!-- Gallery -->
+            <div id="gallery" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Gallery</h2>
+                    <div class="preview-box">
+                        <div class="gallery-accordion" style="width:100%; max-width:600px; margin:0 auto;">
+                            <div class="gallery-item"
+                                style="background-image: url('https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=600&q=80');">
+                            </div>
+                            <div class="gallery-item"
+                                style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80');">
+                            </div>
+                            <div class="gallery-item"
+                                style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80&sat=-30');">
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Interactive image accordion with smooth expansion.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"gallery-accordion"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Optional overlay --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"gallery-overlay"</span>&gt;Title&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <div id="videobg" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Video Background</h2>
+                    <div class="preview-box" style="height:300px; padding:0;">
+                        <div class="video-bg-container">
+                            <video class="video-bg" autoplay muted loop>
+                                <source
+                                    src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-background-1610-large.mp4"
+                                    type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Looped ambient video layers that sit behind your hero content.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">video</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"video-bg"</span> <span class="token-attr">autoplay</span> <span
+                            class="token-attr">muted</span> <span class="token-attr">loop</span>&gt;...&lt;/<span
+                            class="token-tag">video</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Combine with a gradient overlay for contrast
+                        and legibility.</p>
+                </section>
+            </div>
+
+            <!-- Transitions & Scenes -->
+            <div id="transitions" class="docs-content-wrapper">
+                <h1 class="category-header">Effects</h1>
+                <section class="component-section">
+                    <h2>Transitions & Scenes</h2>
+                    <p>Orchestrate complex full-screen or section-level transitions using the built-in Scene Manager.
+                        Powered by GSAP for physical movement and depth.</p>
+
+                    <div class="preview-box">
+                        <div style="text-align:center;">
+                            <p style="margin-bottom: 1.5rem; opacity: 0.6;">Simulated Scene Transition Effects:</p>
+                            <div style="display:flex; gap: 15px; justify-content:center; flex-wrap:wrap;">
+                                <button class="btn-secondary"
+                                    onclick="window.Yaka.showToast('Elastic transition triggered', 'info')">Elastic</button>
+                                <button class="btn-secondary"
+                                    onclick="window.Yaka.showToast('Tilt transition triggered', 'info')">Tilt</button>
+                                <button class="btn-secondary"
+                                    onclick="window.Yaka.showToast('Ripple transition triggered', 'info')">Ripple</button>
+                                <button class="btn-secondary"
+                                    onclick="window.Yaka.showToast('Split transition triggered', 'info')">Split</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Scene Structure</h3>
+                    <p>Group content into <code>.scene</code> containers within a parent wrapper. Use the
+                        <code>data-transition</code> attribute to specify the effect.
+                    </p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"scene-wrapper"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"scene active"</span> <span
+                            class="token-attr">data-transition</span>=<span
+                            class="token-val">"elastic"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"scene"</span> <span class="token-attr">data-transition</span>=<span
+                            class="token-val">"tilt"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Available Effects</h3>
+                    <ul>
+                        <li><strong>Elastic:</strong> A bouncy, physics-based horizontal slide.</li>
+                        <li><strong>Tilt:</strong> 3D perspective rotation with depth-fading.</li>
+                        <li><strong>Ripple:</strong> Scale-based entrance with a cinematic blur filter.</li>
+                        <li><strong>Split:</strong> A dramatic vertical split and rotation reveal.</li>
+                    </ul>
+
+                    <h3>Programmatic Navigation</h3>
+                    <p>Navigate between scenes using the global <code>Yaka.modules.Transition</code> API.</p>
+                    <div class="code-block">
+                        <span class="token-keyword">const</span> { Transition } = window.Yaka.modules;<br>
+                        Transition.next(); <span class="token-comment">// Go to next scene</span><br>
+                        Transition.prev(); <span class="token-comment">// Go to previous scene</span><br>
+                        Transition.goToScene(2); <span class="token-comment">// Direct jump</span>
+                    </div>
+                </section>
+            </div>
+
+            <div id="motion" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Motion & Parallax</h2>
+                    <p>Physics-based movement that responds to user presence and scroll behavior.</p>
+
+                    <div class="preview-box">
+                        <div style="display:flex; flex-direction: column; gap: 20px;">
+                            <div class="glass-card" data-magnetic style="padding: 2rem; cursor: pointer;">
+                                <h3>Magnetic Card</h3>
+                                <p>I'll follow your mouse with inertia.</p>
+                            </div>
+                            <div
+                                style="height: 100px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                                <span data-speed="2">Parallax Text (Speed 2)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>1. Magnetic Interaction</h3>
+                    <p>Add <code>data-magnetic</code> to any element to give it physical weight that responds to cursor
+                        proximity.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span
+                            class="token-attr">data-magnetic</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>2. Parallax Scrolling</h3>
+                    <p>Use <code>data-speed</code> to create depth between layers during scroll. Higher numbers move the
+                        element faster relative to scroll.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">data-speed</span>=<span
+                            class="token-val">"2"</span>&gt;Background Layer&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">data-speed</span>=<span
+                            class="token-val">"-1"</span>&gt;Slow Layer&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>3. Entrance Animations</h3>
+                    <p>Universal fade-up reveal on scroll using simple data attributes.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">data-yaka-fade</span>&gt;Reveals
+                        when scrolled into view&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <div id="testimonials" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Testimonials</h2>
+                    <div class="preview-box">
+                        <div class="testimonial-card">
+                            <p class="testimonial-quote">"The level of detail and quality in YAKA UI is simply
+                                unmatched. It transformed our product completely."</p>
+                            <div class="testimonial-author">
+                                <img src="https://i.pravatar.cc/150?img=44" class="author-avatar" alt="Author">
+                                <div class="author-info">
+                                    <h4>Alex Rivera</h4>
+                                    <span>Product Designer @ Studio X</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"testimonial-card"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">p</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"testimonial-quote"</span>&gt;...&lt;/<span
+                            class="token-tag">p</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"testimonial-author"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Use one or more cards in a grid to add social
+                        proof.</p>
+                </section>
+            </div>
+
+            <div id="steps" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Steps</h2>
+                    <div class="preview-box">
+                        <div class="step-process" style="width:100%;">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <h3 class="step-title">Conceptualize</h3>
+                                <p class="step-desc">Define the core vision of your interface.</p>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <h3 class="step-title">Build</h3>
+                                <p class="step-desc">Utilize YAKA components to assemble blocks.</p>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <h3 class="step-title">Deploy</h3>
+                                <p class="step-desc">Launch with high-end motion effects.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"step-process"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"step-item"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Use concise descriptions for each step to keep
+                        the layout compact.</p>
+                </section>
+            </div>
+            <div id="pricing" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Pricing</h2>
+                    <div class="preview-box">
+                        <div class="pricing-grid">
+                            <div class="pricing-card">
+                                <h3>Basic</h3>
+                                <div class="pricing-price">$0</div><button class="btn-glow">Start Free</button>
+                                <ul style="margin-top:1.5rem; list-style:none; padding:0; color:var(--text-muted);">
+                                    <li>✔ Starter components</li>
+                                    <li>✔ Theme tokens</li>
+                                    <li>✔ Community support</li>
+                                </ul>
+                            </div>
+                            <div class="pricing-card featured">
+                                <h3>Pro</h3>
+                                <div class="pricing-price">$29</div><button class="btn-primary">Buy Now</button>
+                                <ul style="margin-top:1.5rem; list-style:none; padding:0; color:var(--text-muted);">
+                                    <li>✔ Full component library</li>
+                                    <li>✔ Motion presets</li>
+                                    <li>✔ Priority support</li>
+                                </ul>
+                            </div>
+                            <div class="pricing-card">
+                                <h3>Enterprise</h3>
+                                <div class="pricing-price">Custom</div><button class="btn-outline">Contact</button>
+                                <ul style="margin-top:1.5rem; list-style:none; padding:0; color:var(--text-muted);">
+                                    <li>✔ Custom theming</li>
+                                    <li>✔ Design review</li>
+                                    <li>✔ SLA support</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"pricing-card"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <div class="code-block">
+                        <span class="token-comment">&lt;!-- Highlighted tier --&gt;</span><br>
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"pricing-card featured"</span>&gt;...&lt;/<span
+                            class="token-tag">div</span>&gt;
+                    </div>
+                </section>
+            </div>
+
+            <div id="grid-system" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Grid System</h2>
+                    <div class="preview-box">
+                        <div class="grid grid-3" style="width:100%;">
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column A</h3>
+                                    <p>Use <code>.grid</code> with <code>.grid-3</code>.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column B</h3>
+                                    <p>Responsive down to one column.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column C</h3>
+                                    <p>Supports fixed or auto grids.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card grid-span-2">
+                                <div class="card-content">
+                                    <h3>Span 2</h3>
+                                    <p>Use <code>.grid-span-2</code> to span columns.</p>
+                                </div>
+                            </div>
+                            <div class="card glass-card">
+                                <div class="card-content">
+                                    <h3>Column D</h3>
+                                    <p>Auto-fit available space.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Boutique Showcase Grid</h3>
+                    <p>Mixing spans and auto-layouts for complex, asymmetrical magazine-style headers and dashboards.
+                    </p>
+                    <div class="preview-box">
+                        <div class="grid grid-4" style="width: 100%; gap: 15px;">
+                            <div class="card glass-card grid-span-2 grid-row-span-2"
+                                style="min-height: 320px; background: rgba(255, 255, 255, 0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                                <div class="card-content">
+                                    <div class="category-header" style="margin-bottom: 1rem;">Showcase</div>
+                                    <h3 style="font-size: 2.2rem; margin: 0; line-height: 1.1;">Fluid Asymmetry</h3>
+                                    <p style="margin-top: 1rem; font-size: 0.95rem;">Combine row and column spans to
+                                        create high-impact editorial layouts that break the standard grid rhythm.</p>
+                                </div>
+                                <div class="glass-shine-layer"></div>
+                            </div>
+                            <div class="card glass-card" style="background: rgba(255, 255, 255, 0.01);">
+                                <div class="card-content">
+                                    <h4 style="margin:0; font-size: 0.8rem; opacity: 0.5;">Performance</h4>
+                                    <div
+                                        style="font-size: 2.5rem; font-weight: 700; color: var(--accent); margin-top: 10px;">
+                                        99<span style="font-size: 1rem; opacity:0.5;">%</span></div>
+                                </div>
+                            </div>
+                            <div class="card glass-card" style="background: rgba(255, 255, 255, 0.01);">
+                                <div class="card-content">
+                                    <h4 style="margin:0; font-size: 0.8rem; opacity: 0.5;">Load Time</h4>
+                                    <div
+                                        style="font-size: 2.5rem; font-weight: 700; color: var(--accent-2); margin-top: 10px;">
+                                        0.4<span style="font-size: 1rem; opacity:0.5;">s</span></div>
+                                </div>
+                            </div>
+                            <div class="card glass-card grid-span-2"
+                                style="background: rgba(255, 255, 255, 0.02); padding: 1.5rem 2rem;">
+                                <div class="card-content"
+                                    style="flex-direction: row; justify-content: space-between; align-items: center; width: 100%;">
+                                    <div>
+                                        <h4 style="margin:0;">Global Status</h4>
+                                        <p style="margin: 5px 0 0; font-size: 0.8rem; opacity: 0.5;">All systems
+                                            operational across 12 regions.</p>
+                                    </div>
+                                    <div
+                                        style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 15px #10b981;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 2rem 0;">
+                    <p>Powerful layout utilities for dashboards, feature grids, and marketing sections with responsive
+                        behavior baked in.</p>
+
+                    <h3>Basic Usage</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-3"</span>&gt;<br>
+                        &nbsp;&nbsp;... items ...<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Auto-Fit Layout</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-auto"</span>&gt;<br>
+                        &nbsp;&nbsp;... cards ...<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Span Columns</h3>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"grid grid-4"</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card grid-span-2"</span>&gt;Wide&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &nbsp;&nbsp;&lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"card glass-card"</span>&gt;Item&lt;/<span
+                            class="token-tag">div</span>&gt;<br>
+                        &lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Responsive breakpoints collapse to a single
+                        column on smaller screens.</p>
+                </section>
+            </div>
+
+            <div id="timeline" class="docs-content-wrapper">
+                <section class="component-section">
+                    <h2>Timeline</h2>
+                    <div class="preview-box" style="padding: 6rem 3rem;">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>2024</h3>
+                                    <p>Platform Launch</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>2026</h3>
+                                    <p>Global Expansion</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">class</span>=<span
+                            class="token-val">"timeline-item"</span>&gt;...&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Items automatically alternate left/right for
+                        visual rhythm.</p>
+                </section>
+            </div>
+
+            <div id="utilities" class="docs-content-wrapper">
+                <h1 class="category-header">Helper</h1>
+                <section class="component-section">
+                    <h2>Utility Classes</h2>
+                    <p>Helper classes and data attributes for quick styling and animations.</p>
+
+                    <h3>Scroll Animations</h3>
+                    <p>Apply <code>data-yaka-fade</code> to any element to make it fade and slide up when scrolled into
+                        view.</p>
+                    <div class="code-block">
+                        &lt;<span class="token-tag">div</span> <span class="token-attr">data-yaka-fade</span>&gt;I fade
+                        in!&lt;/<span class="token-tag">div</span>&gt;
+                    </div>
+
+                    <h3>Text Helpers</h3>
+                    <div class="code-block">
+                        <span class="token-comment">/* Centers text */</span><br>
+                        .text-center<br><br>
+                        <span class="token-comment">/* Subtle muted text */</span><br>
+                        .text-muted
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container"></div>
+    <div id="search-modal" class="modal-overlay">
+        <div class="modal glass-card" style="max-width: 600px; width: 90%;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--glass-border); padding: 1.5rem;">
+                <div style="display:flex; align-items:center; gap:15px; width:100%;">
+                    <i class="fa-solid fa-magnifying-glass" style="opacity:0.5;"></i>
+                    <input type="text" id="docs-search-input" placeholder="Search components, effects..."
+                        style="background:transparent; border:none; color:white; font-size:1.2rem; width:100%; outline:none;">
+                </div>
+                <button class="modal-close"
+                    style="background:rgba(255,255,255,0.05); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--glass-border);">&times;</button>
+            </div>
+            <div class="modal-body" id="search-results" style="max-height: 400px; overflow-y: auto; padding: 0;">
+                <!-- Results will appear here -->
+            </div>
+            <div class="modal-footer"
+                style="padding: 1rem; border-top: 1px solid var(--glass-border); display: flex; gap: 15px; font-size: 0.75rem; opacity: 0.5;">
+                <span><kbd style="background:rgba(255,255,255,0.1); padding: 2px 4px; border-radius:3px;">Enter</kbd> to
+                    select</span>
+                <span><kbd style="background:rgba(255,255,255,0.1); padding: 2px 4px; border-radius:3px;">ESC</kbd> to
+                    close</span>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./yaka_v1.0.js"></script>
+    <script type="module">
+        import { YakaUI } from './yaka_v1.0.js';
+
+        // Utility to activate a section
+        function activateSection(targetId) {
+            console.log('Activating section:', targetId);
+            const targetSection = document.getElementById(targetId);
+            const activeLink = document.querySelector(`.sidebar-link[data-target="${targetId}"]`);
+
+            if (!targetSection) {
+                console.error('Section not found:', targetId);
+                return;
+            }
+
+            // Deactivate all
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.docs-content-wrapper').forEach(s => s.classList.remove('active'));
+
+            // Activate target
+            targetSection.classList.add('active');
+            if (activeLink) {
+                activeLink.classList.add('active');
+                activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            // Scroll content to top
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            // Refresh GSAP ScrollTriggers with proper timing
+            if (window.ScrollTrigger) {
+                // First refresh to recalculate positions
+                setTimeout(() => {
+                    ScrollTrigger.refresh();
+                }, 100);
+
+                // Then scroll slightly to trigger animations
+                setTimeout(() => {
+                    window.scrollTo({ top: 1, behavior: 'instant' });
+                    setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        ScrollTrigger.refresh();
+                    }, 50);
+                }, 200);
+            }
+        }
+
+        // Init Navigation listeners
+        function initDocs() {
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const tid = link.getAttribute('data-target');
+                    if (tid) {
+                        e.preventDefault();
+                        activateSection(tid);
+
+                        // Update URL
+                        const url = new URL(window.location);
+                        url.searchParams.set('tab', tid);
+                        history.pushState({}, '', url);
+                    }
+                });
+            });
+
+            // Initial load from URL
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get('tab') || 'getting-started';
+            activateSection(tab);
+        }
+
+        // Run
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDocs);
+        } else {
+            initDocs();
+        }
+
+        // Back to top
+        const btt = document.createElement('button');
+        btt.className = 'back-to-top';
+        btt.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>`;
+        document.body.appendChild(btt);
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) btt.classList.add('visible');
+            else btt.classList.remove('visible');
+        });
+
+
+        btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // Interactive Glass Shine Script
+        function initGlassInteractions() {
+            const glassyElements = document.querySelectorAll('.preview-box, .glass-card, .code-block');
+
+            glassyElements.forEach(el => {
+                // Add shine layer if not present
+                if (!el.querySelector('.glass-shine-layer')) {
+                    const shine = document.createElement('div');
+                    shine.className = 'glass-shine-layer';
+                    el.appendChild(shine);
+                }
+
+                el.addEventListener('mousemove', e => {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    el.style.setProperty('--x', `${x}px`);
+                    el.style.setProperty('--y', `${y}px`);
+                });
+            });
+        }
+
+        initGlassInteractions();
+
+        // Re-run on section change
+        const originalActivateSection = activateSection;
+        window.activateSection = function (tid) {
+            originalActivateSection(tid);
+            setTimeout(initGlassInteractions, 100);
+        };
+
+        // Attach Yaka to window for onclick handlers in previews
+        window.Yaka = new YakaUI();
+
+        // High-Fidelity Syntax Highlighter Engine (Single-Pass Tokenization)
+        function colorizeCodeBlocks() {
+            const blocks = document.querySelectorAll('.code-block');
+            blocks.forEach(block => {
+                if (block.dataset.highlighted === "true") return;
+
+                // Add Copy Button if missing
+                if (!block.querySelector('.copy-btn')) {
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'copy-btn';
+                    copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                    copyBtn.onclick = () => copyToClipboard(block, copyBtn);
+                    block.appendChild(copyBtn);
+                }
+
+                let text = block.innerHTML.replace(/<span class="token-[^"]+">/g, '').replace(/<\/span>/g, '').replace(/<button[^>]*>.*?<\/button>/g, '');
+
+                const masterRegex = /(&lt;!--[\s\S]*?--&gt;)|(&lt;\/?[A-Za-z0-9-]+)|(&gt;)|(\b[a-z-]+(?==))|("(?:[^"\\]|\\.)*")|([a-z-]+:)/g;
+
+                text = text.replace(masterRegex, (match, m1, m2, m3, m4, m5, m6) => {
+                    if (m1) return `<span class="token-comment">${m1}</span>`;
+                    if (m2) {
+                        const parts = m2.split(/(&lt;)/);
+                        return `${parts[1]}<span class="token-pun">&lt;</span><span class="token-tag">${m2.substring(4)}</span>`;
+                    }
+                    if (m3) return `<span class="token-pun">&gt;</span>`;
+                    if (m4) return `<span class="token-attr">${m4}</span>`;
+                    if (m5) return `<span class="token-val">${m5}</span>`;
+                    if (m6) return `<span class="token-prop">${m6.slice(0, -1)}</span><span class="token-pun">:</span>`;
+                    return match;
+                });
+
+                block.innerHTML = text;
+                block.dataset.highlighted = "true";
+            });
+        }
+
+        async function copyToClipboard(block, btn) {
+            const text = block.innerText.replace('Copy', '').trim();
+            try {
+                await navigator.clipboard.writeText(text);
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+                btn.classList.add('success');
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                    btn.classList.remove('success');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy!', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', colorizeCodeBlocks);
+        colorizeCodeBlocks(); // Immediate run
+
+        // Search Engine Implementation
+        const searchInput = document.getElementById('docs-search-input');
+        const searchResults = document.getElementById('search-results');
+        const searchModal = document.getElementById('search-modal');
+        const searchTrigger = document.querySelector('.search-trigger');
+
+        function openSearch() {
+            searchModal.classList.add('active');
+            setTimeout(() => searchInput.focus(), 100);
+        }
+
+        if (searchTrigger) searchTrigger.addEventListener('click', openSearch);
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                openSearch();
+            }
+            if (e.key === 'Escape') {
+                searchModal.classList.remove('active');
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const links = Array.from(document.querySelectorAll('.sidebar-link'));
+
+            if (!query) {
+                searchResults.innerHTML = '<div style="padding: 2rem; text-align:center; opacity:0.5;">Type to search...</div>';
+                return;
+            }
+
+            const matches = links.filter(link => link.textContent.toLowerCase().includes(query));
+
+            if (matches.length === 0) {
+                searchResults.innerHTML = '<div style="padding: 2rem; text-align:center; opacity:0.5;">No results found.</div>';
+                return;
+            }
+
+            searchResults.innerHTML = matches.map(link => `
+                <div class="search-result-item clickable" onclick="activateSection('${link.dataset.target}'); document.getElementById('search-modal').classList.remove('active');" 
+                     style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; transition: background 0.2s;">
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-weight:500;">${link.textContent}</span>
+                        <span style="font-size:0.75rem; opacity:0.5; margin-top:2px;">Component Documentation</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:0.8rem; opacity:0.3;"></i>
+                </div>
+            `).join('');
+        });
+
+        // Add hover effect for search results
+        searchResults.addEventListener('mouseover', (e) => {
+            const item = e.target.closest('.search-result-item');
+            if (item) item.style.background = 'rgba(255,255,255,0.05)';
+        });
+        searchResults.addEventListener('mouseout', (e) => {
+            const item = e.target.closest('.search-result-item');
+            if (item) item.style.background = 'transparent';
+        });
+    </script>
+</body>
+
+</html>

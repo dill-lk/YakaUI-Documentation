@@ -1,0 +1,3870 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-black">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YakaUI - High Fidelity Atmospheric UI</title>
+    <link rel="icon" type="image/png" href="image.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style type="text/tailwindcss">
+        @layer base {
+            body { @apply bg-black text-white antialiased overflow-x-hidden; font-family: 'Outfit', sans-serif; }
+        }
+        .bg-system { position: fixed; inset: 0; z-index: 0; background: #000; overflow: hidden; pointer-events: none; }
+        .atm-glow-master { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 1920px; height: 100vh; background-image: url('bg-top.c54a3f7e.jpg'); background-repeat: no-repeat; background-position: top center; background-size: 100% auto; opacity: 1; mix-blend-mode: screen; z-index: 1; pointer-events: none; -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%); }
+        .atm-layer-noise { position: absolute; inset: 0; z-index: 5; background-image: url('bg-noise.67fd2524.png'); background-repeat: repeat; opacity: 0.12; pointer-events: none; }
+        .atm-glow-bottom { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; height: 900px; background-image: url('bg-bottom.e4e0724b.jpg'); background-repeat: no-repeat; background-position: bottom center; background-size: cover; opacity: 0.6; mix-blend-mode: screen; z-index: 1; pointer-events: none; -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to top, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 100%); }
+        
+        .visual-grid { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0.4; background-image: 
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .grid-matrix { @apply pointer-events-none absolute inset-0 z-10 px-4 sm:px-6 opacity-30; }
+        .vertical-lines { @apply mx-auto flex h-full max-w-[calc(80rem+2px)] gap-[14px]; }
+        .v-line { @apply flex-1 border-x border-white/15; }
+        
+        .app-shell { position: relative; z-index: 10; }
+        .header-blueprint { @apply flex h-24 items-center justify-between px-10 max-w-7xl mx-auto border-b border-white/5; }
+        .hero-blueprint { @apply px-10 pt-12 pb-16 max-w-7xl mx-auto; }
+        .content-panel { @apply mt-0 rounded-t-[3rem] bg-[#020202]/85 backdrop-blur-[140px] border-t border-white/10 shadow-[0_-50px_100px_-20px_rgba(0,0,0,1)]; min-height: 100vh; position: relative; display: flex; flex-direction: column; overflow: hidden; }
+        
+        .version-dropdown-panel { visibility: hidden; opacity: 0; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .version-dropdown-panel.active { visibility: visible; opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="relative min-h-full">
+    <div class="bg-system">
+        <div class="atm-glow-master"></div>
+        <div class="atm-glow-bottom"></div>
+        <div class="atm-layer-noise"></div>
+        <div class="visual-grid"></div>
+        <div class="grid-matrix"><div class="vertical-lines"><div class="v-line border-white/15"></div><div class="v-line hidden sm:block"></div><div class="v-line hidden lg:block"></div></div></div>
+    </div>
+    <div class="app-shell">
+        <header class="header-blueprint">
+            <div class="flex items-center gap-12">
+                <div class="flex items-center gap-3"><img src="image.png" alt="Logo" class="h-9 w-9"><span class="text-2xl font-bold tracking-tight ">YakaUI</span></div>
+            </div>
+            
+            <div class="flex items-center gap-10">
+                <div class="relative" id="versionDropdown">
+                    <button id="versionBtn" class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors focus:outline-none">
+                        <span class="text-[9px] font-bold tracking-widest uppercase text-white/50">v1.0.8</span>
+                        <i class="fa-solid fa-chevron-down text-[7px] text-white/20"></i>
+                    </button>
+                    <div id="versionPanel" class="version-dropdown-panel absolute top-full left-0 mt-2 w-32 bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-50">
+                        <div class="flex flex-col py-1">
+                            <a href="index.html" class="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white hover:bg-white/5 transition-colors">v1.0.8</a>
+                            <a href="v0.1.html" class="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white/20 hover:text-white hover:bg-white/5 transition-colors">v0.1.0</a>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="flex items-center gap-10">
+                    <a href="docs.html" class="text-[10px] font-bold tracking-[0.25em] uppercase text-white/40 hover:text-white transition-all transform hover:translate-y-[-1px]">Documentation</a>
+                    <a href="https://github.com/Yaka-UI-Labs/Yaka-UI" target="_blank" class="text-white/40 hover:text-white transition-colors">
+                        <i class="fa-brands fa-github text-xl"></i>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="hero-blueprint">
+            <h1 id="hero-title" class="text-[clamp(2.5rem,5vw,3rem)] font-bold leading-[1.05] tracking-tight max-w-5xl opacity-0">
+               Completely styled, fully accessible UI components, designed to integrate to HTML derectly for Developers 
+                with YakaUI<span class="text-white/40" style="font-style: italic;"> Framework.</span>
+            </h1>
+        </section>
+
+        <main class="content-panel">
+            <div class="max-w-7xl mx-auto px-10 pt-16 w-full flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-12 gap-y-20 pb-32">
+                    
+                    <!-- Buttons Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Buttons</span>
+                            <a href="docs.html#buttons" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium Glass Button Suite&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        /* Global Resets */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+
+        /* Layout Container */
+        .layout-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent; 
+            overflow: hidden;
+        }
+
+        /* --- GLOW EFFECTS --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 8rem; 
+            height: 8rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 80%);
+            filter: blur(25px); 
+            opacity: 0.9;
+        }
+
+        .glow-mid {
+            position: absolute;
+            width: 18rem; 
+            height: 14rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            filter: blur(50px);
+        }
+
+        .glow-outer {
+            position: absolute;
+            width: 40rem; 
+            height: 30rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 75%);
+            filter: blur(90px);
+        }
+
+        /* --- GLASS BUTTONS (Based on your Disclosure Card logic) --- */
+        .glass-btn {
+            position: relative;
+            z-index: 1; 
+            width: 100%;
+            max-width: 18rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            user-select: none;
+            outline: none;
+            border-radius: 1rem;
+            
+            /* Your Glass UI Logic */
+            background-color: rgba(255, 255, 255, 0.025); 
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            box-shadow: 
+                0 20px 40px -10px rgba(0, 0, 0, 0.8),
+                inset 0 1px 1px rgba(255, 255, 255, 0.03); 
+            
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .glass-btn:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .glass-btn i {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s ease;
+        }
+
+        .glass-btn:hover i {
+            color: #fff;
+        }
+
+        /* Attribution Footer */
+        .attribution-footer {
+            position: absolute; 
+            bottom: 24px; 
+            color: rgba(255, 255, 255, 0.25); 
+            font-size: 0.75rem; 
+            z-index: 10;
+        }
+
+        .attribution-footer a {
+            color: rgba(255, 255, 255, 0.4); 
+            text-decoration: none;
+            font-weight: 500;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;div class=&quot;layout-container&quot;&gt;
+        &lt;!-- Glow effects based on your structure --&gt;
+        &lt;div class=&quot;glow-wrapper&quot;&gt;
+            &lt;div class=&quot;glow-outer&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;glow-mid&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;glow-core&quot; id=&quot;followGlow&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Buttons using your Glass Logic --&gt;
+        &lt;div class=&quot;relative z-10 flex flex-col items-center w-full px-6&quot;&gt;
+            
+            &lt;button class=&quot;glass-btn&quot; data-anim=&quot;bounce&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-cloud-arrow-up&quot;&gt;&lt;/i&gt;
+                &lt;span&gt;Upload Assets&lt;/span&gt;
+            &lt;/button&gt;
+
+            &lt;button class=&quot;glass-btn&quot; data-anim=&quot;spin&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-arrows-rotate&quot;&gt;&lt;/i&gt;
+                &lt;span&gt;Sync Content&lt;/span&gt;
+            &lt;/button&gt;
+
+            &lt;button class=&quot;glass-btn&quot; data-anim=&quot;vibrate&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-bell&quot;&gt;&lt;/i&gt;
+                &lt;span&gt;Notifications&lt;/span&gt;
+            &lt;/button&gt;
+
+            &lt;button class=&quot;glass-btn&quot; data-anim=&quot;pop&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-heart&quot;&gt;&lt;/i&gt;
+                &lt;span&gt;Add Favorite&lt;/span&gt;
+            &lt;/button&gt;
+
+        &lt;/div&gt;
+
+         
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // Track the glow to the mouse for interactivity
+        const glow = document.getElementById(&#x27;followGlow&#x27;);
+        window.addEventListener(&#x27;mousemove&#x27;, (e) =&gt; {
+            gsap.to(glow, {
+                x: e.clientX - window.innerWidth / 2,
+                y: e.clientY - window.innerHeight / 2,
+                duration: 1.5,
+                ease: &quot;power2.out&quot;
+            });
+        });
+
+        // Icon Animation Logic
+        document.querySelectorAll(&#x27;.glass-btn&#x27;).forEach(btn =&gt; {
+            const icon = btn.querySelector(&#x27;i&#x27;);
+            const type = btn.dataset.anim;
+
+            btn.addEventListener(&#x27;click&#x27;, () =&gt; {
+                // Button Press Effect
+                gsap.to(btn, { scale: 0.96, duration: 0.1, yoyo: true, repeat: 1 });
+
+                // Icon Specific Animations
+                if (type === &#x27;bounce&#x27;) {
+                    gsap.fromTo(icon, { y: 0 }, { y: -8, duration: 0.2, yoyo: true, repeat: 1, ease: &quot;power2.out&quot; });
+                } 
+                else if (type === &#x27;spin&#x27;) {
+                    gsap.to(icon, { rotation: &quot;+=360&quot;, duration: 0.6, ease: &quot;back.inOut(1.7)&quot; });
+                } 
+                else if (type === &#x27;vibrate&#x27;) {
+                    gsap.fromTo(icon, { x: -2 }, { x: 2, duration: 0.05, repeat: 5, yoyo: true });
+                } 
+                else if (type === &#x27;pop&#x27;) {
+                    gsap.fromTo(icon, { scale: 1 }, { scale: 1.5, duration: 0.2, yoyo: true, repeat: 1, ease: &quot;back.out(2)&quot; });
+                }
+            });
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Checkbox Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Checkbox</span>
+                            <a href="docs.html#checkbox" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium Glass Checkboxes&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* --- INTENSIFIED STATIC CENTERED GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Multi-layered glow for maximum depth */
+        .glow-core {
+            position: absolute;
+            width: 18rem; 
+            height: 18rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+            filter: blur(50px); 
+            opacity: 0.7;
+            animation: pulse 8s infinite ease-in-out;
+        }
+
+        .glow-mid {
+            position: absolute;
+            width: 30rem; 
+            height: 30rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.4;
+        }
+
+        .glow-outer {
+            position: absolute;
+            width: 50rem; 
+            height: 40rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 75%);
+            filter: blur(120px);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        /* --- GLASS CONTAINER --- */
+        .glass-card {
+            position: relative;
+            z-index: 1; 
+            width: 100%;
+            max-width: 22rem; 
+            background-color: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(45px) saturate(210%);
+            -webkit-backdrop-filter: blur(45px) saturate(210%);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-top: 1px solid rgba(255, 255, 255, 0.15); /* Top highlight */
+            border-radius: 1.5rem;
+            box-shadow: 
+                0 40px 100px -20px rgba(0, 0, 0, 0.9),
+                inset 0 1px 1px rgba(255, 255, 255, 0.03); 
+            padding: 1.25rem;
+        }
+
+        /* --- ROW STYLING --- */
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0.75rem;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .row:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .label-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .label-content i {
+            width: 1.2rem;
+            text-align: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s ease;
+        }
+
+        .row:hover i { color: #fff; }
+
+        .text-group { display: flex; flex-direction: column; }
+        .title { font-size: 0.9rem; font-weight: 500; color: rgba(255, 255, 255, 0.9); }
+        .subtitle { font-size: 0.75rem; color: rgba(255, 255, 255, 0.3); }
+
+        /* --- TYPE 1: CLASSIC SQUARE --- */
+        .cb-square { position: relative; width: 1.5rem; height: 1.5rem; }
+        .cb-square input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .box {
+            position: absolute;
+            top: 0; left: 0; height: 1.5rem; width: 1.5rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input:checked ~ .box {
+            background: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            border-color: #fff;
+        }
+        .box i { color: #000; font-size: 0.75rem; opacity: 0; transform: scale(0.5); transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        input:checked ~ .box i { opacity: 1; transform: scale(1); }
+
+        /* --- TYPE 2: TOGGLE SWITCH --- */
+        .switch { position: relative; width: 2.6rem; height: 1.4rem; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.08);
+            transition: .4s; border-radius: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .slider:before {
+            position: absolute; content: &quot;&quot;; height: 1rem; width: 1rem;
+            left: 3px; bottom: 2.5px; background-color: rgba(255, 255, 255, 0.4);
+            transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: rgba(255, 255, 255, 0.2); }
+        input:checked + .slider:before { transform: translateX(1.1rem); background-color: #fff; box-shadow: 0 0 12px rgba(255,255,255,0.5); }
+
+        /* --- TYPE 3: RADIO DOT --- */
+        .dot-outer {
+            width: 1.5rem; height: 1.5rem; border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .dot-inner {
+            width: 0.6rem; height: 0.6rem; background: #fff; border-radius: 50%;
+            transform: scale(0); transition: 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 12px #fff;
+        }
+        input:checked ~ .dot-outer { border-color: #fff; }
+        input:checked ~ .dot-outer .dot-inner { transform: scale(1); }
+
+        footer {
+            position: absolute; 
+            bottom: 20px; 
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+        footer a { color: rgba(255,255,255,0.5); text-decoration: none; border-bottom: 1px solid transparent; transition: 0.3s; }
+        footer a:hover { border-bottom: 1px solid rgba(255,255,255,0.5); }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;div class=&quot;glow-wrapper&quot;&gt;
+        &lt;div class=&quot;glow-outer&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;glow-mid&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;glass-card&quot;&gt;
+        
+        &lt;!-- Standard Checkbox --&gt;
+        &lt;label class=&quot;row&quot;&gt;
+            &lt;div class=&quot;label-content&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-cloud&quot;&gt;&lt;/i&gt;
+                &lt;div class=&quot;text-group&quot;&gt;
+                    &lt;span class=&quot;title&quot;&gt;Sync Data&lt;/span&gt;
+                    &lt;span class=&quot;subtitle&quot;&gt;Cloud-native glass check&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;cb-square&quot;&gt;
+                &lt;input type=&quot;checkbox&quot; checked&gt;
+                &lt;div class=&quot;box&quot;&gt;&lt;i class=&quot;fa-solid fa-check&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/label&gt;
+
+        &lt;!-- Switch Toggle --&gt;
+        &lt;label class=&quot;row&quot;&gt;
+            &lt;div class=&quot;label-content&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-bolt&quot;&gt;&lt;/i&gt;
+                &lt;div class=&quot;text-group&quot;&gt;
+                    &lt;span class=&quot;title&quot;&gt;Turbo Mode&lt;/span&gt;
+                    &lt;span class=&quot;subtitle&quot;&gt;Peak performance&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;switch&quot;&gt;
+                &lt;input type=&quot;checkbox&quot; checked&gt;
+                &lt;span class=&quot;slider&quot;&gt;&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/label&gt;
+
+        &lt;!-- Radio Selection --&gt;
+        &lt;label class=&quot;row&quot;&gt;
+            &lt;div class=&quot;label-content&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-fingerprint&quot;&gt;&lt;/i&gt;
+                &lt;div class=&quot;text-group&quot;&gt;
+                    &lt;span class=&quot;title&quot;&gt;Biometrics&lt;/span&gt;
+                    &lt;span class=&quot;subtitle&quot;&gt;Radio dot verification&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;cb-square&quot;&gt;
+                &lt;input type=&quot;checkbox&quot;&gt;
+                &lt;div class=&quot;dot-outer&quot;&gt;&lt;div class=&quot;dot-inner&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/label&gt;
+
+        &lt;!-- Minimal Box --&gt;
+        &lt;label class=&quot;row&quot;&gt;
+            &lt;div class=&quot;label-content&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-shield-halved&quot;&gt;&lt;/i&gt;
+                &lt;div class=&quot;text-group&quot;&gt;
+                    &lt;span class=&quot;title&quot;&gt;Privacy Lock&lt;/span&gt;
+                    &lt;span class=&quot;subtitle&quot;&gt;Encrypted states&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;cb-square&quot;&gt;
+                &lt;input type=&quot;checkbox&quot;&gt;
+                &lt;div class=&quot;box&quot;&gt;&lt;i class=&quot;fa-solid fa-check&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/label&gt;
+
+    &lt;/div&gt;
+
+    
+
+    &lt;script&gt;
+        // Kinetic feedback on interaction
+        document.querySelectorAll(&#x27;input&#x27;).forEach(input =&gt; {
+            input.addEventListener(&#x27;change&#x27;, function() {
+                const row = this.closest(&#x27;.row&#x27;);
+                gsap.to(row, { scale: 0.96, duration: 0.1, yoyo: true, repeat: 1 });
+            });
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Combobox Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Combobox</span>
+                            <a href="docs.html#combobox" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium Glass Combobox&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        /* --- Global Resets --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+
+        .layout-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: transparent; 
+            overflow: hidden;
+            padding-top: 6rem; /* Top alignment */
+        }
+
+        /* --- CENTERED WHITE CIRCLE GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 22rem; 
+            height: 22rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.85;
+            animation: pulse 8s infinite ease-in-out;
+        }
+
+        .glow-outer {
+            position: absolute;
+            width: 45rem; 
+            height: 45rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 75%);
+            filter: blur(140px);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0.9; }
+        }
+
+        /* --- TRANSLUCENT COMBOBOX --- */
+        .combobox-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 22rem; 
+        }
+
+        .combobox-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .combobox-input {
+            width: 100%;
+            border-radius: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            padding: 1rem 3rem 1rem 1.5rem;
+            font-size: 1rem;
+            color: #fff;
+            outline: none;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            letter-spacing: -0.01em;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .combobox-input:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .combobox-button {
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s;
+        }
+
+        .combobox-button:hover { color: #fff; }
+
+        /* --- TRANSLUCENT POPUP --- */
+        .combobox-options {
+            position: absolute;
+            top: calc(100% + 0.75rem);
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 0.6rem;
+            z-index: 50;
+            /* INCREASED HEIGHT TO DISPLAY ALL NAMES */
+            max-height: 28rem; 
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            transform-origin: top;
+        }
+
+        .combobox-options.show { display: block; }
+
+        .combobox-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem; /* Slightly more vertical padding */
+            border-radius: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .combobox-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .combobox-option.selected {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .combobox-option i {
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .combobox-option.selected i { opacity: 1; }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        .combobox-options::-webkit-scrollbar { width: 4px; }
+        .combobox-options::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+
+        /* --- FOOTER --- */
+        footer {
+            position: absolute; 
+            bottom: 25px; 
+            color: rgba(255,255,255,0.25); 
+            font-size: 0.85rem; 
+            z-index: 10;
+        }
+        footer a { color: rgba(255,255,255,0.4); text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: #fff; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;div class=&quot;layout-container&quot;&gt;
+        &lt;!-- Centered Background Glow --&gt;
+        &lt;div class=&quot;glow-wrapper&quot;&gt;
+            &lt;div class=&quot;glow-outer&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Floating Combobox --&gt;
+        &lt;div class=&quot;combobox-container&quot; id=&quot;combobox&quot;&gt;
+            &lt;div class=&quot;combobox-input-wrapper&quot;&gt;
+                &lt;input type=&quot;text&quot; class=&quot;combobox-input&quot; id=&quot;comboInput&quot; placeholder=&quot;Search team...&quot; autocomplete=&quot;off&quot;&gt;
+                &lt;button class=&quot;combobox-button&quot; id=&quot;comboButton&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-chevron-down&quot;&gt;&lt;/i&gt;
+                &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;combobox-options&quot; id=&quot;comboOptions&quot;&gt;
+                &lt;!-- JavaScript populates --&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        const people = [
+            { id: 1, name: &#x27;Tom Cook&#x27; },
+            { id: 2, name: &#x27;Wade Cooper&#x27; },
+            { id: 3, name: &#x27;Tanya Fox&#x27; },
+            { id: 4, name: &#x27;Jinuk Chanthusa&#x27; },
+            
+          
+        ];
+
+        let selectedPerson = null; 
+        const comboInput = document.getElementById(&#x27;comboInput&#x27;);
+        const comboOptions = document.getElementById(&#x27;comboOptions&#x27;);
+        const comboButton = document.getElementById(&#x27;comboButton&#x27;);
+
+        function renderOptions(filter = &#x27;&#x27;) {
+            const filtered = people.filter(p =&gt; p.name.toLowerCase().includes(filter.toLowerCase()));
+            comboOptions.innerHTML = &#x27;&#x27;;
+            
+            if (filtered.length === 0) {
+                const empty = document.createElement(&#x27;div&#x27;);
+                empty.className = &#x27;p-4 text-sm text-white/30 text-center italic&#x27;;
+                empty.innerText = &#x27;No results found&#x27;;
+                comboOptions.appendChild(empty);
+                return;
+            }
+
+            filtered.forEach(person =&gt; {
+                const opt = document.createElement(&#x27;div&#x27;);
+                opt.className = `combobox-option ${person.id === selectedPerson?.id ? &#x27;selected&#x27; : &#x27;&#x27;}`;
+                opt.innerHTML = `&lt;span&gt;${person.name}&lt;/span&gt;&lt;i class=&quot;fa-solid fa-check&quot;&gt;&lt;/i&gt;`;
+                opt.onclick = (e) =&gt; {
+                    e.stopPropagation();
+                    selectedPerson = person;
+                    comboInput.value = person.name;
+                    closeDropdown();
+                };
+                comboOptions.appendChild(opt);
+            });
+        }
+
+        function openDropdown() {
+            comboOptions.classList.add(&#x27;show&#x27;);
+            renderOptions(comboInput.value);
+            gsap.fromTo(comboOptions, 
+                { opacity: 0, y: -15, scale: 0.95 }, 
+                { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: &quot;back.out(1.7)&quot; }
+            );
+        }
+
+        function closeDropdown() {
+            if (!comboOptions.classList.contains(&#x27;show&#x27;)) return;
+            gsap.to(comboOptions, { 
+                opacity: 0, 
+                y: -10, 
+                scale: 0.98,
+                duration: 0.2, 
+                onComplete: () =&gt; {
+                    comboOptions.classList.remove(&#x27;show&#x27;);
+                    if (selectedPerson) comboInput.value = selectedPerson.name;
+                }
+            });
+        }
+
+        comboInput.onfocus = openDropdown;
+        comboInput.oninput = (e) =&gt; {
+            if (!comboOptions.classList.contains(&#x27;show&#x27;)) openDropdown();
+            renderOptions(e.target.value);
+        };
+
+        comboButton.onclick = (e) =&gt; {
+            e.stopPropagation();
+            comboOptions.classList.contains(&#x27;show&#x27;) ? closeDropdown() : openDropdown();
+        };
+
+        document.onclick = (e) =&gt; {
+            if (!document.getElementById(&#x27;combobox&#x27;).contains(e.target)) closeDropdown();
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Dialog Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Dialog</span>
+                            <a href="docs.html#dialog" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium Glassmorphism Dialog&lt;/title&gt;
+    
+    &lt;!-- Tailwind for layout only --&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        /* --- PURE GLASS CSS ONLY --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- CONSTRAINED DYNAMIC GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -45%); /* Aligned with button */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .glow-active {
+            transform: translate(-50%, -50%); /* Aligned with popup */
+        }
+
+        .glow-core {
+            position: absolute;
+            /* Tightened to vanish residue behind button */
+            width: 4rem; 
+            height: 4rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            filter: blur(15px); 
+            opacity: 0; /* Fully invisible when button is shown */
+            transition: all 0.3s ease;
+        }
+
+        /* Glow only appears and expands for the popup */
+        .glow-active .glow-core {
+            width: 18rem; 
+            height: 18rem;
+            opacity: 0.8;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, transparent 75%);
+            filter: blur(45px);
+        }
+
+        .glow-mid {
+            position: absolute;
+            width: 15rem; 
+            height: 15rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+            filter: blur(50px);
+            opacity: 0; /* Vanish residue */
+            transition: opacity 0.3s ease;
+        }
+
+        .glow-active .glow-mid {
+            opacity: 1;
+        }
+
+        /* --- TRIGGER BUTTON --- */
+        #openBtn {
+            position: relative;
+            z-index: 10;
+            padding: 0.6rem 1.4rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #fff;
+            border-radius: 0.6rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        #openBtn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* --- DIALOG PANEL --- */
+        #dialogOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 40;
+            display: none;
+            backdrop-filter: blur(8px);
+        }
+
+        #dialogContainer {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .dialog-panel {
+            position: relative;
+            width: 100%;
+            max-width: 30rem;
+            padding: 2rem;
+            
+            background-color: rgba(255, 255, 255, 0.01); 
+            backdrop-filter: blur(50px) saturate(210%);
+            -webkit-backdrop-filter: blur(50px) saturate(210%);
+            
+            /* Reflected Light Border */
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-top: 1px solid rgba(255, 255, 255, 0.22); 
+            border-radius: 1.5rem;
+            
+            box-shadow: 
+                0 50px 100px -20px rgba(0, 0, 0, 1),
+                inset 0 1px 0px rgba(255, 255, 255, 0.05); 
+        }
+
+        .dialog-title {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #fff;
+            letter-spacing: -0.01em;
+        }
+
+        .dialog-message {
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        /* Got it button: Translucent &amp; Glassy */
+        .confirm-btn {
+            margin-top: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border-radius: 0.6rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .confirm-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .hidden-element {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+   &lt;div class=&quot;layout-container&quot;&gt;
+    &lt;!-- Minimal Spotlight Glow --&gt;
+    &lt;div id=&quot;glowWrapper&quot; class=&quot;glow-wrapper&quot;&gt;
+        &lt;div class=&quot;glow-mid&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Trigger --&gt;
+    &lt;button id=&quot;openBtn&quot;&gt;Open dialog&lt;/button&gt;
+
+    &lt;!-- Dialog --&gt;
+    &lt;div id=&quot;dialogOverlay&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;dialogContainer&quot;&gt;
+        &lt;div class=&quot;dialog-panel&quot;&gt;
+            &lt;h3 class=&quot;dialog-title&quot;&gt;Payment successful&lt;/h3&gt;
+            &lt;p class=&quot;dialog-message&quot;&gt;
+                Your payment has been successfully submitted. We’ve sent you an email with all of the details of your order.
+            &lt;/p&gt;
+            &lt;button id=&quot;closeBtn&quot; class=&quot;confirm-btn&quot;&gt;Got it, thanks!&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+   
+        &lt;!-- Attribution Footer --&gt;
+        
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        const openBtn = document.getElementById(&#x27;openBtn&#x27;);
+        const closeBtn = document.getElementById(&#x27;closeBtn&#x27;);
+        const overlay = document.getElementById(&#x27;dialogOverlay&#x27;);
+        const container = document.getElementById(&#x27;dialogContainer&#x27;);
+        const glowWrapper = document.getElementById(&#x27;glowWrapper&#x27;);
+
+        function openModal() {
+            container.style.display = &#x27;flex&#x27;;
+            overlay.style.display = &#x27;block&#x27;;
+            openBtn.classList.add(&#x27;hidden-element&#x27;);
+            glowWrapper.classList.add(&#x27;glow-active&#x27;); 
+        }
+
+        function closeModal() {
+            container.style.display = &#x27;none&#x27;;
+            overlay.style.display = &#x27;none&#x27;;
+            openBtn.classList.remove(&#x27;hidden-element&#x27;);
+            glowWrapper.classList.remove(&#x27;glow-active&#x27;); 
+        }
+
+        openBtn.addEventListener(&#x27;click&#x27;, openModal);
+        closeBtn.addEventListener(&#x27;click&#x27;, closeModal);
+        overlay.addEventListener(&#x27;click&#x27;, closeModal);
+
+        document.addEventListener(&#x27;keydown&#x27;, (e) =&gt; {
+            if (e.key === &#x27;Escape&#x27;) closeModal();
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Disclosure Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Disclosure</span>
+                            <a href="docs.html#disclosure" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium Animated Disclosure&lt;/title&gt;
+    
+    &lt;!-- Typography: Outfit font is a modern geometric sans-serif --&gt;
+    &lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+    &lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    
+    &lt;!-- External Stylesheet --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
+    
+    &lt;!-- GSAP Library: Handles high-performance property animations --&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;div class=&quot;layout-container&quot;&gt;
+        &lt;!-- Glow Wrapper: Layered radial gradients centered behind the component --&gt;
+        &lt;div class=&quot;glow-wrapper&quot;&gt;
+            &lt;div class=&quot;glow-outer&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;glow-mid&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Disclosure Card: The main container with glassmorphism effects --&gt;
+        &lt;div class=&quot;disclosure-card&quot;&gt;
+            
+            &lt;!-- Item 1: Set to &#x27;open&#x27; by default --&gt;
+            &lt;details class=&quot;disclosure-item&quot; open&gt;
+                &lt;summary&gt;
+                    &lt;span class=&quot;title-text&quot;&gt;What is your refund policy?&lt;/span&gt;
+                    &lt;!-- Chevron SVG: Rotated via GSAP when open --&gt;
+                    &lt;svg viewBox=&quot;0 0 20 20&quot; aria-hidden=&quot;true&quot; class=&quot;chevron&quot;&gt;
+                        &lt;path d=&quot;M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z&quot;&gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                &lt;/summary&gt;
+                &lt;!-- Panel Wrapper: Height animated from 0 to &#x27;auto&#x27; --&gt;
+                &lt;div class=&quot;panel-wrapper&quot;&gt;
+                    &lt;div class=&quot;panel-inner&quot;&gt;
+                        &lt;div class=&quot;panel-content&quot;&gt;
+                            If you&#x27;re unhappy with your purchase, we&#x27;ll refund you in full. 
+                            Our team processes all requests within 24 hours without any hidden fees.
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/details&gt;
+
+            &lt;!-- Item 2 --&gt;
+            &lt;details class=&quot;disclosure-item&quot;&gt;
+                &lt;summary&gt;
+                    &lt;span class=&quot;title-text&quot;&gt;Do you offer technical support?&lt;/span&gt;
+                    &lt;svg viewBox=&quot;0 0 20 20&quot; aria-hidden=&quot;true&quot; class=&quot;chevron&quot;&gt;
+                        &lt;path d=&quot;M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z&quot;&gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                &lt;/summary&gt;
+                &lt;div class=&quot;panel-wrapper&quot;&gt;
+                    &lt;div class=&quot;panel-inner&quot;&gt;
+                        &lt;div class=&quot;panel-content&quot;&gt;
+                            Yes, our technical support team is available 24/7 via live chat 
+                            and email. We pride ourselves on a 15-minute average response time.
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/details&gt;
+        &lt;/div&gt;
+
+     
+    &lt;/div&gt;
+
+    &lt;!-- External Script --&gt;
+    &lt;script src=&quot;script.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Dropdown Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Dropdown</span>
+                            <a href="docs.html#dropdown" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium Glassmorphism Dropdown&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;!-- Phosphor Icons CDN --&gt;
+    &lt;script src=&quot;https://unpkg.com/@phosphor-icons/web&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        /* Custom Styles from React Layout */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.001);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            /* Visible border added for more definition */
+            border: 1.5px solid rgba(255, 255, 255, 0.05);
+            border-top-color: rgba(255, 255, 255, 0.15);
+            border-left-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.98), 
+                inset 0 1px 2px rgba(255, 255, 255, 0.02);
+        }
+
+        /* Transition States */
+        .menu-transition {
+            opacity: 0;
+            transform: scale(0.95) translateY(-12px);
+            visibility: hidden;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top right;
+        }
+
+        .menu-transition.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            visibility: visible;
+        }
+
+        .glow-transition {
+            transition: opacity 700ms ease-out;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .glow-transition.active {
+            opacity: 1;
+        }
+
+        .btn-glow-active {
+            opacity: 1 !important;
+        }
+
+        /* Rounded Icon Containers */
+        .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .group:hover .icon-box {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .ph-duotone {
+            font-size: 1.1rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .group:hover .ph-duotone {
+            opacity: 1;
+        }
+
+        /* Specialized Delete Hover */
+        .group:hover .icon-box-delete {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .group:hover .icon-delete {
+            color: #f87171;
+            opacity: 1;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;relative min-h-screen w-full bg-[#030303] flex flex-col items-center justify-start pt-24 overflow-hidden font-[&#x27;Outfit&#x27;]&quot;&gt;
+
+    &lt;!-- --- DROPDOWN CONTAINER --- --&gt;
+    &lt;div class=&quot;z-10 w-full max-w-[280px] px-8 flex justify-end&quot;&gt;
+        &lt;div class=&quot;relative inline-block text-left&quot; id=&quot;menuRoot&quot;&gt;
+            
+            &lt;!-- --- MAIN MENU GLOW --- --&gt;
+            &lt;div id=&quot;mainGlow&quot; class=&quot;glow-transition absolute top-full right-0 translate-y-20 -translate-x-20 z-0&quot;&gt;
+                &lt;div class=&quot;absolute w-[8rem] h-[8rem] bg-white/40 blur-[25px] rounded-full -translate-x-1/2 -translate-y-1/2&quot;&gt;&lt;/div&gt;
+                &lt;div class=&quot;absolute w-[20rem] h-[16rem] bg-white/[0.02] blur-[80px] rounded-full -translate-x-1/2 -translate-y-1/2&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Trigger Button Wrapper --&gt;
+            &lt;div class=&quot;relative inline-block&quot;&gt;
+                &lt;!-- Internal Button Glow --&gt;
+                &lt;div id=&quot;btnGlow&quot; class=&quot;absolute inset-0 m-auto w-1/2 h-1/2 bg-white/30 blur-[10px] rounded-full pointer-events-none opacity-0 transition-opacity duration-500&quot;&gt;&lt;/div&gt;
+                
+                &lt;button id=&quot;menuButton&quot; class=&quot;
+                    relative z-20 inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-[14px] font-medium text-white/90
+                    bg-white/[0.01] backdrop-blur-3xl 
+                    border-[1.5px] border-white/[0.06] border-t-white/[0.22] border-l-white/[0.12]
+                    shadow-[0_1px_3px_rgba(0,0,0,0.3)]
+                    hover:bg-white/[0.04] hover:border-white/25 transition-all duration-300
+                    focus:outline-none
+                &quot;&gt;
+                    &lt;span class=&quot;relative z-10 tracking-tight&quot;&gt;Options&lt;/span&gt;
+                    &lt;i id=&quot;chevron&quot; class=&quot;ph ph-caret-down relative z-10 text-[12px] opacity-50 transition-transform duration-300&quot;&gt;&lt;/i&gt;
+                &lt;/button&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Menu Items --&gt;
+            &lt;div id=&quot;menuItems&quot; class=&quot;menu-transition absolute right-0 w-52 mt-3 glass-panel rounded-[1.75rem] p-2 text-[14px] text-white/70 z-10&quot;&gt;
+                &lt;div class=&quot;space-y-0.5&quot;&gt;
+                    &lt;button class=&quot;group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white&quot;&gt;
+                        &lt;div class=&quot;icon-box&quot;&gt;
+                            &lt;i class=&quot;ph-duotone ph-pencil-circle&quot;&gt;&lt;/i&gt;
+                        &lt;/div&gt;
+                        &lt;span class=&quot;font-normal&quot;&gt;Edit Post&lt;/span&gt;
+                    &lt;/button&gt;
+                    
+                    &lt;button class=&quot;group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white&quot;&gt;
+                        &lt;div class=&quot;icon-box&quot;&gt;
+                            &lt;i class=&quot;ph-duotone ph-copy&quot;&gt;&lt;/i&gt;
+                        &lt;/div&gt;
+                        &lt;span class=&quot;font-normal&quot;&gt;Duplicate&lt;/span&gt;
+                    &lt;/button&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Faint Divider --&gt;
+                &lt;div class=&quot;my-2 h-[1px] bg-white/[0.05] mx-4&quot;&gt;&lt;/div&gt;
+
+                &lt;div class=&quot;space-y-0.5&quot;&gt;
+                    &lt;button class=&quot;group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-white/[0.04] hover:text-white&quot;&gt;
+                        &lt;div class=&quot;icon-box&quot;&gt;
+                            &lt;i class=&quot;ph-duotone ph-archive&quot;&gt;&lt;/i&gt;
+                        &lt;/div&gt;
+                        &lt;span class=&quot;font-normal&quot;&gt;Archive&lt;/span&gt;
+                    &lt;/button&gt;
+                    
+                    &lt;button class=&quot;group flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-all hover:bg-red-500/10 hover:text-red-400&quot;&gt;
+                        &lt;div class=&quot;icon-box icon-box-delete&quot;&gt;
+                            &lt;i class=&quot;ph-duotone ph-trash icon-delete&quot;&gt;&lt;/i&gt;
+                        &lt;/div&gt;
+                        &lt;span class=&quot;font-normal&quot;&gt;Delete&lt;/span&gt;
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Attribution Footer --&gt;
+    
+
+    &lt;script&gt;
+        const btn = document.getElementById(&#x27;menuButton&#x27;);
+        const menu = document.getElementById(&#x27;menuItems&#x27;);
+        const root = document.getElementById(&#x27;menuRoot&#x27;);
+        const mainGlow = document.getElementById(&#x27;mainGlow&#x27;);
+        const btnGlow = document.getElementById(&#x27;btnGlow&#x27;);
+        const chevron = document.getElementById(&#x27;chevron&#x27;);
+
+        let isOpen = false;
+
+        function toggleMenu() {
+            isOpen = !isOpen;
+            if (isOpen) {
+                menu.classList.add(&#x27;show&#x27;);
+                mainGlow.classList.add(&#x27;active&#x27;);
+                btnGlow.classList.add(&#x27;btn-glow-active&#x27;);
+                chevron.style.transform = &#x27;rotate(180deg)&#x27;;
+            } else {
+                menu.classList.remove(&#x27;show&#x27;);
+                mainGlow.classList.remove(&#x27;active&#x27;);
+                btnGlow.classList.remove(&#x27;btn-glow-active&#x27;);
+                chevron.style.transform = &#x27;rotate(0deg)&#x27;;
+            }
+        }
+
+        btn.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        document.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+            if (isOpen &amp;&amp; !root.contains(e.target)) {
+                toggleMenu();
+            }
+        });
+
+        document.addEventListener(&#x27;keydown&#x27;, (e) =&gt; {
+            if (e.key === &#x27;Escape&#x27; &amp;&amp; isOpen) {
+                toggleMenu();
+            }
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Fieldset Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Fieldset</span>
+                            <a href="docs.html#fieldset" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Glass Shipping Details&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 25rem; 
+            height: 25rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* --- GLASS FORM STYLING --- */
+        .form-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 32rem;
+            padding: 1rem;
+        }
+
+        .glass-fieldset {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .description {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .input-base {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.6rem 0.9rem;
+            color: #fff;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-base:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- CUSTOM SELECT ARROW --- */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-input {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .select-input option {
+            background-color: transparent;
+            color: #fff;
+        }
+
+        .chevron-icon {
+            position: absolute;
+            right: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- Background Glow --&gt;
+    &lt;div class=&quot;glow-wrapper&quot;&gt;
+        &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Shipping Form --&gt;
+    &lt;div class=&quot;form-container&quot;&gt;
+        &lt;div class=&quot;glass-fieldset space-y-8&quot;&gt;
+            &lt;h2 class=&quot;text-base font-semibold text-white tracking-wide&quot;&gt;Shipping details&lt;/h2&gt;
+            
+            &lt;!-- Street Address --&gt;
+            &lt;div class=&quot;field&quot;&gt;
+                &lt;label class=&quot;label&quot;&gt;Street address&lt;/label&gt;
+                &lt;input type=&quot;text&quot; class=&quot;input-base&quot; placeholder=&quot;123 Glass Lane&quot;&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Country --&gt;
+            &lt;div class=&quot;field&quot;&gt;
+                &lt;label class=&quot;label&quot;&gt;Country&lt;/label&gt;
+                &lt;p class=&quot;description&quot;&gt;We currently only ship to North America.&lt;/p&gt;
+                &lt;div class=&quot;select-wrapper&quot;&gt;
+                    &lt;select class=&quot;input-base select-input&quot;&gt;
+                        &lt;option&gt;Canada&lt;/option&gt;
+                        &lt;option&gt;Mexico&lt;/option&gt;
+                        &lt;option&gt;United States&lt;/option&gt;
+                    &lt;/select&gt;
+                    &lt;i class=&quot;fa-solid fa-chevron-down chevron-icon&quot;&gt;&lt;/i&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Delivery Notes --&gt;
+            &lt;div class=&quot;field&quot;&gt;
+                &lt;label class=&quot;label&quot;&gt;Delivery notes&lt;/label&gt;
+                &lt;p class=&quot;description&quot;&gt;If you have a tiger, we&#x27;d like to know about it.&lt;/p&gt;
+                &lt;textarea class=&quot;input-base&quot; rows=&quot;3&quot; style=&quot;resize: none;&quot;&gt;&lt;/textarea&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Attribution Footer --&gt;
+    
+
+    &lt;script&gt;
+        // Smooth entrance animation
+        window.onload = () =&gt; {
+            gsap.from(&quot;.glass-fieldset&quot;, {
+                opacity: 0,
+                y: 30,
+                duration: 1.2,
+                ease: &quot;power4.out&quot;
+            });
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[192.3%] h-[192.3%] border-0 origin-center scale-[0.52] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Input Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Input</span>
+                            <a href="docs.html#inputs" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Glass Input Field&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 20rem; 
+            height: 20rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0.85; }
+        }
+
+        /* --- GLASS COMPONENT STYLING --- */
+        .field-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 28rem;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+            line-height: 1.5rem;
+        }
+
+        .description {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.5rem;
+            margin-top: 0.1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            margin-top: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid transparent;
+            border-radius: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            color: #fff;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- Background Glow --&gt;
+    &lt;div class=&quot;glow-wrapper&quot;&gt;
+        &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Main Component --&gt;
+    &lt;div class=&quot;field-container&quot;&gt;
+        &lt;div class=&quot;field&quot;&gt;
+            &lt;label class=&quot;label&quot;&gt;Name&lt;/label&gt;
+            &lt;p class=&quot;description&quot;&gt;Use your real name so people will recognize you.&lt;/p&gt;
+            &lt;input type=&quot;text&quot; class=&quot;input-field&quot; placeholder=&quot;Enter your name&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Attribution Footer --&gt;
+    
+
+    &lt;script&gt;
+        // Smooth entrance animation
+        window.onload = () =&gt; {
+            gsap.from(&quot;.field-container&quot;, {
+                opacity: 0,
+                scale: 0.95,
+                y: 20,
+                duration: 1,
+                ease: &quot;power3.out&quot;
+            });
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Listbox Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Listbox</span>
+                            <a href="docs.html#listbox" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Glass Listbox Component&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            color: white;
+            padding-top: 5rem;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 20rem; 
+            height: 20rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0.85; }
+        }
+
+        /* --- LISTBOX STYLING --- */
+        .listbox-container {
+            position: relative;
+            z-index: 10;
+            width: 13rem; /* 52 in tailwind */
+        }
+
+        .listbox-button {
+            width: 100%;
+            text-align: left;
+            padding: 0.375rem 2rem 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            outline: none;
+        }
+
+        .listbox-button:focus {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+        }
+
+        .chevron-icon {
+            position: absolute;
+            right: 0.625rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+            pointer-events: none;
+        }
+
+        .listbox-options {
+            position: absolute;
+            top: calc(100% + 0.25rem);
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            padding: 0.25rem;
+            z-index: 50;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .listbox-options.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .listbox-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+            user-select: none;
+        }
+
+        .listbox-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .check-icon {
+            font-size: 0.75rem;
+            width: 1rem;
+            visibility: hidden;
+        }
+
+        .listbox-option.selected .check-icon {
+            visibility: visible;
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- Background Glow --&gt;
+    &lt;div class=&quot;glow-wrapper&quot;&gt;
+        &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Main Component Container --&gt;
+    &lt;div class=&quot;listbox-container&quot; id=&quot;listbox&quot;&gt;
+        &lt;button class=&quot;listbox-button&quot; id=&quot;listboxBtn&quot;&gt;
+            &lt;span id=&quot;selectedName&quot;&gt;Wade Cooper&lt;/span&gt;
+            &lt;i class=&quot;fa-solid fa-chevron-down chevron-icon&quot;&gt;&lt;/i&gt;
+        &lt;/button&gt;
+
+        &lt;div class=&quot;listbox-options&quot; id=&quot;listboxOptions&quot;&gt;
+            &lt;!-- Populated via JS --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Attribution Footer --&gt;
+    
+
+    &lt;script&gt;
+        const people = [
+            { id: 1, name: &#x27;Tom Cook&#x27; },
+            { id: 2, name: &#x27;Wade Cooper&#x27; },
+            { id: 3, name: &#x27;Tanya Fox&#x27; },
+            { id: 4, name: &#x27;Arlene Mccoy&#x27; },
+            { id: 5, name: &#x27;Devon Webb&#x27; },
+        ];
+
+        let selected = people[1];
+        const btn = document.getElementById(&#x27;listboxBtn&#x27;);
+        const optionsContainer = document.getElementById(&#x27;listboxOptions&#x27;);
+        const selectedNameLabel = document.getElementById(&#x27;selectedName&#x27;);
+
+        function renderOptions() {
+            optionsContainer.innerHTML = &#x27;&#x27;;
+            people.forEach(person =&gt; {
+                const opt = document.createElement(&#x27;div&#x27;);
+                opt.className = `listbox-option ${person.id === selected.id ? &#x27;selected&#x27; : &#x27;&#x27;}`;
+                opt.innerHTML = `
+                    &lt;i class=&quot;fa-solid fa-check check-icon&quot;&gt;&lt;/i&gt;
+                    &lt;span&gt;${person.name}&lt;/span&gt;
+                `;
+                opt.onclick = (e) =&gt; {
+                    e.stopPropagation();
+                    selected = person;
+                    selectedNameLabel.innerText = person.name;
+                    renderOptions();
+                    toggleOptions();
+                };
+                optionsContainer.appendChild(opt);
+            });
+        }
+
+        function toggleOptions() {
+            const isOpen = optionsContainer.classList.contains(&#x27;show&#x27;);
+            if (isOpen) {
+                optionsContainer.classList.remove(&#x27;show&#x27;);
+            } else {
+                optionsContainer.classList.add(&#x27;show&#x27;);
+            }
+        }
+
+        btn.onclick = (e) =&gt; {
+            e.stopPropagation();
+            toggleOptions();
+        };
+
+        window.onclick = () =&gt; {
+            optionsContainer.classList.remove(&#x27;show&#x27;);
+        };
+
+        // Initial Render
+        renderOptions();
+        
+        // Entry Animation
+        window.onload = () =&gt; {
+            gsap.from(&quot;#listbox&quot;, {
+                opacity: 0,
+                y: 10,
+                duration: 1,
+                ease: &quot;power3.out&quot;
+            });
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Popover Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Popover</span>
+                            <a href="docs.html#popover" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium Glassmorphism UI&lt;/title&gt;
+    &lt;!-- Tailwind for layout utilities --&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        /* --- GLOBAL STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        /* --- CONSTRAINED DYNAMIC GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0; /* Hidden by default */
+        }
+
+        .glow-container {
+            position: absolute;
+            width: 0;
+            height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glow-core {
+            position: absolute;
+            /* Reduced by another 10% from 18.8rem to ~16.9rem */
+            width: 16.9rem; 
+            height: 16.9rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 75%);
+            filter: blur(50px); 
+        }
+
+        .glow-mid {
+            position: absolute;
+            /* Reduced by another 10% from 12.0rem to ~10.8rem */
+            width: 10.8rem; 
+            height: 10.8rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, transparent 60%);
+            filter: blur(35px);
+        }
+
+        /* When active, wrapper is visible */
+        .glow-active {
+            opacity: 1;
+        }
+
+        /* --- GLASS UI SHARED --- */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(40px) saturate(210%);
+            -webkit-backdrop-filter: blur(40px) saturate(210%);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-top: 1px solid rgba(255, 255, 255, 0.22); 
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 1), inset 0 1px 0px rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- POPOVER STYLES --- */
+        .popover-panel {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            width: 18rem;
+            border-radius: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .popover-panel.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .popover-link {
+            display: block;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .popover-link:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: scale(1.02);
+        }
+
+        /* --- NAV BUTTON &amp; UNDERLINE ANIMATION --- */
+        .nav-btn {
+            position: relative;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+            outline: none;
+            padding-bottom: 6px;
+        }
+
+        .nav-btn::after {
+            content: &#x27;&#x27;;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .nav-btn.active {
+            color: white;
+        }
+
+        .nav-btn.active::after {
+            width: 100%;
+            opacity: 1;
+        }
+
+        .nav-btn:hover {
+            color: white;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;pt-24&quot;&gt;
+
+    &lt;!-- Global Dynamic Spotlight (Centered exactly behind the panel) --&gt;
+    &lt;div id=&quot;glowWrapper&quot; class=&quot;glow-wrapper&quot;&gt;
+        &lt;div id=&quot;glowContainer&quot; class=&quot;glow-container&quot;&gt;
+            &lt;div class=&quot;glow-mid&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Navigation Section --&gt;
+    &lt;nav class=&quot;relative z-20 flex gap-12 items-center&quot;&gt;
+        
+        &lt;div class=&quot;text-sm font-semibold text-white/40 cursor-default hover:text-white transition-colors duration-300&quot;&gt;Products&lt;/div&gt;
+        
+        &lt;!-- Solutions Popover --&gt;
+        &lt;div class=&quot;relative popover-container&quot;&gt;
+            &lt;button id=&quot;solutionsTrigger&quot; class=&quot;nav-btn popover-trigger&quot;&gt;Solutions&lt;/button&gt;
+            &lt;div id=&quot;solutionsPanel&quot; class=&quot;popover-panel glass-panel divide-y divide-white/5&quot;&gt;
+                &lt;div class=&quot;p-4&quot;&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;popover-link&quot;&gt;
+                        &lt;p class=&quot;font-semibold text-white text-base&quot;&gt;Insights&lt;/p&gt;
+                        &lt;p class=&quot;text-xs text-white/40&quot;&gt;Measure actions your users take&lt;/p&gt;
+                    &lt;/a&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;popover-link mt-2&quot;&gt;
+                        &lt;p class=&quot;font-semibold text-white text-base&quot;&gt;Automations&lt;/p&gt;
+                        &lt;p class=&quot;text-xs text-white/40&quot;&gt;Create your own targeted content&lt;/p&gt;
+                    &lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;p-4&quot;&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;popover-link&quot;&gt;
+                        &lt;p class=&quot;font-semibold text-white text-base&quot;&gt;Documentation&lt;/p&gt;
+                        &lt;p class=&quot;text-xs text-white/40&quot;&gt;Start integrating tools&lt;/p&gt;
+                    &lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;text-sm font-semibold text-white/40 cursor-default hover:text-white transition-colors duration-300&quot;&gt;Pricing&lt;/div&gt;
+
+    &lt;/nav&gt;
+
+    &lt;!-- Attribution Footer --&gt;
+     
+
+    &lt;script&gt;
+        const glowWrapper = document.getElementById(&#x27;glowWrapper&#x27;);
+        const glowContainer = document.getElementById(&#x27;glowContainer&#x27;);
+        const trigger = document.getElementById(&#x27;solutionsTrigger&#x27;);
+        const panel = document.getElementById(&#x27;solutionsPanel&#x27;);
+        const container = document.querySelector(&#x27;.popover-container&#x27;);
+
+        /**
+         * Aligns the glow elements directly behind the popover panel
+         */
+        function alignGlowToPanel() {
+            const rect = panel.getBoundingClientRect();
+            // Calculate center of the actual panel
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Move the container to that coordinate
+            glowContainer.style.left = `${centerX}px`;
+            glowContainer.style.top = `${centerY}px`;
+        }
+
+        function closePopover() {
+            panel.classList.remove(&#x27;show&#x27;);
+            trigger.classList.remove(&#x27;active&#x27;);
+            glowWrapper.classList.remove(&#x27;glow-active&#x27;);
+        }
+
+        trigger.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+            e.stopPropagation();
+            const isShowing = panel.classList.contains(&#x27;show&#x27;);
+
+            if (!isShowing) {
+                // Show panel first
+                panel.classList.add(&#x27;show&#x27;);
+                trigger.classList.add(&#x27;active&#x27;);
+                
+                // Align glow to the now-visible panel
+                alignGlowToPanel();
+                glowWrapper.classList.add(&#x27;glow-active&#x27;);
+            } else {
+                closePopover();
+            }
+        });
+
+        // Close on outside click
+        window.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+            if (!container.contains(e.target)) {
+                closePopover();
+            }
+        });
+
+        // Keep alignment on window resize
+        window.addEventListener(&#x27;resize&#x27;, () =&gt; {
+            if (panel.classList.contains(&#x27;show&#x27;)) {
+                alignGlowToPanel();
+            }
+        });
+
+        // Close on escape
+        document.addEventListener(&#x27;keydown&#x27;, (e) =&gt; {
+            if (e.key === &#x27;Escape&#x27;) {
+                closePopover();
+            }
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Radio Group Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Radio Group</span>
+                            <a href="docs.html#radio-group" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Glass Radio Group Component&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 25rem; 
+            height: 25rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* --- RADIO GROUP STYLING --- */
+        .radio-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 28rem;
+            padding: 1rem;
+            /* Prevent layout shift during animation */
+            min-height: 300px; 
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .radio-option {
+            position: relative;
+            cursor: pointer;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            outline: none;
+            opacity: 0; /* Hidden initially for GSAP */
+        }
+
+        .radio-option:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .radio-option.checked {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .radio-option.checked .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .plan-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .plan-details {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .dot {
+            font-size: 0.5rem;
+            opacity: 0.5;
+        }
+
+        .check-icon {
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        .radio-option:focus-visible {
+            box-shadow: 0 0 0 2px #fff;
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;div class=&quot;glow-wrapper&quot;&gt;
+        &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;radio-container&quot;&gt;
+        &lt;div class=&quot;radio-group&quot; id=&quot;radioGroup&quot; aria-label=&quot;Server size&quot;&gt;
+            &lt;!-- Populated via JS --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    
+
+    &lt;script&gt;
+        const plans = [
+            { id: &#x27;startup&#x27;, name: &#x27;Startup&#x27;, ram: &#x27;12GB&#x27;, cpus: &#x27;6 CPUs&#x27;, disk: &#x27;256GB SSD disk&#x27; },
+            { id: &#x27;business&#x27;, name: &#x27;Business&#x27;, ram: &#x27;16GB&#x27;, cpus: &#x27;8 CPUs&#x27;, disk: &#x27;512GB SSD disk&#x27; },
+            { id: &#x27;enterprise&#x27;, name: &#x27;Enterprise&#x27;, ram: &#x27;32GB&#x27;, cpus: &#x27;12 CPUs&#x27;, disk: &#x27;1TB SSD disk&#x27; },
+        ];
+
+        let selectedId = plans[0].id;
+        const groupContainer = document.getElementById(&#x27;radioGroup&#x27;);
+
+        function renderOptions(isInitial = false) {
+            groupContainer.innerHTML = &#x27;&#x27;;
+            plans.forEach(plan =&gt; {
+                const isChecked = plan.id === selectedId;
+                const option = document.createElement(&#x27;div&#x27;);
+                option.className = `radio-option ${isChecked ? &#x27;checked&#x27; : &#x27;&#x27;}`;
+                option.setAttribute(&#x27;tabindex&#x27;, &#x27;0&#x27;);
+                option.setAttribute(&#x27;role&#x27;, &#x27;radio&#x27;);
+                option.setAttribute(&#x27;aria-checked&#x27;, isChecked);
+                
+                // If it&#x27;s the initial render, keep opacity 0 for GSAP
+                if (isInitial) option.style.opacity = &#x27;0&#x27;;
+                else option.style.opacity = &#x27;1&#x27;;
+
+                option.innerHTML = `
+                    &lt;div class=&quot;flex-1&quot;&gt;
+                        &lt;p class=&quot;plan-name&quot;&gt;${plan.name}&lt;/p&gt;
+                        &lt;div class=&quot;plan-details&quot;&gt;
+                            &lt;span&gt;${plan.ram}&lt;/span&gt;
+                            &lt;span class=&quot;dot&quot;&gt;•&lt;/span&gt;
+                            &lt;span&gt;${plan.cpus}&lt;/span&gt;
+                            &lt;span class=&quot;dot&quot;&gt;•&lt;/span&gt;
+                            &lt;span&gt;${plan.disk}&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;i class=&quot;fa-solid fa-circle-check check-icon&quot;&gt;&lt;/i&gt;
+                `;
+
+                const selectPlan = () =&gt; {
+                    selectedId = plan.id;
+                    renderOptions(false);
+                };
+
+                option.onclick = selectPlan;
+                option.onkeydown = (e) =&gt; {
+                    if (e.key === &#x27;Enter&#x27; || e.key === &#x27; &#x27;) {
+                        e.preventDefault();
+                        selectPlan();
+                    }
+                };
+
+                groupContainer.appendChild(option);
+            });
+        }
+
+        // Initial Render
+        renderOptions(true);
+
+        // Entrance Animation
+        window.onload = () =&gt; {
+            gsap.to(&quot;.radio-option&quot;, {
+                opacity: 1,
+                x: 0,
+                startAt: { x: -20 },
+                stagger: 0.1,
+                duration: 0.8,
+                ease: &quot;power2.out&quot;,
+                clearProps: &quot;transform&quot; // Critical: removes GSAP transform so hover CSS works
+            });
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Select Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Select</span>
+                            <a href="docs.html#select" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Glass Select Component&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 25rem; 
+            height: 25rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* --- COMPONENT STYLING --- */
+        .container-box {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 28rem;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            opacity: 0; /* For GSAP */
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .description {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-input {
+            width: 100%;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.6rem 2.5rem 0.6rem 0.9rem;
+            color: #fff;
+            font-size: 0.875rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .select-input option {
+            background-color: transparent;
+            color: #fff;
+        }
+
+        .chevron-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .select-input:focus + .chevron-icon {
+            transform: translateY(-50%) rotate(180deg);
+            color: #fff;
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- Background Glow --&gt;
+    &lt;div class=&quot;glow-wrapper&quot;&gt;
+        &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Project Status Container --&gt;
+    &lt;div class=&quot;container-box&quot;&gt;
+        &lt;label class=&quot;label&quot;&gt;Project status&lt;/label&gt;
+        &lt;p class=&quot;description&quot;&gt;This will be visible to clients on the project.&lt;/p&gt;
+        
+        &lt;div class=&quot;select-wrapper&quot;&gt;
+            &lt;select class=&quot;select-input&quot;&gt;
+                &lt;option value=&quot;active&quot;&gt;Active&lt;/option&gt;
+                &lt;option value=&quot;paused&quot;&gt;Paused&lt;/option&gt;
+                &lt;option value=&quot;delayed&quot;&gt;Delayed&lt;/option&gt;
+                &lt;option value=&quot;canceled&quot;&gt;Canceled&lt;/option&gt;
+            &lt;/select&gt;
+            &lt;i class=&quot;fa-solid fa-chevron-down chevron-icon&quot;&gt;&lt;/i&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Attribution Footer --&gt;
+    
+
+    &lt;script&gt;
+        // Entrance Animation
+        window.onload = () =&gt; {
+            gsap.to(&quot;.container-box&quot;, {
+                opacity: 1,
+                y: 0,
+                startAt: { y: 20 },
+                duration: 1,
+                ease: &quot;power3.out&quot;
+            });
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Tabs Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Tabs</span>
+                            <a href="docs.html#tabs" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium Glassmorphism Tabs&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;!-- GSAP for Seamless Animations --&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            position: relative;
+        }
+
+        /* --- Dynamic Background Spotlight --- */
+        .glow-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+        }
+
+        .glow-container {
+            position: absolute;
+            width: 0;
+            height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            will-change: transform, left, top;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 20rem; 
+            height: 20rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+            filter: blur(50px); 
+        }
+
+        .glow-mid {
+            position: absolute;
+            width: 10rem; 
+            height: 10rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            filter: blur(30px);
+        }
+
+        /* --- Glassmorphism UI --- */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(40px) saturate(210%);
+            -webkit-backdrop-filter: blur(40px) saturate(210%);
+            border: 1px solid rgba(255, 255, 255, 0.06); 
+            border-top: 1px solid rgba(255, 255, 255, 0.15); 
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.9), inset 0 1px 0px rgba(255, 255, 255, 0.04);
+        }
+
+        /* --- Tab Styling --- */
+        .tab-btn {
+            position: relative;
+            padding: 7px 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.45);
+            border-radius: 9999px;
+            transition: color 0.3s ease;
+            z-index: 1;
+        }
+
+        .tab-btn.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Tab Content Control */
+        .tab-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            visibility: hidden;
+            opacity: 0;
+            padding: 4px; /* Reduced padding */
+        }
+
+        .tab-content.active {
+            position: relative;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* --- List Items --- */
+        .post-item {
+            position: relative;
+            padding: 14px 16px;
+            border-radius: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .post-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
+            margin: 0px 16px;
+        }
+
+        /* --- Footer (Fixed Position) --- */
+        .attribution-footer {
+            position: fixed; 
+            bottom: 24px; 
+            color: rgba(255,255,255,0.25); 
+            font-size: 0.75rem; 
+            z-index: 50;
+            text-align: center;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .attribution-footer a {
+            color: rgba(255,255,255,0.4); 
+            text-decoration: none;
+            transition: color 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .attribution-footer a:hover {
+            color: white;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;pt-24 pb-32 px-4&quot;&gt;
+
+    &lt;!-- Dynamic Spotlight --&gt;
+    &lt;div id=&quot;glowWrapper&quot; class=&quot;glow-wrapper&quot;&gt;
+        &lt;div id=&quot;glowContainer&quot; class=&quot;glow-container&quot;&gt;
+            &lt;div class=&quot;glow-mid&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;w-full max-w-md relative z-10&quot;&gt;
+        &lt;!-- Tab Navigation --&gt;
+        &lt;div class=&quot;flex gap-1 mb-6 px-1 w-full justify-start&quot; id=&quot;tabList&quot;&gt;
+            &lt;button class=&quot;tab-btn active&quot; data-tab=&quot;recent&quot;&gt;Recent&lt;/button&gt;
+            &lt;button class=&quot;tab-btn&quot; data-tab=&quot;popular&quot;&gt;Popular&lt;/button&gt;
+            &lt;button class=&quot;tab-btn&quot; data-tab=&quot;trending&quot;&gt;Trending&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Tab Panels (Optimized height and padding) --&gt;
+        &lt;div id=&quot;tabPanels&quot; class=&quot;glass-panel rounded-2xl overflow-hidden w-full&quot;&gt;
+            &lt;div class=&quot;relative w-full&quot;&gt;
+                
+                &lt;!-- Recent Panel --&gt;
+                &lt;div id=&quot;recent&quot; class=&quot;tab-content active&quot;&gt;
+                    &lt;ul class=&quot;flex flex-col&quot;&gt;
+                        &lt;li class=&quot;post-item&quot;&gt;
+                            &lt;a href=&quot;#&quot; class=&quot;block font-medium text-white mb-0.5&quot;&gt;Does drinking coffee make you smarter?&lt;/a&gt;
+                            &lt;div class=&quot;flex gap-2 text-[11px] text-white/40 font-light&quot;&gt;
+                                &lt;span&gt;5h ago&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;5 comments&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;2 shares&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/li&gt;
+                        &lt;div class=&quot;divider&quot;&gt;&lt;/div&gt;
+                        &lt;li class=&quot;post-item&quot;&gt;
+                            &lt;a href=&quot;#&quot; class=&quot;block font-medium text-white mb-0.5&quot;&gt;So you&#x27;ve bought coffee... now what?&lt;/a&gt;
+                            &lt;div class=&quot;flex gap-2 text-[11px] text-white/40 font-light&quot;&gt;
+                                &lt;span&gt;2h ago&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;3 comments&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;2 shares&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Popular Panel --&gt;
+                &lt;div id=&quot;popular&quot; class=&quot;tab-content&quot;&gt;
+                    &lt;ul class=&quot;flex flex-col&quot;&gt;
+                        &lt;li class=&quot;post-item&quot;&gt;
+                            &lt;a href=&quot;#&quot; class=&quot;block font-medium text-white mb-0.5&quot;&gt;Is tech making coffee better or worse?&lt;/a&gt;
+                            &lt;div class=&quot;flex gap-2 text-[11px] text-white/40 font-light&quot;&gt;
+                                &lt;span&gt;Jan 7&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;29 comments&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;16 shares&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/li&gt;
+                        &lt;div class=&quot;divider&quot;&gt;&lt;/div&gt;
+                        &lt;li class=&quot;post-item&quot;&gt;
+                            &lt;a href=&quot;#&quot; class=&quot;block font-medium text-white mb-0.5&quot;&gt;Innovative things happening in coffee&lt;/a&gt;
+                            &lt;div class=&quot;flex gap-2 text-[11px] text-white/40 font-light&quot;&gt;
+                                &lt;span&gt;Mar 19&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;24 comments&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;12 shares&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Trending Panel --&gt;
+                &lt;div id=&quot;trending&quot; class=&quot;tab-content&quot;&gt;
+                    &lt;ul class=&quot;flex flex-col&quot;&gt;
+                        &lt;li class=&quot;post-item&quot;&gt;
+                            &lt;a href=&quot;#&quot; class=&quot;block font-medium text-white mb-0.5&quot;&gt;Ask Me Anything: 10 coffee answers&lt;/a&gt;
+                            &lt;div class=&quot;flex gap-2 text-[11px] text-white/40 font-light&quot;&gt;
+                                &lt;span&gt;2d ago&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;9 comments&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;5 shares&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/li&gt;
+                        &lt;div class=&quot;divider&quot;&gt;&lt;/div&gt;
+                        &lt;li class=&quot;post-item&quot;&gt;
+                            &lt;a href=&quot;#&quot; class=&quot;block font-medium text-white mb-0.5&quot;&gt;The worst coffee advice ever heard&lt;/a&gt;
+                            &lt;div class=&quot;flex gap-2 text-[11px] text-white/40 font-light&quot;&gt;
+                                &lt;span&gt;4d ago&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;1 comments&lt;/span&gt;&lt;span&gt;&amp;middot;&lt;/span&gt;&lt;span&gt;2 shares&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Attribution Footer (Moved Outside main container for fixed bottom) --&gt;
+     
+
+    &lt;script&gt;
+        const glowWrapper = document.getElementById(&#x27;glowWrapper&#x27;);
+        const glowContainer = document.getElementById(&#x27;glowContainer&#x27;);
+        const tabBtns = document.querySelectorAll(&#x27;.tab-btn&#x27;);
+        const tabContents = document.querySelectorAll(&#x27;.tab-content&#x27;);
+        const tabPanels = document.getElementById(&#x27;tabPanels&#x27;);
+
+        let currentActiveId = &#x27;recent&#x27;;
+
+        function moveGlow(immediate = false) {
+            const rect = tabPanels.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            gsap.to(glowContainer, {
+                left: centerX,
+                top: centerY,
+                duration: immediate ? 0 : 1,
+                ease: &quot;power3.out&quot;
+            });
+        }
+
+        function switchTab(newTabBtn) {
+            const newTabId = newTabBtn.getAttribute(&#x27;data-tab&#x27;);
+            if (newTabId === currentActiveId) return;
+
+            const oldContent = document.getElementById(currentActiveId);
+            const newContent = document.getElementById(newTabId);
+
+            tabBtns.forEach(b =&gt; b.classList.remove(&#x27;active&#x27;));
+            newTabBtn.classList.add(&#x27;active&#x27;);
+
+            // Butterfly Transition
+            gsap.to(oldContent, {
+                opacity: 0,
+                y: 8,
+                scale: 0.98,
+                duration: 0.3,
+                ease: &quot;power2.in&quot;,
+                onComplete: () =&gt; {
+                    oldContent.classList.remove(&#x27;active&#x27;);
+                    newContent.classList.add(&#x27;active&#x27;);
+                    
+                    gsap.fromTo(newContent, 
+                        { opacity: 0, y: -8, scale: 0.98 }, 
+                        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: &quot;back.out(1.2)&quot; }
+                    );
+
+                    currentActiveId = newTabId;
+                    // Trigger glow update after panel size might change
+                    requestAnimationFrame(moveGlow);
+                }
+            });
+        }
+
+        window.addEventListener(&#x27;DOMContentLoaded&#x27;, () =&gt; {
+            gsap.to(glowWrapper, { opacity: 1, duration: 1.5 });
+            moveGlow(true);
+
+            tabBtns.forEach(btn =&gt; {
+                btn.addEventListener(&#x27;click&#x27;, () =&gt; switchTab(btn));
+            });
+        });
+
+        window.addEventListener(&#x27;resize&#x27;, () =&gt; moveGlow(true));
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Textarea Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Textarea</span>
+                            <a href="docs.html#textarea" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Glass Select Component&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 25rem; 
+            height: 25rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* --- COMPONENT STYLING --- */
+        .container-box {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 28rem;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            opacity: 0; /* For GSAP */
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .description {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .select-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .input-base {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.6rem 0.9rem;
+            color: #fff;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-base:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .select-input {
+            appearance: none;
+            cursor: pointer;
+            padding-right: 2.5rem;
+        }
+
+        .select-input option {
+            background-color: transparent;
+            color: #fff;
+        }
+
+        .chevron-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .select-input:focus + .chevron-icon {
+            transform: translateY(-50%) rotate(180deg);
+            color: #fff;
+        }
+
+        .textarea-input {
+            resize: none;
+            display: block;
+            margin-top: 0.75rem;
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- Background Glow --&gt;
+    &lt;div class=&quot;glow-wrapper&quot;&gt;
+        &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Container --&gt;
+    &lt;div class=&quot;container-box&quot;&gt;
+        &lt;!-- Project Status Field --&gt;
+        &lt;div class=&quot;field&quot;&gt;
+            &lt;label class=&quot;label&quot;&gt;Project status&lt;/label&gt;
+            &lt;p class=&quot;description&quot;&gt;This will be visible to clients on the project.&lt;/p&gt;
+            
+            &lt;div class=&quot;select-wrapper&quot;&gt;
+                &lt;select class=&quot;input-base select-input&quot;&gt;
+                    &lt;option value=&quot;active&quot;&gt;Active&lt;/option&gt;
+                    &lt;option value=&quot;paused&quot;&gt;Paused&lt;/option&gt;
+                    &lt;option value=&quot;delayed&quot;&gt;Delayed&lt;/option&gt;
+                    &lt;option value=&quot;canceled&quot;&gt;Canceled&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;i class=&quot;fa-solid fa-chevron-down chevron-icon&quot;&gt;&lt;/i&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Description Field --&gt;
+        &lt;div class=&quot;field&quot;&gt;
+            &lt;label class=&quot;label&quot;&gt;Description&lt;/label&gt;
+            &lt;p class=&quot;description&quot;&gt;This will be shown under the product title.&lt;/p&gt;
+            &lt;textarea class=&quot;input-base textarea-input&quot; rows=&quot;3&quot;&gt;&lt;/textarea&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Attribution Footer --&gt;
+    
+
+    &lt;script&gt;
+        // Entrance Animation
+        window.onload = () =&gt; {
+            gsap.to(&quot;.container-box&quot;, {
+                opacity: 1,
+                y: 0,
+                startAt: { y: 20 },
+                duration: 1,
+                ease: &quot;power3.out&quot;
+            });
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                    <!-- Transistion Card -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[11px] font-bold text-white/50 tracking-[0.2em] uppercase">Transistion</span>
+                            <a href="docs.html#transitions" class="text-[9px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest flex items-center gap-1.5 focus:outline-none">
+                                Documentation <i class="fa-solid fa-chevron-right text-[7px]"></i>
+                            </a>
+                        </div>
+                        <div class="group relative h-[340px] bg-[#030303] border border-white/[0.03] rounded-2xl overflow-hidden transition-all duration-700 hover:border-white/10 hover:bg-[#050505] shadow-[0_0_50px_-20px_rgba(0,0,0,1)]">
+                            <div class="w-full h-full flex items-center justify-center p-4">
+                                <iframe srcdoc="&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Premium GSAP Transitions&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;!-- GSAP for Seamless Animations --&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;!-- Font Awesome CDN --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+        @import url(&#x27;https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;display=swap&#x27;);
+
+        body {
+            min-height: 100vh;
+            background-color: transparent;
+            font-family: &#x27;Outfit&#x27;, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+
+        /* --- Dynamic Background Spotlight --- */
+        .glow-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-container {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+        }
+
+        .glow-core {
+            width: 35rem; 
+            height: 35rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+            filter: blur(90px); 
+        }
+
+        /* --- Premium Glassmorphism UI --- */
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-top: 1px solid rgba(255, 255, 255, 0.2); 
+            box-shadow: 
+                0 40px 80px -15px rgba(0, 0, 0, 0.8),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            perspective: 2000px;
+        }
+
+        .content-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            padding: 3.5rem;
+            text-align: center;
+        }
+
+        .content-box.active {
+            position: relative;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- Interactive Elements --- */
+        .btn-action {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .btn-action:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .icon-wrap {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.75rem;
+            font-size: 1.75rem;
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- Custom Pagination --- */
+        .dot {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        /* --- Attribution Footer --- */
+        .attribution-footer {
+            position: absolute; 
+            bottom: 24px; 
+            color: rgba(255, 255, 255, 0.25); 
+            font-size: 0.75rem; 
+            z-index: 10;
+            letter-spacing: 0.025em;
+            transition: opacity 0.3s ease;
+        }
+
+        .attribution-footer a {
+            color: rgba(255, 255, 255, 0.4); 
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+        }
+
+        .attribution-footer a:hover { 
+            color: white; 
+            border-bottom-color: rgba(255, 255, 255, 0.5);
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- Dynamic Background Elements --&gt;
+    &lt;div class=&quot;glow-wrapper&quot;&gt;
+        &lt;div id=&quot;glow&quot; class=&quot;glow-container&quot;&gt;
+            &lt;div class=&quot;glow-core&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Main Transition Stage --&gt;
+    &lt;div class=&quot;w-full max-w-md relative z-10&quot;&gt;
+        &lt;div id=&quot;mainStage&quot; class=&quot;glass-panel rounded-[2.5rem] overflow-hidden min-h-[420px] flex items-center justify-center&quot;&gt;
+            
+            &lt;!-- Scene 1: Elastic Glide --&gt;
+            &lt;div id=&quot;scene-1&quot; class=&quot;content-box active&quot;&gt;
+                &lt;div class=&quot;icon-wrap&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-bolt-lightning text-yellow-400/80&quot;&gt;&lt;/i&gt;
+                &lt;/div&gt;
+                &lt;h2 class=&quot;text-2xl font-semibold mb-3 tracking-tight&quot;&gt;Elastic Glide&lt;/h2&gt;
+                &lt;p class=&quot;text-white/40 text-[13px] leading-relaxed mb-8 px-2&quot;&gt;High-momentum fluid transition utilizing advanced spring physics for an organic interaction feel.&lt;/p&gt;
+                &lt;button onclick=&quot;transitionTo(2)&quot; class=&quot;btn-action px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]&quot;&gt;Explore Velocity&lt;/button&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Scene 2: Kinetic Tilt --&gt;
+            &lt;div id=&quot;scene-2&quot; class=&quot;content-box&quot;&gt;
+                &lt;div class=&quot;icon-wrap&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-cube text-blue-400/80&quot;&gt;&lt;/i&gt;
+                &lt;/div&gt;
+                &lt;h2 class=&quot;text-2xl font-semibold mb-3 tracking-tight&quot;&gt;Kinetic Tilt&lt;/h2&gt;
+                &lt;p class=&quot;text-white/40 text-[13px] leading-relaxed mb-8 px-2&quot;&gt;Spatial depth through dynamic perspective shifts and 3D coordinate space manipulation.&lt;/p&gt;
+                &lt;button onclick=&quot;transitionTo(3)&quot; class=&quot;btn-action px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]&quot;&gt;Enter Dimensions&lt;/button&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Scene 3: Spectral Ripple --&gt;
+            &lt;div id=&quot;scene-3&quot; class=&quot;content-box&quot;&gt;
+                &lt;div class=&quot;icon-wrap&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-droplet text-purple-400/80&quot;&gt;&lt;/i&gt;
+                &lt;/div&gt;
+                &lt;h2 class=&quot;text-2xl font-semibold mb-3 tracking-tight&quot;&gt;Spectral Ripple&lt;/h2&gt;
+                &lt;p class=&quot;text-white/40 text-[13px] leading-relaxed mb-8 px-2&quot;&gt;Atmospheric Gaussian diffusion paired with staggered opacity for a smooth, spectral exit.&lt;/p&gt;
+                &lt;button onclick=&quot;transitionTo(4)&quot; class=&quot;btn-action px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]&quot;&gt;Flow Spectral&lt;/button&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Scene 4: Split Expansion --&gt;
+            &lt;div id=&quot;scene-4&quot; class=&quot;content-box&quot;&gt;
+                &lt;div class=&quot;icon-wrap&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-arrows-split-up-and-left text-emerald-400/80&quot;&gt;&lt;/i&gt;
+                &lt;/div&gt;
+                &lt;h2 class=&quot;text-2xl font-semibold mb-3 tracking-tight&quot;&gt;Split Expansion&lt;/h2&gt;
+                &lt;p class=&quot;text-white/40 text-[13px] leading-relaxed mb-8 px-2&quot;&gt;Precise modular separation that reassembles with mathematical sequencing and weight.&lt;/p&gt;
+                &lt;button onclick=&quot;transitionTo(1)&quot; class=&quot;btn-action px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]&quot;&gt;Return Home&lt;/button&gt;
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+
+        &lt;!-- Pagination Indicators --&gt;
+        &lt;div class=&quot;mt-12 flex justify-center gap-4&quot;&gt;
+            &lt;div class=&quot;dot w-1 h-1 rounded-full bg-white/10&quot; id=&quot;dot-1&quot; onclick=&quot;transitionTo(1)&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;dot w-1 h-1 rounded-full bg-white/10&quot; id=&quot;dot-2&quot; onclick=&quot;transitionTo(2)&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;dot w-1 h-1 rounded-full bg-white/10&quot; id=&quot;dot-3&quot; onclick=&quot;transitionTo(3)&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;dot w-1 h-1 rounded-full bg-white/10&quot; id=&quot;dot-4&quot; onclick=&quot;transitionTo(4)&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Attribution Footer --&gt;
+     
+
+    &lt;script&gt;
+        let currentScene = 1;
+        let isAnimating = false;
+
+        // Init Glow
+        gsap.set(&quot;#glow&quot;, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+        gsap.set(&quot;#dot-1&quot;, { backgroundColor: &quot;rgba(255,255,255,0.7)&quot;, scale: 2.5 });
+
+        function transitionTo(nextScene) {
+            if (isAnimating || nextScene === currentScene) return;
+            isAnimating = true;
+
+            const outEl = document.getElementById(`scene-${currentScene}`);
+            const inEl = document.getElementById(`scene-${nextScene}`);
+            const direction = nextScene &gt; currentScene ? 1 : -1;
+
+            // Dot Animation
+            gsap.to(`.dot`, { backgroundColor: &quot;rgba(255,255,255,0.1)&quot;, scale: 1, duration: 0.5, ease: &quot;power4.out&quot; });
+            gsap.to(`#dot-${nextScene}`, { backgroundColor: &quot;rgba(255,255,255,0.7)&quot;, scale: 2.5, duration: 0.5, ease: &quot;back.out(2)&quot; });
+
+            const tl = gsap.timeline({
+                onComplete: () =&gt; {
+                    outEl.classList.remove(&#x27;active&#x27;);
+                    inEl.classList.add(&#x27;active&#x27;);
+                    runInAnimation(nextScene, inEl, direction);
+                }
+            });
+
+            // Out Sequences
+            if (currentScene === 1) {
+                tl.to(outEl, { opacity: 0, x: -30 * direction, scale: 0.96, filter: &quot;blur(8px)&quot;, duration: 0.45, ease: &quot;power2.inOut&quot; });
+            } else if (currentScene === 2) {
+                tl.to(outEl, { opacity: 0, rotationY: 35 * direction, x: -80 * direction, duration: 0.55, ease: &quot;expo.in&quot; });
+            } else if (currentScene === 3) {
+                tl.to(outEl, { opacity: 0, y: 25, filter: &quot;blur(15px)&quot;, duration: 0.45, ease: &quot;power2.in&quot; });
+            } else {
+                tl.to(outEl, { opacity: 0, scale: 1.15, filter: &quot;blur(12px)&quot;, duration: 0.45, ease: &quot;power3.in&quot; });
+            }
+        }
+
+        function runInAnimation(index, el, direction) {
+            if (index === 1) {
+                gsap.fromTo(el, 
+                    { opacity: 0, x: 50 * direction, scale: 0.92, filter: &quot;blur(12px)&quot; }, 
+                    { opacity: 1, x: 0, scale: 1, filter: &quot;blur(0px)&quot;, duration: 1.2, ease: &quot;elastic.out(1, 0.8)&quot;, onComplete: () =&gt; isAnimating = false }
+                );
+            } else if (index === 2) {
+                gsap.fromTo(el, 
+                    { opacity: 0, rotationY: -35 * direction, x: 80 * direction }, 
+                    { opacity: 1, rotationY: 0, x: 0, duration: 0.9, ease: &quot;power4.out&quot;, onComplete: () =&gt; isAnimating = false }
+                );
+            } else if (index === 3) {
+                gsap.fromTo(el, 
+                    { opacity: 0, filter: &quot;blur(25px)&quot;, scale: 0.85, y: -15 }, 
+                    { opacity: 1, filter: &quot;blur(0px)&quot;, scale: 1, y: 0, duration: 0.8, ease: &quot;expo.out&quot;, onComplete: () =&gt; isAnimating = false }
+                );
+            } else {
+                gsap.fromTo(el, 
+                    { opacity: 0, scale: 0.6, rotation: 4 * direction }, 
+                    { opacity: 1, scale: 1, rotation: 0, duration: 0.9, ease: &quot;back.out(1.5)&quot;, onComplete: () =&gt; isAnimating = false }
+                );
+            }
+            currentScene = index;
+        }
+
+        // Spotlight Motion
+        window.addEventListener(&#x27;mousemove&#x27;, (e) =&gt; {
+            gsap.to(&quot;#glow&quot;, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 2.2,
+                ease: &quot;power3.out&quot;
+            });
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" class="w-[138.88%] h-[138.88%] border-0 origin-center scale-[0.72] opacity-80 group-hover:opacity-100 transition-all duration-700" scrolling="no" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="border-t border-white/5 bg-black/60 backdrop-blur-xl mt-32 relative z-10 w-full">
+                <div class="max-w-7xl mx-auto px-10 pt-24 pb-12">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+                        <div class="col-span-1 md:col-span-1">
+                            <div class="flex items-center gap-3 mb-8"><img src="image.png" alt="Logo" class="h-7 w-7 opacity-80"><span class="text-sm font-bold tracking-widest uppercase text-white/90">YakaUI Labs</span></div>
+                            <p class="text-xs text-white/30 leading-relaxed max-w-xs font-light">Crafting the future of immersive web experiences through high-fidelity, atmospheric UI systems.</p>
+                        </div>
+                        <div><h3 class="text-[10px] font-bold text-white/90 uppercase tracking-[0.3em] mb-10 opacity-40">Resources</h3><ul class="space-y-5 text-xs text-white/40 font-medium"><li><a href="docs.html" class="hover:text-cyan-400 transition-all">Manual</a></li><li><a href="docs.html#buttons" class="hover:text-cyan-400 transition-all">Components</a></li></ul></div>
+                        <div><h3 class="text-[10px] font-bold text-white/90 uppercase tracking-[0.3em] mb-10 opacity-40">Community</h3><ul class="space-y-5 text-xs text-white/40 font-medium"><li><a href="https://github.com/Yaka-UI-Labs/Yaka-UI" class="hover:text-cyan-400 transition-all">GitHub</a></li><li><a href="#" class="hover:text-cyan-400 transition-all">Discord</a></li></ul></div>
+                        <div><h3 class="text-[10px] font-bold text-white/90 uppercase tracking-[0.3em] mb-10 opacity-40">Development</h3><ul class="space-y-5 text-xs text-white/40 font-medium"><li><a href="docs.html#getting-started" class="hover:text-cyan-400 transition-all">Installation</a></li><li><a href="docs.html#theming" class="hover:text-cyan-400 transition-all">Design Tokens</a></li></ul></div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+    <script>
+        const versionBtn = document.getElementById('versionBtn');
+        const versionPanel = document.getElementById('versionPanel');
+        const versionDropdown = document.getElementById('versionDropdown');
+        
+        versionBtn.onclick = (e) => {
+            e.stopPropagation();
+            versionPanel.classList.toggle('active');
+        };
+        
+        document.onclick = (e) => {
+            if (!versionDropdown.contains(e.target)) versionPanel.classList.remove('active');
+        };
+
+        window.addEventListener('load', () => { 
+            gsap.to("#hero-title", { opacity: 1, y: -15, duration: 2, ease: "power4.out" });
+            gsap.from(".content-panel", { y: 100, opacity: 0, duration: 1.5, ease: "expo.out", delay: 0.5 });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glassmorphism Tabs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP for Seamless Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="pt-24 pb-32 px-4">
+
+    <!-- Dynamic Spotlight -->
+    <div id="glowWrapper" class="glow-wrapper">
+        <div id="glowContainer" class="glow-container">
+            <div class="glow-mid"></div>
+            <div class="glow-core"></div>
+        </div>
+    </div>
+
+    <div class="w-full max-w-md relative z-10">
+        <!-- Tab Navigation -->
+        <div class="flex gap-1 mb-6 px-1 w-full justify-start" id="tabList">
+            <button class="tab-btn active" data-tab="recent">Recent</button>
+            <button class="tab-btn" data-tab="popular">Popular</button>
+            <button class="tab-btn" data-tab="trending">Trending</button>
+        </div>
+
+        <!-- Tab Panels (Optimized height and padding) -->
+        <div id="tabPanels" class="glass-panel rounded-2xl overflow-hidden w-full">
+            <div class="relative w-full">
+
+                <!-- Recent Panel -->
+                <div id="recent" class="tab-content active">
+                    <ul class="flex flex-col">
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">Does drinking coffee make you
+                                smarter?</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>5h ago</span><span>&middot;</span><span>5
+                                    comments</span><span>&middot;</span><span>2 shares</span>
+                            </div>
+                        </li>
+                        <div class="divider"></div>
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">So you've bought coffee... now
+                                what?</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>2h ago</span><span>&middot;</span><span>3
+                                    comments</span><span>&middot;</span><span>2 shares</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Popular Panel -->
+                <div id="popular" class="tab-content">
+                    <ul class="flex flex-col">
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">Is tech making coffee better or
+                                worse?</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>Jan 7</span><span>&middot;</span><span>29
+                                    comments</span><span>&middot;</span><span>16 shares</span>
+                            </div>
+                        </li>
+                        <div class="divider"></div>
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">Innovative things happening in
+                                coffee</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>Mar 19</span><span>&middot;</span><span>24
+                                    comments</span><span>&middot;</span><span>12 shares</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Trending Panel -->
+                <div id="trending" class="tab-content">
+                    <ul class="flex flex-col">
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">Ask Me Anything: 10 coffee
+                                answers</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>2d ago</span><span>&middot;</span><span>9
+                                    comments</span><span>&middot;</span><span>5 shares</span>
+                            </div>
+                        </li>
+                        <div class="divider"></div>
+                        <li class="post-item">
+                            <a href="#" class="block font-medium text-white mb-0.5">The worst coffee advice ever
+                                heard</a>
+                            <div class="flex gap-2 text-[11px] text-white/40 font-light">
+                                <span>4d ago</span><span>&middot;</span><span>1
+                                    comments</span><span>&middot;</span><span>2 shares</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Attribution Footer (Moved Outside main container for fixed bottom) -->
+    <footer class="attribution-footer">
+        Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk chanthusa</a>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

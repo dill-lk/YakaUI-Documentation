@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Animated Disclosure</title>
+    
+    <!-- Typography: Outfit font is a modern geometric sans-serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- GSAP Library: Handles high-performance property animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+    <div class="layout-container">
+        <!-- Glow Wrapper: Layered radial gradients centered behind the component -->
+        <div class="glow-wrapper">
+            <div class="glow-outer"></div>
+            <div class="glow-mid"></div>
+            <div class="glow-core"></div>
+        </div>
+
+        <!-- Disclosure Card: The main container with glassmorphism effects -->
+        <div class="disclosure-card">
+            
+            <!-- Item 1: Set to 'open' by default -->
+            <details class="disclosure-item" open>
+                <summary>
+                    <span class="title-text">What is your refund policy?</span>
+                    <!-- Chevron SVG: Rotated via GSAP when open -->
+                    <svg viewBox="0 0 20 20" aria-hidden="true" class="chevron">
+                        <path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"></path>
+                    </svg>
+                </summary>
+                <!-- Panel Wrapper: Height animated from 0 to 'auto' -->
+                <div class="panel-wrapper">
+                    <div class="panel-inner">
+                        <div class="panel-content">
+                            If you're unhappy with your purchase, we'll refund you in full. 
+                            Our team processes all requests within 24 hours without any hidden fees.
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Item 2 -->
+            <details class="disclosure-item">
+                <summary>
+                    <span class="title-text">Do you offer technical support?</span>
+                    <svg viewBox="0 0 20 20" aria-hidden="true" class="chevron">
+                        <path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"></path>
+                    </svg>
+                </summary>
+                <div class="panel-wrapper">
+                    <div class="panel-inner">
+                        <div class="panel-content">
+                            Yes, our technical support team is available 24/7 via live chat 
+                            and email. We pride ourselves on a 15-minute average response time.
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+     
+    </div>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+</html>

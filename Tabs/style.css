@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #030303;
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    position: relative;
+}
+
+/* --- Dynamic Background Spotlight --- */
+.glow-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+}
+
+.glow-container {
+    position: absolute;
+    width: 0;
+    height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform, left, top;
+}
+
+.glow-core {
+    position: absolute;
+    width: 20rem;
+    height: 20rem;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+    filter: blur(50px);
+}
+
+.glow-mid {
+    position: absolute;
+    width: 10rem;
+    height: 10rem;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+    filter: blur(30px);
+}
+
+/* --- Glassmorphism UI --- */
+.glass-panel {
+    background-color: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px) saturate(210%);
+    -webkit-backdrop-filter: blur(40px) saturate(210%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.9), inset 0 1px 0px rgba(255, 255, 255, 0.04);
+}
+
+/* --- Tab Styling --- */
+.tab-btn {
+    position: relative;
+    padding: 7px 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.45);
+    border-radius: 9999px;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.tab-btn.active {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Tab Content Control */
+.tab-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    padding: 4px;
+    /* Reduced padding */
+}
+
+.tab-content.active {
+    position: relative;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* --- List Items --- */
+.post-item {
+    position: relative;
+    padding: 14px 16px;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+}
+
+.post-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.06), transparent);
+    margin: 0px 16px;
+}
+
+/* --- Footer (Fixed Position) --- */
+.attribution-footer {
+    position: fixed;
+    bottom: 24px;
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 0.75rem;
+    z-index: 50;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+}
+
+.attribution-footer a {
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    pointer-events: auto;
+}
+
+.attribution-footer a:hover {
+    color: white;
+}

@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+/* --- GLOBAL STYLES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #000;
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+/* --- CONSTRAINED DYNAMIC GLOW --- */
+.glow-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    /* Hidden by default */
+}
+
+.glow-container {
+    position: absolute;
+    width: 0;
+    height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow-core {
+    position: absolute;
+    /* Reduced by another 10% from 18.8rem to ~16.9rem */
+    width: 16.9rem;
+    height: 16.9rem;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 75%);
+    filter: blur(50px);
+}
+
+.glow-mid {
+    position: absolute;
+    /* Reduced by another 10% from 12.0rem to ~10.8rem */
+    width: 10.8rem;
+    height: 10.8rem;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, transparent 60%);
+    filter: blur(35px);
+}
+
+/* When active, wrapper is visible */
+.glow-active {
+    opacity: 1;
+}
+
+/* --- GLASS UI SHARED --- */
+.glass-panel {
+    background-color: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px) saturate(210%);
+    -webkit-backdrop-filter: blur(40px) saturate(210%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 1), inset 0 1px 0px rgba(255, 255, 255, 0.05);
+}
+
+/* --- POPOVER STYLES --- */
+.popover-panel {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    width: 18rem;
+    border-radius: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+.popover-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.popover-link {
+    display: block;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s;
+}
+
+.popover-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: scale(1.02);
+}
+
+/* --- NAV BUTTON & UNDERLINE ANIMATION --- */
+.nav-btn {
+    position: relative;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.3s ease;
+    outline: none;
+    padding-bottom: 6px;
+}
+
+.nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-50%);
+    opacity: 0;
+}
+
+.nav-btn.active {
+    color: white;
+}
+
+.nav-btn.active::after {
+    width: 100%;
+    opacity: 1;
+}
+
+.nav-btn:hover {
+    color: white;
+}

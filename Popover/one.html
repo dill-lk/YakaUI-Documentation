@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Glassmorphism UI</title>
+    <!-- Tailwind for layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        /* --- GLOBAL STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        /* --- CONSTRAINED DYNAMIC GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0; /* Hidden by default */
+        }
+
+        .glow-container {
+            position: absolute;
+            width: 0;
+            height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glow-core {
+            position: absolute;
+            /* Reduced by another 10% from 18.8rem to ~16.9rem */
+            width: 16.9rem; 
+            height: 16.9rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 75%);
+            filter: blur(50px); 
+        }
+
+        .glow-mid {
+            position: absolute;
+            /* Reduced by another 10% from 12.0rem to ~10.8rem */
+            width: 10.8rem; 
+            height: 10.8rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, transparent 60%);
+            filter: blur(35px);
+        }
+
+        /* When active, wrapper is visible */
+        .glow-active {
+            opacity: 1;
+        }
+
+        /* --- GLASS UI SHARED --- */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(40px) saturate(210%);
+            -webkit-backdrop-filter: blur(40px) saturate(210%);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-top: 1px solid rgba(255, 255, 255, 0.22); 
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 1), inset 0 1px 0px rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- POPOVER STYLES --- */
+        .popover-panel {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            width: 18rem;
+            border-radius: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .popover-panel.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .popover-link {
+            display: block;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .popover-link:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: scale(1.02);
+        }
+
+        /* --- NAV BUTTON & UNDERLINE ANIMATION --- */
+        .nav-btn {
+            position: relative;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+            outline: none;
+            padding-bottom: 6px;
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .nav-btn.active {
+            color: white;
+        }
+
+        .nav-btn.active::after {
+            width: 100%;
+            opacity: 1;
+        }
+
+        .nav-btn:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body class="pt-24">
+
+    <!-- Global Dynamic Spotlight (Centered exactly behind the panel) -->
+    <div id="glowWrapper" class="glow-wrapper">
+        <div id="glowContainer" class="glow-container">
+            <div class="glow-mid"></div>
+            <div class="glow-core"></div>
+        </div>
+    </div>
+
+    <!-- Navigation Section -->
+    <nav class="relative z-20 flex gap-12 items-center">
+        
+        <div class="text-sm font-semibold text-white/40 cursor-default hover:text-white transition-colors duration-300">Products</div>
+        
+        <!-- Solutions Popover -->
+        <div class="relative popover-container">
+            <button id="solutionsTrigger" class="nav-btn popover-trigger">Solutions</button>
+            <div id="solutionsPanel" class="popover-panel glass-panel divide-y divide-white/5">
+                <div class="p-4">
+                    <a href="#" class="popover-link">
+                        <p class="font-semibold text-white text-base">Insights</p>
+                        <p class="text-xs text-white/40">Measure actions your users take</p>
+                    </a>
+                    <a href="#" class="popover-link mt-2">
+                        <p class="font-semibold text-white text-base">Automations</p>
+                        <p class="text-xs text-white/40">Create your own targeted content</p>
+                    </a>
+                </div>
+                <div class="p-4">
+                    <a href="#" class="popover-link">
+                        <p class="font-semibold text-white text-base">Documentation</p>
+                        <p class="text-xs text-white/40">Start integrating tools</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm font-semibold text-white/40 cursor-default hover:text-white transition-colors duration-300">Pricing</div>
+
+    </nav>
+
+    <!-- Attribution Footer -->
+    <footer style="position: absolute; bottom: 30px; color: rgba(255,255,255,0.25); font-size: 0.8rem; z-index: 10;">
+        Created by <a href="https://github.com/dill-lk" target="_blank" style="color: rgba(255,255,255,0.4); text-decoration: none; border-bottom: 1px solid transparent; transition: border 0.3s;" onmouseover="this.style.borderBottom='1px solid rgba(255,255,255,0.4)'" onmouseout="this.style.borderBottom='1px solid transparent'">Jinuk chanthusa</a>
+    </footer> 
+
+    <script>
+        const glowWrapper = document.getElementById('glowWrapper');
+        const glowContainer = document.getElementById('glowContainer');
+        const trigger = document.getElementById('solutionsTrigger');
+        const panel = document.getElementById('solutionsPanel');
+        const container = document.querySelector('.popover-container');
+
+        /**
+         * Aligns the glow elements directly behind the popover panel
+         */
+        function alignGlowToPanel() {
+            const rect = panel.getBoundingClientRect();
+            // Calculate center of the actual panel
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Move the container to that coordinate
+            glowContainer.style.left = `${centerX}px`;
+            glowContainer.style.top = `${centerY}px`;
+        }
+
+        function closePopover() {
+            panel.classList.remove('show');
+            trigger.classList.remove('active');
+            glowWrapper.classList.remove('glow-active');
+        }
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isShowing = panel.classList.contains('show');
+
+            if (!isShowing) {
+                // Show panel first
+                panel.classList.add('show');
+                trigger.classList.add('active');
+                
+                // Align glow to the now-visible panel
+                alignGlowToPanel();
+                glowWrapper.classList.add('glow-active');
+            } else {
+                closePopover();
+            }
+        });
+
+        // Close on outside click
+        window.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                closePopover();
+            }
+        });
+
+        // Keep alignment on window resize
+        window.addEventListener('resize', () => {
+            if (panel.classList.contains('show')) {
+                alignGlowToPanel();
+            }
+        });
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePopover();
+            }
+        });
+    </script>
+</body>
+</html>

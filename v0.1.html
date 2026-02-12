@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAKA UI - Next Gen Framework</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="yaka_v1.0.css">
+    <link rel="icon" type="image/png" href="image.png">
+</head>
+
+<body>
+    <!-- Loader -->
+    <div class="loader-overlay">
+        <svg viewBox="0 0 100 100" class="loader-svg">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#333" stroke-width="2" />
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#FF3CAC" stroke-width="2" class="loader-circle" />
+        </svg>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="glass-nav">
+        <div class="logo">
+            <img src="image.png" alt="YAKA UI Logo" style="width: 48px; height: 48px;">
+            <span style="font-size: 1.2rem; font-weight: 700;">YAKA UI</span>
+        </div>
+        <div class="nav-links">
+            <a href="#components" class="nav-item">Components</a>
+            <a href="docs.html?tab=getting-started" class="nav-item">Documentation</a>
+            <a href="docs.html?tab=getting-started" class="nav-item active">Get Started</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-gradient"></div>
+            <div class="hero-bg">
+                <svg viewBox="0 0 1440 800" class="bg-svg">
+                    <path class="wave-path" d="" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <circle class="floating-orb" cx="20%" cy="30%" r="50" fill="url(#grad1)" />
+                    <circle class="floating-orb" cx="80%" cy="70%" r="80" fill="url(#grad2)" />
+                    <defs>
+                        <radialGradient id="grad1">
+                            <stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.3" />
+                            <stop offset="100%" stop-color="#FF3CAC" stop-opacity="0" />
+                        </radialGradient>
+                        <radialGradient id="grad2">
+                            <stop offset="0%" stop-color="#784BA0" stop-opacity="0.3" />
+                            <stop offset="100%" stop-color="#784BA0" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+                </svg>
+            </div>
+            <div class="hero-orbit"></div>
+            <h1 class="hero-title">
+                <span class="char-wrap">D</span><span class="char-wrap">e</span><span class="char-wrap">s</span><span
+                    class="char-wrap">i</span><span class="char-wrap">g</span><span class="char-wrap">n</span>
+                <br>
+                <span class="highlight">Systems</span>
+            </h1>
+            <p class="hero-subtitle">Token-driven layouts, animated interactions, and scalable components for modern
+                product teams.</p>
+            <div class="hero-badges">
+                <span class="hero-badge">Design Tokens</span>
+                <span class="hero-badge">Grid Utilities</span>
+                <span class="hero-badge">Motion Ready</span>
+            </div>
+
+            <div class="cta-group">
+                <button class="btn-glow btn-magnetic" data-magnetic
+                    onclick="window.location.href='docs.html?tab=getting-started'">
+                    <span>Explore Library</span>
+                    <div class="glow-container">
+                        <div class="glow-circle"></div>
+                    </div>
+                </button>
+                <button class="btn-outline"
+                    onclick="window.location.href='docs.html?tab=colors'">Explore Themes</button>
+            </div>
+        </section>
+
+        <section class="section-padded">
+            <div class="container text-center">
+                <h2 class="section-title">Trusted by modern product teams</h2>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Design-led teams shipping immersive interfaces
+                    with YAKA UI.</p>
+                <div class="brand-strip" style="margin-top: 2rem;">
+                    <div class="brand-pill">Nova Labs</div>
+                    <div class="brand-pill">Studio Orbit</div>
+                    <div class="brand-pill">Hyperlane</div>
+                    <div class="brand-pill">Pulse OS</div>
+                    <div class="brand-pill">Arc Studio</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components Showcase -->
+        <section id="components" class="showcase section-padded">
+            <div class="container text-center">
+                <h2 class="section-title">Interactive Components</h2>
+                <div class="grid-container">
+                    <!-- Buttons Link -->
+                    <div class="card glass-card" data-tilt onclick="window.location.href='docs.html?tab=buttons'"
+                        style="cursor:pointer">
+                        <div class="card-content">
+                            <h3>Buttons</h3>
+                            <p>Magnetic and Glow effects with crisp SVG backgrounds.</p>
+                            <span class="link-arrow">Documentation</span>
+                        </div>
+                        <div class="card-border"></div>
+                    </div>
+
+                    <!-- Cards Link -->
+                    <div class="card glass-card" data-tilt onclick="window.location.href='docs.html?tab=cards'"
+                        style="cursor:pointer">
+                        <div class="card-content">
+                            <h3>Smart Cards</h3>
+                            <p>Interactive glassmorphism with 3D tilt and dynamic borders.</p>
+                            <span class="link-arrow">Documentation</span>
+                        </div>
+                        <div class="card-border"></div>
+                    </div>
+
+                    <!-- Inputs Link -->
+                    <div class="card glass-card" data-tilt onclick="window.location.href='docs.html?tab=inputs'"
+                        style="cursor:pointer">
+                        <div class="card-content">
+                            <h3>Inputs & Switches</h3>
+                            <p>Morphing transitions and animated validation states.</p>
+                            <span class="link-arrow">Documentation</span>
+                        </div>
+                        <div class="card-border"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padded">
+            <div class="container">
+                <h2 class="section-title text-center">Design-to-Deploy Workflow</h2>
+                <div class="grid grid-3" style="margin-top: 2rem;">
+                    <div class="card glass-card">
+                        <div class="card-content">
+                            <h3>Compose</h3>
+                            <p>Stack ready-made components with consistent spacing and tokenized styles.</p>
+                        </div>
+                    </div>
+                    <div class="card glass-card card-neon">
+                        <div class="card-content">
+                            <h3>Animate</h3>
+                            <p>Trigger GSAP-powered interactions with minimal configuration.</p>
+                        </div>
+                    </div>
+                    <div class="card glass-card card-gradient">
+                        <div class="card-content">
+                            <h3>Launch</h3>
+                            <p>Ship polished UI with responsive grid utilities and theme tokens.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <h3>60fps</h3>
+                        <p>Optimized animation loops</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>30+</h3>
+                        <p>Production-ready components</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>5kb</h3>
+                        <p>Lightweight CSS footprint</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>24/7</h3>
+                        <p>Reliable CDN distribution</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section-padded">
+            <div class="container">
+                <h2 class="section-title text-center">Why Yaka UI?</h2>
+                <div class="features-grid">
+                    <div class="feature-card" data-animate="fade-up">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                                fill="none">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Blazing Fast</h3>
+                        <p class="feature-desc">Optimized GSAP 3.0 timelines for buttery smooth 60fps animations.</p>
+                    </div>
+                    <div class="feature-card" data-animate="fade-up" style="transition-delay: 0.1s;">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                                fill="none">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Modular</h3>
+                        <p class="feature-desc">Lightweight ES modules. Use only the components you need.</p>
+                    </div>
+                    <div class="feature-card" data-animate="fade-up" style="transition-delay: 0.2s;">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                                fill="none">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Glass Ready</h3>
+                        <p class="feature-desc">Pre-configured glassmorphism tokens for consistent premium aesthetics.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padded">
+            <div class="container">
+                <div class="cta-panel">
+                    <div>
+                        <h3>Build the next interface faster</h3>
+                        <p style="color: var(--text-muted); max-width: 480px;">Start with YAKA UI and ship immersive
+                            experiences with advanced layout utilities, motion presets, and clean documentation.</p>
+                        <p style="color: var(--text-muted); max-width: 480px; margin-top: 12px;">Includes <strong>30+</strong>
+                            production-ready components, premium theming, and high-performance motion.</p>
+                    </div>
+                    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                        <button class="btn-primary btn-magnetic" data-magnetic
+                            onclick="window.location.href='docs.html?tab=getting-started'">Get Started</button>
+                        <button class="btn-outline"
+                            onclick="window.location.href='docs.html?tab=buttons'">View Components</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center section-padded" style="padding: 4rem 0; border-top: 1px solid var(--glass-border);">
+        <div class="container">
+            <p style="color: var(--text-muted);">© 2026 YAKA UI Framework. Precision Crafted UI Components.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="./yaka_v1.0.js"></script>
+</body>
+
+</html>

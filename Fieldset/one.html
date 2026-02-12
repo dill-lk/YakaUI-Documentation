@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Shipping Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #030303;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-core {
+            position: absolute;
+            width: 25rem; 
+            height: 25rem;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            filter: blur(80px); 
+            opacity: 0.8;
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* --- GLASS FORM STYLING --- */
+        .form-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 32rem;
+            padding: 1rem;
+        }
+
+        .glass-fieldset {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .description {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .input-base {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.6rem 0.9rem;
+            color: #fff;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-base:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- CUSTOM SELECT ARROW --- */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-input {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .select-input option {
+            background-color: #111;
+            color: #fff;
+        }
+
+        .chevron-icon {
+            position: absolute;
+            right: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+        }
+
+        footer {
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
+            z-index: 10;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.5); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Glow -->
+    <div class="glow-wrapper">
+        <div class="glow-core"></div>
+    </div>
+
+    <!-- Shipping Form -->
+    <div class="form-container">
+        <div class="glass-fieldset space-y-8">
+            <h2 class="text-base font-semibold text-white tracking-wide">Shipping details</h2>
+            
+            <!-- Street Address -->
+            <div class="field">
+                <label class="label">Street address</label>
+                <input type="text" class="input-base" placeholder="123 Glass Lane">
+            </div>
+
+            <!-- Country -->
+            <div class="field">
+                <label class="label">Country</label>
+                <p class="description">We currently only ship to North America.</p>
+                <div class="select-wrapper">
+                    <select class="input-base select-input">
+                        <option>Canada</option>
+                        <option>Mexico</option>
+                        <option>United States</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                </div>
+            </div>
+
+            <!-- Delivery Notes -->
+            <div class="field">
+                <label class="label">Delivery notes</label>
+                <p class="description">If you have a tiger, we'd like to know about it.</p>
+                <textarea class="input-base" rows="3" style="resize: none;"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attribution Footer -->
+    <footer>
+        Created by <a href="https://github.com/dill-lk" target="_blank">Jinuk chanthusa</a>
+    </footer>
+
+    <script>
+        // Smooth entrance animation
+        window.onload = () => {
+            gsap.from(".glass-fieldset", {
+                opacity: 0,
+                y: 30,
+                duration: 1.2,
+                ease: "power4.out"
+            });
+        };
+    </script>
+</body>
+</html>
