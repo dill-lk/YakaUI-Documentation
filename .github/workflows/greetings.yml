@@ -12,5 +12,6 @@ jobs:
     - uses: actions/first-interaction@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "Message that will be displayed on users' first pull request"
+        issue-message: "☠️ **Welcome to YAKA UI!** Thanks for opening your first issue. Our team (dill-lk) will look into this soon. In the meantime, make sure to check the [Docs](https://yaka-ui.vercel.app/docs.html)."
+        pr-message:  "🔥 **Awesome! Your first PR for YAKA UI!** Thank you for contributing to the framework. We'll review your code shortly. You're officially a Yaka dev now!"
+    
