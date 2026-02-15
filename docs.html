@@ -238,6 +238,12 @@
             border: 1px solid transparent;
         }
 
+        /* Prevent any pseudo-element dot indicators on sidebar links */
+        .sidebar-link::before,
+        .sidebar-link::after {
+            content: none;
+        }
+
         .sidebar-link:hover {
             color: #fff;
             background: rgba(255, 255, 255, 0.05);

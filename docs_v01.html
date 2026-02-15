@@ -57,6 +57,12 @@
             padding-left: 10px;
         }
 
+        /* Prevent any pseudo-element dot indicators on sidebar links */
+        .sidebar-link::before,
+        .sidebar-link::after {
+            content: none;
+        }
+
         .sidebar-link:hover,
         .sidebar-link.active {
             color: var(--text-main);
