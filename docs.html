@@ -236,14 +236,12 @@
             font-weight: 500;
             cursor: pointer;
             border: 1px solid transparent;
-            position: relative;
         }
 
         /* Prevent any pseudo-element dot indicators on sidebar links */
         .sidebar-link::before,
         .sidebar-link::after {
-            content: none !important;
-            display: none !important;
+            content: none;
         }
 
         .sidebar-link:hover {
@@ -257,13 +255,6 @@
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Explicitly prevent any dot indicators on active sidebar links */
-        .sidebar-link.active::before,
-        .sidebar-link.active::after {
-            content: none !important;
-            display: none !important;
         }
 
         .content {
